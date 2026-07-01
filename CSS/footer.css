@@ -1,0 +1,120 @@
+/* Shared site footer styles */
+
+footer {
+  background-color: #022842;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  padding: 15px 0 10px;
+  font-family: "Inter", sans-serif;
+  color: #fff;
+  margin-top: 30px;
+}
+
+footer .container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+footer .footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #fff;
+  padding-bottom: 10px;
+  gap: 16px;
+}
+
+footer .footer-content .footer-logo {
+  transform: none !important;
+  height: auto !important;
+  width: 250px !important;
+  max-width: 250px !important;
+  margin-top: 10px;
+  margin-right: 30px;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+footer .footer-content p {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #fff;
+}
+
+footer .footer-content i {
+  margin-right: 8px;
+}
+
+footer .footer-bottom {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #fff;
+}
+
+footer .social-icons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0;
+  transform: none;
+}
+
+footer .social-icons a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  color: #1b3f8b;
+  text-decoration: none;
+  font-size: 10px;
+  transition: all 0.3s ease;
+}
+
+footer .social-icons a:hover {
+  background-color: #d2d2d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+  footer .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  footer .footer-content > * {
+    flex: 1 1 100%;
+  }
+
+  footer .footer-content p {
+    margin: 5px 0;
+  }
+
+  footer .social-icons {
+    margin-top: 15px;
+    transform: none;
+  }
+
+  footer .footer-content .footer-logo {
+    width: 120px !important;
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  footer .footer-content .footer-logo {
+    width: 105px !important;
+  }
+
+  footer .social-icons a {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}

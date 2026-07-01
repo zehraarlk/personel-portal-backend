@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Anketler - Gebze Belediyesi</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../CSS/anketler.style.css" />
+    <link rel="stylesheet" href="../CSS/footer.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <button class="mobile-menu-toggle" aria-label="Menüyü aç">
+            <i class="fas fa-bars"></i>
+          </button>
+          <a href="ana_sayfa.html" class="logo-container">
+            <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
+          </a>
+        </div>
+
+        <ul class="nav-links">
+          <li class="nav-dropdown">
+            <a href="ana_sayfa.html"> <i class="fas fa-home"></i> Anasayfa </a>
+          </li>
+          <li>
+            <a href="videolar.html"><i class="fas fa-video"></i>Videolar</a>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-newspaper"></i>
+              Etkinlikler
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="sizden_gelenler.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">SİZDEN GELENLER</div>
+                      <div class="dropdown-description">Talep ve öneri merkezi</div>
+                    </div>
+                  </a>
+                  <a href="etkinlikler.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ETKİNLİKLER</div>
+                      <div class="dropdown-description">Kurumsal etkinlik takvimi</div>
+                    </div>
+                  </a>
+                  <a href="duyuru.html" class="dropdown-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DUYURULAR</div>
+                      <div class="dropdown-description">Güncel duyuru ve arşivi</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-landmark"></i>
+              Kaynaklar
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="protokol.html" class="dropdown-item">
+                    <i class="fas fa-file-signature"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">PROTOKOLLER</div>
+                      <div class="dropdown-description">Resmi protokol kayıtları.</div>
+                    </div>
+                  </a>
+                  <a href="dokumanlar.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOKÜMANLAR</div>
+                      <div class="dropdown-description">Kurumsal doküman arşivi.</div>
+                    </div>
+                  </a>
+                  <a href="mevzuat.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">MEVZUATLAR</div>
+                      <div class="dropdown-description">Güncel mevzuat bilgileri.</div>
+                    </div>
+                  </a>
+                  <a href="egitim.html" class="dropdown-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">EĞİTİMLER</div>
+                      <div class="dropdown-description">Personel eğitim içerikleri.</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-file-alt"></i>
+              Diğer
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="anketler.html" class="dropdown-item">
+                    <i class="fas fa-poll"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ANKETLER</div>
+                      <div class="dropdown-description">Katılabileceğiniz güncel anketler</div>
+                    </div>
+                  </a>
+                  <a href="yardimci_linkler.html" class="dropdown-item">
+                    <i class="fas fa-link"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">YARDIMCI LİNKLER</div>
+                      <div class="dropdown-description">İş akışı için önemli bağlantılar</div>
+                    </div>
+                  </a>
+                  <a href="vefat_bilgisi.html" class="dropdown-item">
+                    <i class="fas fa-ribbon" style="color: #222"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">VEFAT EDEN BİLGİSİ</div>
+                      <div class="dropdown-description">Vefat eden değerli çalışanlarımız</div>
+                    </div>
+                  </a>
+                  <a href="dogum.html" class="dropdown-item">
+                    <i class="fas fa-birthday-cake"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOĞUM GÜNÜ BİLGİSİ</div>
+                      <div class="dropdown-description">Bugün doğum günü olan personeller</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="nav-right">
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileBtn">
+              <img src="../images/login/login.jpg" alt="Profil" class="profile-img" />
+            </button>
+            <div class="profile-menu" id="profileMenu">
+              <div class="profile-info">
+                <img src="../images/login/login.jpg" alt="Profil" class="profile-menu-img" />
+                <div class="profile-details">
+                  <span class="profile-name">Kullanıcı Adı</span>
+                  <span class="profile-role">Personel</span>
+                </div>
+              </div>
+              <ul class="profile-menu-list">
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-user"></i><span>Profilim</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-cog"></i><span>Ayarlar</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item logout"
+                    ><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <div class="side-menu-profile">
+          <img src="../images/login/login.jpg" alt="Profil" class="side-menu-profile-img" />
+          <div class="side-menu-profile-details">
+            <span class="side-menu-profile-name">Kullanıcı Adı</span>
+            <span class="side-menu-profile-email">personel@gebze.bel.tr</span>
+          </div>
+        </div>
+        <button class="close-menu-btn" aria-label="Menüyü kapat">&times;</button>
+      </div>
+      <ul class="side-menu-links">
+        <li>
+          <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
+        </li>
+        <li>
+          <a href="sizden_gelenler.html"><i class="fas fa-comments"></i> Sizden Gelenler</a>
+        </li>
+        <li>
+          <a href="etkinlikler.html"><i class="fas fa-calendar-check"></i> Etkinlikler</a>
+        </li>
+        <li>
+          <a href="duyuru.html"><i class="fas fa-bullhorn"></i> Duyurular</a>
+        </li>
+        <li>
+          <a href="protokol.html"><i class="fas fa-file-signature"></i> Protokoller</a>
+        </li>
+        <li>
+          <a href="dokumanlar.html"><i class="fas fa-comments"></i> Dokümanlar</a>
+        </li>
+        <li>
+          <a href="mevzuat.html"><i class="fas fa-calendar-check"></i> Mevzuatlar</a>
+        </li>
+        <li>
+          <a href="egitim.html"><i class="fas fa-graduation-cap"></i> Eğitimler</a>
+        </li>
+        <li>
+          <a href="videolar.html"><i class="fas fa-video"></i> Videolar</a>
+        </li>
+        <li>
+          <a href="anketler.html"><i class="fas fa-poll"></i> Anketler</a>
+        </li>
+        <li>
+          <a href="yardimci_linkler.html"><i class="fas fa-link"></i> Yardımcı Linkler</a>
+        </li>
+        <li>
+          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i>Vefat Eden Bilgisi</a>
+        </li>
+        <li>
+          <a href="dogum.html"><i class="fas fa-birthday-cake"></i>Doğum Günü Bilgisi</a>
+        </li>
+      </ul>
+    </div>
+    <div class="container py-5">
+      <!-- Yeni Anket Başlığı ve Kontroller -->
+      <div class="surveys-header">
+        <h1 class="surveys-title">Anketler</h1>
+        <div class="surveys-controls">
+          <div class="search-box">
+            <input type="text" placeholder="Anket ara..." id="searchInput" />
+            <i class="fas fa-search"></i>
+          </div>
+          <select class="sort-select">
+            <option value="Tarihe Göre Sırala">Tarihe Göre Sırala</option>
+            <option value="En Yeni">En Yeni</option>
+            <option value="En Eski">En Eski</option>
+            <option value="Popülerlik">Popülerlik</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Yeni Filtre Tabları -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">
+          <i class="fas fa-list me-1"></i>Tümü
+        </button>
+        <button class="filter-tab" data-filter="active">
+          <i class="fas fa-play-circle me-1"></i>Aktif Anketler
+        </button>
+        <button class="filter-tab" data-filter="pending">
+          <i class="fas fa-clock me-1"></i>Beklemede
+        </button>
+        <button class="filter-tab" data-filter="completed">
+          <i class="fas fa-check-circle me-1"></i>Tamamlanan
+        </button>
+      </div>
+
+      <!-- Anket Kartları -->
+      <div class="row g-4" id="surveyContainer">
+        <!-- Anket 1 - Aktif -->
+        <div class="col-md-6 col-lg-4 survey-item" data-category="active" data-priority="high">
+          <div class="survey-card h-100 d-flex flex-column priority-high">
+            <span class="status-badge status-active">
+              <i class="fas fa-play-circle me-1"></i>Aktif
+            </span>
+            <img
+              src="https://img.freepik.com/free-photo/business-graphs-charts-tablet_23-2147819730.jpg"
+              class="survey-img"
+              alt="Anket 1"
+            />
+            <div class="p-4 d-flex flex-column justify-content-between flex-grow-1">
+              <div>
+                <h5 class="survey-title">Personel Memnuniyet Anketi 2024</h5>
+                <p class="survey-desc">
+                  Görev yapan personele yönelik genel değerlendirme formu. İş memnuniyeti ve çalışma
+                  koşulları değerlendirmesi.
+                </p>
+                <p class="survey-date">
+                  <i class="fas fa-calendar me-1"></i>09.10.2024 - 15.11.2024
+                </p>
+                <div class="progress-container">
+                  <div class="d-flex justify-content-between">
+                    <span class="participation-rate">Katılım: 45/120 kişi</span>
+                    <span class="participation-rate">%37</span>
+                  </div>
+                  <div class="progress mt-2" style="height: 6px">
+                    <div
+                      class="progress-bar bg-success"
+                      role="progressbar"
+                      style="width: 37%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <a href="#" class="btn survey-btn w-100">
+                  <i class="fas fa-edit me-2"></i>Ankete Katıl
+                </a>
+                <button class="btn btn-outline-warning btn-sm mt-2" onclick="toggleFavorite(this)">
+                  <i class="far fa-star"></i> Favoriye Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anket 2 - Completed -->
+        <div class="col-md-6 col-lg-4 survey-item" data-category="completed" data-priority="medium">
+          <div class="survey-card h-100 d-flex flex-column priority-medium">
+            <span class="status-badge status-completed">
+              <i class="fas fa-check-circle me-1"></i>Tamamlandı
+            </span>
+            <img
+              src="https://img.freepik.com/free-photo/education-concept-with-graduation-cap-books_23-2147819868.jpg"
+              class="survey-img"
+              alt="Anket 2"
+            />
+            <div class="p-4 d-flex flex-column justify-content-between flex-grow-1">
+              <div>
+                <h5 class="survey-title">Eğitim İhtiyaç Analizi</h5>
+                <p class="survey-desc">
+                  Personel gelişimi için gerekli eğitim alanlarının belirlenmesi amacıyla hazırlanan
+                  değerlendirme anketi.
+                </p>
+                <p class="survey-date">
+                  <i class="fas fa-calendar me-1"></i>01.09.2024 - 30.09.2024
+                </p>
+                <div class="progress-container">
+                  <div class="d-flex justify-content-between">
+                    <span class="participation-rate">Katılım: 98/120 kişi</span>
+                    <span class="participation-rate">%82</span>
+                  </div>
+                  <div class="progress mt-2" style="height: 6px">
+                    <div
+                      class="progress-bar bg-success"
+                      role="progressbar"
+                      style="width: 82%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <a href="#" class="btn survey-btn completed w-100">
+                  <i class="fas fa-chart-bar me-2"></i>Sonuçları Gör
+                </a>
+                <button class="btn btn-outline-warning btn-sm mt-2" onclick="toggleFavorite(this)">
+                  <i class="far fa-star"></i> Favoriye Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anket 3 - Expired -->
+        <div class="col-md-6 col-lg-4 survey-item" data-category="expired" data-priority="low">
+          <div class="survey-card h-100 d-flex flex-column priority-low">
+            <span class="status-badge status-expired">
+              <i class="fas fa-times-circle me-1"></i>Süresi Doldu
+            </span>
+            <img
+              src="https://img.freepik.com/free-photo/workplace-productivity-concept_23-2147819745.jpg"
+              class="survey-img"
+              alt="Anket 3"
+            />
+            <div class="p-4 d-flex flex-column justify-content-between flex-grow-1">
+              <div>
+                <h5 class="survey-title">İş Ortamı Değerlendirme</h5>
+                <p class="survey-desc">
+                  Çalışma ortamı, ekipman yeterliliği ve fiziksel koşulların değerlendirilmesi
+                  anketi.
+                </p>
+                <p class="survey-date">
+                  <i class="fas fa-calendar me-1"></i>15.08.2024 - 15.09.2024
+                </p>
+                <div class="progress-container">
+                  <div class="d-flex justify-content-between">
+                    <span class="participation-rate">Katılım: 67/120 kişi</span>
+                    <span class="participation-rate">%56</span>
+                  </div>
+                  <div class="progress mt-2" style="height: 6px">
+                    <div
+                      class="progress-bar bg-warning"
+                      role="progressbar"
+                      style="width: 56%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mt-3">
+                <a href="#" class="btn survey-btn expired w-100" disabled>
+                  <i class="fas fa-clock me-2"></i>Süresi Dolmuş
+                </a>
+                <button class="btn btn-outline-warning btn-sm mt-2" onclick="toggleFavorite(this)">
+                  <i class="far fa-star"></i> Favoriye Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Boş Durum Mesajı -->
+      <div class="empty-state d-none" id="emptyState">
+        <i class="fas fa-search"></i>
+        <h4>Sonuç Bulunamadı</h4>
+        <p>Aradığınız kriterlere uygun anket bulunamadı.</p>
+      </div>
+
+      <!-- Son Aktiviteler -->
+      <div class="row mt-5">
+        <div class="col-12"></div>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <img src="../images/logo(2).png" class="footer-logo" alt="Gebze Belediyesi" />
+          <p><i class="fas fa-phone"></i> (0262) 123 45 67</p>
+          <p><i class="fas fa-envelope"></i> bilgiislem@gebze.bel.tr</p>
+          <div class="social-icons mt-3">
+            <a href="https://www.facebook.com/gebzebelediye/?locale=tr_TR"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              href="https://x.com/gebze_belediye?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="https://www.instagram.com/gebze_belediyesi/?hl=tr"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="https://www.youtube.com/@gebzebelediyesi7295"
+              ><i class="fab fa-youtube"></i
+            ></a>
+            <a href="https://www.linkedin.com/company/gebze-belediyesi/posts/?feedView=all"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Gebze Belediyesi - Bilgi İşlem Müdürlüğü | Tüm Hakları Saklıdır</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/anketler.script.js"></script>
+  </body>
+</html>
