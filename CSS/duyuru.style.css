@@ -556,7 +556,7 @@ body {
   --logo-shift: 16rem; /* nav'da kullandığın değerle aynı */
 }
 .breadcrumb-section .container {
-  width: min(1000px, 92%) !important;
+  width: min(60%, 92%) !important;
   margin: 0 auto !important;
   position: relative;
   transform: translateX(calc(-1 * var(--logo-shift))); /* LOGO ile aynı sola kaydır */
@@ -578,7 +578,7 @@ body {
   overflow-x: hidden;
 }
 .breadcrumb-section .container {
-  width: min(1200px, 92%);
+  width: min(90%, 92%);
   margin: 0 auto;
   position: relative;
 }
