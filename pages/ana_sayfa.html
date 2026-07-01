@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ana Sayfa - Gebze Belediyesi Personel Portalı</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../CSS/ana_sayfa.style.css" />
+    <link rel="stylesheet" href="../CSS/footer.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <button class="mobile-menu-toggle" aria-label="Menüyü aç">
+            <i class="fas fa-bars"></i>
+          </button>
+          <a href="ana_sayfa.html" class="logo-container">
+            <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
+          </a>
+        </div>
+
+        <ul class="nav-links">
+          <li class="nav-dropdown">
+            <a href="ana_sayfa.html"> <i class="fas fa-home"></i> Ana Sayfa </a>
+          </li>
+          <li>
+            <a href="videolar.html"><i class="fas fa-video"></i>Videolar</a>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-newspaper"></i>
+              Etkinlikler
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="sizden_gelenler.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">SİZDEN GELENLER</div>
+                      <div class="dropdown-description">Talep ve öneri merkezi</div>
+                    </div>
+                  </a>
+                  <a href="etkinlikler.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ETKİNLİKLER</div>
+                      <div class="dropdown-description">Kurumsal etkinlik takvimi</div>
+                    </div>
+                  </a>
+                  <a href="duyuru.html" class="dropdown-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DUYURULAR</div>
+                      <div class="dropdown-description">Güncel duyuru ve arşivi</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-landmark"></i>
+              Kaynaklar
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="protokol.html" class="dropdown-item">
+                    <i class="fas fa-file-signature"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">PROTOKOLLER</div>
+                      <div class="dropdown-description">Resmi protokol kayıtları.</div>
+                    </div>
+                  </a>
+                  <a href="dokumanlar.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOKÜMANLAR</div>
+                      <div class="dropdown-description">Kurumsal doküman arşivi.</div>
+                    </div>
+                  </a>
+                  <a href="mevzuat.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">MEVZUATLAR</div>
+                      <div class="dropdown-description">Güncel mevzuat bilgileri.</div>
+                    </div>
+                  </a>
+                  <a href="egitim.html" class="dropdown-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">EĞİTİMLER</div>
+                      <div class="dropdown-description">Personel eğitim içerikleri.</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-file-alt"></i>
+              Diğer
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="anketler.html" class="dropdown-item">
+                    <i class="fas fa-poll"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ANKETLER</div>
+                      <div class="dropdown-description">Katılabileceğiniz güncel anketler</div>
+                    </div>
+                  </a>
+                  <a href="yardimci_linkler.html" class="dropdown-item">
+                    <i class="fas fa-link"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">YARDIMCI LİNKLER</div>
+                      <div class="dropdown-description">İş akışı için önemli bağlantılar</div>
+                    </div>
+                  </a>
+                  <a href="vefat_bilgisi.html" class="dropdown-item">
+                    <i class="fas fa-ribbon" style="color: #222"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">VEFAT EDEN BİLGİSİ</div>
+                      <div class="dropdown-description">Vefat eden değerli çalışanlarımız</div>
+                    </div>
+                  </a>
+                  <a href="dogum.html" class="dropdown-item">
+                    <i class="fas fa-birthday-cake"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOĞUM GÜNÜ BİLGİSİ</div>
+                      <div class="dropdown-description">Bugün doğum günü olan personeller</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="nav-right">
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileBtn">
+              <img src="../images/login/login.jpg" alt="Profil" class="profile-img" />
+            </button>
+            <div class="profile-menu" id="profileMenu">
+              <div class="profile-info">
+                <img src="../images/login/login.jpg" alt="Profil" class="profile-menu-img" />
+                <div class="profile-details">
+                  <span class="profile-name">Kullanıcı Adı</span>
+                  <span class="profile-role">Personel</span>
+                </div>
+              </div>
+              <ul class="profile-menu-list">
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-user"></i><span>Profilim</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-cog"></i><span>Ayarlar</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item logout"
+                    ><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <div class="side-menu-profile">
+          <img src="../images/login/login.jpg" alt="Profil" class="side-menu-profile-img" />
+          <div class="side-menu-profile-details">
+            <span class="profile-name">Kullanıcı Adı</span>
+            <span class="side-menu-profile-email">personel@gebze.bel.tr</span>
+          </div>
+        </div>
+        <button class="close-menu-btn" aria-label="Menüyü kapat">&times;</button>
+      </div>
+      <ul class="side-menu-links">
+        <li>
+          <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
+        </li>
+        <li>
+          <a href="sizden_gelenler.html"><i class="fas fa-comments"></i> Sizden Gelenler</a>
+        </li>
+        <li>
+          <a href="etkinlikler.html"><i class="fas fa-calendar-check"></i> Etkinlikler</a>
+        </li>
+        <li>
+          <a href="duyuru.html"><i class="fas fa-bullhorn"></i> Duyurular</a>
+        </li>
+        <li>
+          <a href="protokol.html"><i class="fas fa-file-signature"></i> Protokoller</a>
+        </li>
+        <li>
+          <a href="dokumanlar.html"><i class="fas fa-comments"></i> Dokümanlar</a>
+        </li>
+        <li>
+          <a href="mevzuat.html"><i class="fas fa-calendar-check"></i> Mevzuatlar</a>
+        </li>
+        <li>
+          <a href="egitim.html"><i class="fas fa-graduation-cap"></i> Eğitimler</a>
+        </li>
+        <li>
+          <a href="videolar.html"><i class="fas fa-video"></i> Videolar</a>
+        </li>
+        <li>
+          <a href="anketler.html"><i class="fas fa-poll"></i> Anketler</a>
+        </li>
+        <li>
+          <a href="yardimci_linkler.html"><i class="fas fa-link"></i> Yardımcı Linkler</a>
+        </li>
+        <li>
+          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i>Vefat Eden Bilgisi</a>
+        </li>
+        <li>
+          <a href="dogum.html"><i class="fas fa-birthday-cake"></i>Doğum Günü Bilgisi</a>
+        </li>
+      </ul>
+    </div>
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="content-area">
+      <div class="container bg-light py-4 py-sm-5">
+        <div class="container-fluid">
+          <div class="row g-4 g-lg-5 justify-content-center">
+            <div class="col-12 col-lg-8">
+              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4">
+                <!-- Haberler Başlığı -->
+                <div class="d-flex align-items-center mb-3" style="width: 100%; max-width: 1600px">
+                  <div class="title-v1">
+                    <h2 class="title-v2"><i class="fas fa-bullhorn"></i> Haberler & Etkinlikler</h2>
+                  </div>
+                </div>
+                <!-- Ana Haber Resmi ve Başlığı -->
+                <div class="ana-haber-container mb-4">
+                  <img
+                    id="main-haber-gorsel"
+                    src="https://via.placeholder.com/800x400/0d6efd/ffffff?text=Ana+Görsel"
+                    alt="Haber görseli"
+                    class="img-fluid rounded-3 shadow-sm w-100 object-fit-cover"
+                    style="max-height: 500px"
+                  />
+                  <div class="ana-haber-baslik-container">
+                    <a href="" id="ana-haber-link" class="ana-haber-baslik-link">
+                      <h3 id="ana-haber-baslik" class="ana-haber-baslik">
+                        8 Mart Dünya Kadınlar Günü Programı
+                      </h3>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Galeri Container -->
+                <div id="gallery-container" class="mb-4">
+                  <button id="gallery-prev-btn" class="gallery-nav-arrow prev" title="Önceki">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <button id="gallery-next-btn" class="gallery-nav-arrow next" title="Sonraki">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                  <div class="gallery-wrapper">
+                    <div id="gallery-track" class="d-flex gap-2"></div>
+                  </div>
+                  <div id="gallery-dots" class="d-flex justify-content-center gap-2 mt-3"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4 h-100 d-flex flex-column">
+                <div class="duyurular-header">
+                  <h2 class="duyurular-baslik"><i class="fas fa-bell me-2"></i>Duyurular</h2>
+                </div>
+                <hr />
+                <div id="duyurular-listesi" class="duyurular-govde"></div>
+
+                <div id="pagination-controls" class="pagination-controls mt-auto pt-3">
+                  <button id="prev-page" class="pagination-arrow" title="Önceki Sayfa">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <span id="sayfa-bilgisi" class="sayfa-bilgisi">Sayfa 1 / 5</span>
+                  <button id="next-page" class="pagination-arrow" title="Sonraki Sayfa">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row g-4 justify-content-center mt-4">
+            <div class="col-12">
+              <div class="card shadow-lg border-0 rounded-4 p-4">
+                <div class="content-area">
+                  <div class="container-fluid px-4 py-4">
+                    <div class="page-header-container">
+                      <div class="header-icon-wrapper">
+                        <i class="fa-solid fa-cake-candles"></i>
+                      </div>
+                      <div class="header-text-wrapper">
+                        <h2 class="header-title-main">Mutlu Yıllar !</h2>
+                        <p class="header-subtitle">25 Ağustos 2025</p>
+                      </div>
+                    </div>
+                    <div
+                      id="personelListesi"
+                      class="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4"
+                    ></div>
+
+                    <div id="bosMesaj" class="alert alert-secondary text-center mt-4 d-none">
+                      Bugün doğum günü olan personel bulunmamaktadır.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Otomasyon Sistemleri Bölümü -->
+          <div class="row g-4 justify-content-center mt-4">
+            <div class="col-12">
+              <div class="card shadow-lg border-0 rounded-4 p-4">
+                <div class="otomasyon-header mb-4">
+                  <div
+                    class="d-flex align-items-center mb-3"
+                    style="
+                      background-color: #fff;
+                      padding: 1rem;
+                      border-left: 5px solid #344e75;
+                      border-radius: 10px;
+                      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+                    "
+                  >
+                    <h2 class="otomasyon-baslik mb-0 fw-bold">Kurum İçi Otomasyon Sistemleri</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="otomasyon-grid">
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/omis_7572.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">OMİS</h3>
+
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/ulakbel_5496.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Ulakbel</h3>
+
+              <a
+                href="giris_sayfasi/login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/imar-yonetim-sistemi_8038.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">
+                İmar Yönetim Sistemi
+              </h3>
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/dijital-arsiv_415.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Dijital Arşiv</h3>
+
+              <a
+                href="giris_sayfasi/login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/outlook_4005.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Outlook</h3>
+
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/sosyal-yardim_3767.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Soyal Yardım</h3>
+
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/netcad_3888.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Netcad</h3>
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/ebys_8493.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">Ebys</h3>
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/e-belediye-evlendirme-modulu_3993.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">
+                E-Belediye Evlendirme Modülü
+              </h3>
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+            <div class="otomasyon-item">
+              <div class="otomasyon-logo">
+                <img
+                  src="../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png"
+                  alt="omis_7572"
+                  class="otomasyon-icon"
+                  style="width: 200px; height: 100px"
+                />
+              </div>
+              <h3 class="otomasyon-isim" style="margin-top: 10px !important">
+                E-Belediye Sosyal Yardım Modülü
+              </h3>
+              <a
+                href="login.html"
+                target="_blank"
+                class="otomasyon-btn"
+                style="margin-top: 30px !important"
+              >
+                <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <img src="../images/logo(2).png" class="footer-logo" alt="Gebze Belediyesi" />
+          <p><i class="fas fa-phone"></i> (0262) 123 45 67</p>
+          <p><i class="fas fa-envelope"></i> bilgiislem@gebze.bel.tr</p>
+          <div class="social-icons mt-3">
+            <a href="https://www.facebook.com/gebzebelediye/?locale=tr_TR"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              href="https://x.com/gebze_belediye?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="https://www.instagram.com/gebze_belediyesi/?hl=tr"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="https://www.youtube.com/@gebzebelediyesi7295"
+              ><i class="fab fa-youtube"></i
+            ></a>
+            <a href="https://www.linkedin.com/company/gebze-belediyesi/posts/?feedView=all"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Gebze Belediyesi - Bilgi İşlem Müdürlüğü | Tüm Hakları Saklıdır</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/ana_sayfa.script.js"></script>
+  </body>
+</html>

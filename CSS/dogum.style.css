@@ -1,0 +1,848 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+html,
+body {
+  /* Genişliğin her zaman ekran kadar olmasını garantile */
+  width: 100%;
+  /* Yüksekliğin her zaman ekran kadar olmasını garantile */
+  height: 100%;
+}
+.navbar {
+  background-color: #022842;
+  padding: 0.5rem 0; /* Padding'i biraz azalttık */
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  /* Kenar boşluklarını padding ile veriyoruz. 
+       (Değerler: üst-sağ-alt-sol) */
+  padding: 0 0px 0 20px;
+  box-sizing: border-box; /* ÖNEMLİ: Bu satır padding'in genişliği bozmamasını sağlar */
+}
+.nav-left,
+.nav-center,
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+.nav-left {
+  flex-shrink: 0; /* Logonun küçülmesini engeller */
+}
+.nav-center {
+  flex-grow: 1; /* Orta bölümün boş alanı doldurmasını sağlar */
+  justify-content: center; /* Menü linklerini ortalar */
+}
+.nav-right {
+  flex-shrink: 0; /* Profil bölümünün küçülmesini engeller */
+}
+.mobile-menu-toggle {
+  display: none;
+}
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.profile-menu {
+  position: absolute; /* En önemli kural: Menüyü sayfa akışından çıkarır */
+  top: calc(100% + 10px); /* Butonun 10px altına konumlandırır */
+  right: 0; /* Sağa hizalar */
+  background: white; /* Beyaz arka plan */
+  border-radius: 12px; /* Kenarları yuvarlaklaştırır */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); /* Gölgelendirme */
+  min-width: 280px; /* Minimum genişlik */
+  opacity: 0; /* Başlangıçta gizli */
+  visibility: hidden; /* Başlangıçta gizli ve tıklanamaz */
+  transform: translateY(-10px); /* Hafif yukarıda başlatır (animasyon için) */
+  transition: all 0.3s ease; /* Animasyon süresi */
+  z-index: 1000; /* Diğer elemanların üzerinde görünmesini sağlar */
+  padding: 1rem 0; /* İç boşluk */
+}
+.profile-info {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem 1rem; /* İç boşluk */
+  border-bottom: 1px solid #eee; /* Alt çizgi */
+}
+.profile-role {
+  font-size: 0.85rem;
+  color: #777;
+}
+.profile-menu-list {
+  list-style: none; /* Madde imlerini kaldır */
+  padding: 0.5rem 0 0;
+  margin: 0;
+}
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* İkon ve metin arası boşluk */
+  padding: 0.75rem 1.5rem;
+  text-decoration: none; /* Alt çizgiyi kaldır */
+  color: #333;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+.profile-menu-item:hover {
+  background-color: #f5f5f5; /* Üzerine gelince arka plan rengi */
+}
+.profile-menu-item i {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+  color: #555;
+}
+.profile-menu-item.logout {
+  color: #d93025;
+}
+.profile-name {
+  font-weight: 600;
+  color: #333;
+}
+.profile-menu-item.logout:hover {
+  background-color: #fce8e6;
+}
+.profile-menu-item.logout i {
+  color: #d93025;
+}
+.profile-divider {
+  display: none;
+}
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+.profile-menu-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+.profile-menu.show {
+  opacity: 1; /* Görünür yap */
+  visibility: visible; /* Tıklanabilir yap */
+  transform: translateY(0); /* Orijinal pozisyonuna indir */
+}
+.footer-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+.navbar {
+  background-color: #022842;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin: auto;
+  flex-wrap: wrap;
+}
+.logo-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  /* ÖNEMLİ: Sabit margin-left kaldırıldı */
+}
+.nav-links li {
+  position: relative;
+}
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  white-space: nowrap;
+}
+.nav-links a:hover,
+.nav-dropdown:hover .nav-dropdown-toggle {
+  color: orange;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.nav-links a:hover {
+  color: orange;
+  background-color: rgba(0, 89, 179, 0.1);
+  transform: translateY(-2px);
+}
+.nav-links a i {
+  font-size: 1rem;
+}
+.nav-dropdown {
+  position: relative;
+}
+.dropdown-arrow {
+  font-size: 0.7rem !important; /* İkonu biraz küçülttük */
+  margin-left: 0.3rem;
+  transition: transform 0.3s ease;
+}
+.nav-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+.nav-dropdown-menu {
+  position: absolute; /* 'fixed' yerine 'absolute' yapıyoruz */
+  top: calc(100% + 15px); /* Navbar'ın hemen altına 15px boşlukla yerleştir */
+  left: 50%; /* Sayfanın ortasında konumlandır */
+  transform: translateX(-50%); /* Tam ortaya hizala */
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  width: auto; /* Otomatik genişlik */
+  min-width: min-content; /* Minimum içerik kadar genişlik */
+  max-width: 90vw; /* Ekran genişliğinin %90'ını aşmasın */
+  padding: 15px 20px; /* menü padding */
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.nav-dropdown.hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%); /* Y ekseninde kaydırma kaldırıldı */
+}
+.dropdown-content {
+  padding: 0; /* içerik padding menüde zaten var */
+}
+.dropdown-grid {
+  display: grid;
+  grid-auto-flow: column; /* yatay akış */
+  gap: 15px; /* item arası boşluk */
+}
+.dropdown-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  padding: 10px !important; /* küçük padding */
+  text-decoration: none;
+  color: #495057 !important;
+  transition: all 0.3s ease;
+  border-radius: 8px !important;
+  background: none !important;
+  min-width: max-content; /* içerik kadar geniş */
+}
+.dropdown-item:hover {
+  background-color: rgba(0, 89, 179, 0.08) !important;
+}
+.dropdown-item i {
+  font-size: 14px !important;
+  color: #000 !important;
+  width: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.dropdown-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dropdown-title {
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  color: #000 !important;
+  line-height: 1.2;
+  margin: 0;
+}
+.dropdown-description {
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  color: #696868 !important;
+  line-height: 1.3;
+  margin: 0;
+}
+.dropdown-item:hover .dropdown-title {
+  color: #344e75 !important;
+}
+.dropdown-item:hover .dropdown-description {
+  color: #666 !important;
+}
+.nav-dropdown-toggle::after {
+  content: none;
+}
+.nav-dropdown {
+  position: relative;
+}
+.nav-dropdown-menu::before {
+  content: "";
+  position: absolute;
+  top: -9px; /* menünün tam tepesine yapışır */
+  left: var(--arrow-left, 50%); /* JS burayı ayarlar */
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-bottom: 9px solid #fff; /* AŞAĞI bakan ok */
+  filter: drop-shadow(0 -3px 6px rgba(0, 0, 0, 0.1));
+}
+.nav-dropdown:hover .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%); /* Y ekseninde kaydırma kaldırıldı */
+}
+.nav-dropdown:hover .dropdown-arrow {
+  transform: rotate(180deg);
+}
+.nav-dropdown.active .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%); /* Y ekseninde kaydırma kaldırıldı */
+}
+.profile-container {
+  position: relative;
+}
+.profile-dropdown {
+  position: relative;
+}
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+}
+.profile-btn:hover {
+  background-color: rgba(0, 89, 179, 0.1);
+}
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+.profile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.profile-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+}
+.profile-menu-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+.profile-name {
+  font-weight: 600;
+  color: #212529;
+  font-size: 16px;
+}
+.profile-role {
+  font-size: 14px;
+  color: #6c757d;
+  margin-top: 2px;
+}
+.profile-divider {
+  margin: 0;
+  border-color: #e9ecef;
+}
+.profile-menu-list {
+  list-style: none;
+  padding: 12px 0;
+  margin: 0;
+}
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: #495057;
+  transition: all 0.3s ease;
+  font-size: 14px;
+}
+.profile-menu-item:hover {
+  background-color: rgba(0, 89, 179, 0.05);
+  color: #0059b3;
+}
+.profile-menu-item.logout:hover {
+  background-color: rgba(220, 53, 69, 0.05);
+  color: #dc3545;
+}
+.profile-menu-item i {
+  width: 16px;
+  font-size: 14px;
+}
+.nav-dropdown.active .nav-dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.nav-dropdown.active .dropdown-arrow {
+  transform: rotate(180deg);
+}
+@media (max-width: 992px) {
+  .navbar {
+    padding: 0.75rem 0;
+  }
+  .mobile-menu-toggle {
+    display: none; /* Masaüstünde mobil menü butonunu gizle */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 1rem; /* Logo ile arasına boşluk koyar */
+  }
+  .side-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%;
+    max-width: 320px; /* Ekranın yarısı gibi */
+    background-color: #fff;
+    z-index: 1001;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .side-menu.active {
+    transform: translateX(0);
+  }
+  .side-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+  }
+  .side-menu-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .side-menu-profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .side-menu-profile-details {
+    display: flex;
+    flex-direction: column;
+  }
+  .side-menu-profile-name {
+    font-weight: 600;
+    color: #111;
+  }
+  .side-menu-profile-email {
+    font-size: 0.8rem;
+    color: #666;
+  }
+  .close-menu-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: #333;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .side-menu-links {
+    list-style: none;
+    padding: 1rem 0;
+    margin: 0;
+    overflow-y: auto;
+  }
+  .side-menu-links li a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.2s;
+  }
+  .side-menu-links li a:hover,
+  .side-menu-links li a.active {
+    background-color: #f0f0f0;
+  }
+  .side-menu-links li a i {
+    font-size: 1.1rem;
+    width: 20px;
+    text-align: center;
+    color: #555;
+  }
+  .menu-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none; /* Başlangıçta gizli */
+  }
+  .menu-backdrop.active {
+    display: block;
+  }
+}
+@media (max-width: 992px) {
+  .nav-links {
+    display: none;
+  }
+  @media (max-width: 480px) {
+    .logo-container {
+      width: 160px;
+    }
+  }
+  .nav-container {
+    display: flex;
+    justify-content: space-between; /* En sola ve en sağa yasla */
+    align-items: center;
+    width: 100%; /* Tam genişlik kullan */
+    padding: 0 1rem; /* Kenarlara biraz boşluk ver */
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    flex-grow: 1; /* Sol tarafın genişlemesine izin ver */
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+  .mobile-menu-toggle {
+    display: block; /* Gizlenmişse bile görünür yap */
+    font-size: 1.8rem; /* Biraz daha belirgin olsun */
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 15px; /* Logo ile arasına boşluk koy */
+  }
+}
+@media (min-width: 993px) {
+  .side-menu {
+    display: none !important;
+  }
+  .menu-backdrop {
+    display: none !important;
+  }
+}
+@media (min-width: 993px) {
+  .nav-left {
+    flex-grow: 1;
+  }
+  .nav-links {
+    padding-right: 40px; /* Bu değeri artırıp azaltarak boşluğu ayarlayabilirsin */
+  }
+}
+html {
+  height: 100%;
+}
+body {
+  /* vh yerine, mobil cihazlarla daha uyumlu olan dvh birimini kullanıyoruz */
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.main-content {
+  flex-grow: 1;
+}
+@media (max-width: 992px) {
+  .navbar {
+    position: static !important;
+    top: auto !important;
+  }
+}
+@media (max-width: 768px) {
+  .nav-links {
+    margin-left: 0;
+    justify-content: center;
+  }
+  .nav-dropdown-menu {
+    width: 90vw;
+    left: 50%;
+    margin-left: 0;
+  }
+  .dropdown-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .page-header-container {
+    /* İkon ve yazıyı yan yana yerine alt alta getirir */
+    flex-direction: column;
+    /* İçerideki her şeyi ortalar */
+    align-items: center;
+    text-align: center;
+    padding: 20px 15px; /* Kenar boşluklarını mobile göre ayarlar */
+  }
+  .header-icon-wrapper {
+    margin-right: 0; /* Sağdaki boşluğu sıfırlar */
+    margin-bottom: 15px; /* Altına boşluk ekler */
+
+    /* İkonu ve çerçevesini biraz küçültebiliriz */
+    width: 50px;
+    height: 50px;
+    font-size: 1.6rem;
+  }
+  .header-title-main {
+    /* Ana başlığın fontunu mobile göre küçültür */
+    font-size: 1rem;
+  }
+  .header-subtitle {
+    /* Tarih yazısının fontunu ayarlar */
+    font-size: 0.9rem;
+  }
+}
+body {
+  background-color: #f4f7f9; /* Daha yumuşak bir arka plan rengi */
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+.content-area {
+  flex: 1;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  /* Eski .content-area stillerini güncelledik */
+  margin-left: 65px;
+  padding-right: 65px;
+}
+.page-header {
+  display: none;
+  border-left: 5px solid #0d6efd;
+  padding-left: 1rem;
+  background-color: transparent; /* Arka planı kaldırdık */
+  border-radius: 0;
+  margin-bottom: 2rem !important; /* Boşluğu artırdık */
+}
+.page-header-container {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9ecef;
+  margin-bottom: 2.5rem; /* Kartlarla arasındaki boşluğu ayarlar */
+}
+.header-icon-wrapper {
+  font-size: 1.8rem;
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    #fd7e14,
+    #f89d35
+  ); /* Kutlama hissiyatı için turuncu tonları */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* Küçülmesini engeller */
+  margin-right: 20px;
+  box-shadow: 0 4px 10px rgba(253, 126, 20, 0.4);
+}
+.header-text-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.header-title-main {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #34495e;
+  line-height: 1.2;
+}
+.header-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #7f8c8d;
+  margin-top: 4px;
+}
+.birthday-card {
+  border: none;
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  text-align: center;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Konfeti pozisyonu için eklendi */
+}
+.birthday-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+.card-img-top {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 20px auto 15px auto;
+  border: 4px solid #eef2f5;
+}
+.birthday-card .card-body {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+.birthday-card .card-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #34495e;
+}
+.birthday-card .card-text {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+.kutla-btn {
+  background: linear-gradient(45deg, #f39c12, #f1c40f);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 25px;
+  font-weight: 600;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  margin-top: 1rem;
+}
+.kutla-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+}
+.kutla-btn .fa-gift {
+  margin-right: 8px;
+}
+.breadcrumb-section {
+  background-color: #f8f9fa;
+  padding: 15px 0;
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  background: none;
+  font-size: 14px;
+}
+.breadcrumb-item a {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.breadcrumb-item a:hover {
+  color: #022842;
+}
+.breadcrumb-item.active {
+  color: #022842;
+  font-weight: 500;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">";
+  color: #6c757d;
+}
+@media (min-width: 993px) {
+  .nav-left {
+    flex-grow: 1;
+  }
+  .nav-center {
+    flex-grow: 0;
+  }
+  .nav-links {
+    padding-right: 30px;
+  }
+}
+.nav-dropdown-menu.pull-left {
+  left: auto !important;
+  right: 0 !important; /* Kenara sıfır hizalı */
+  transform: none !important;
+}
+.nav-dropdown-menu.pull-left::before {
+  left: auto !important;
+  right: 45px !important; /* Orijinal ok konumu */
+  transform: translateX(50%) !important;
+}
+.nav-dropdown.dd-safe .nav-dropdown-menu.pull-right {
+  left: 1rem !important;
+  right: auto !important;
+  transform: none !important;
+  position: absolute !important;
+}
+.nav-dropdown.dd-safe .nav-dropdown-menu.pull-right::before {
+  left: 25px !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+}

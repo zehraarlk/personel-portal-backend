@@ -1,0 +1,952 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mevzuatlar - Gebze Belediyesi Personel Portalı</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../CSS/mevzuat.style.css" />
+    <link rel="stylesheet" href="../CSS/footer.css" />
+    <link rel="stylesheet" href="../CSS/navbar.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-container">
+        <div class="nav-left">
+          <button class="mobile-menu-toggle" aria-label="Menüyü aç">
+            <i class="fas fa-bars"></i>
+          </button>
+          <a href="ana_sayfa.html" class="logo-container">
+            <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
+          </a>
+        </div>
+
+        <ul class="nav-links">
+          <li class="nav-dropdown">
+            <a href="ana_sayfa.html"> <i class="fas fa-home"></i> Anasayfa </a>
+          </li>
+          <li>
+            <a href="videolar.html"><i class="fas fa-video"></i>Videolar</a>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-newspaper"></i>
+              Etkinlikler
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="sizden_gelenler.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">SİZDEN GELENLER</div>
+                      <div class="dropdown-description">Talep ve öneri merkezi</div>
+                    </div>
+                  </a>
+                  <a href="etkinlikler.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ETKİNLİKLER</div>
+                      <div class="dropdown-description">Kurumsal etkinlik takvimi</div>
+                    </div>
+                  </a>
+                  <a href="duyuru.html" class="dropdown-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DUYURULAR</div>
+                      <div class="dropdown-description">Güncel duyuru ve arşivi</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-landmark"></i>
+              Kaynaklar
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="protokol.html" class="dropdown-item">
+                    <i class="fas fa-file-signature"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">PROTOKOLLER</div>
+                      <div class="dropdown-description">Resmi protokol kayıtları.</div>
+                    </div>
+                  </a>
+                  <a href="dokumanlar.html" class="dropdown-item">
+                    <i class="fas fa-comments"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOKÜMANLAR</div>
+                      <div class="dropdown-description">Kurumsal doküman arşivi.</div>
+                    </div>
+                  </a>
+                  <a href="mevzuat.html" class="dropdown-item">
+                    <i class="fas fa-calendar-check"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">MEVZUATLAR</div>
+                      <div class="dropdown-description">Güncel mevzuat bilgileri.</div>
+                    </div>
+                  </a>
+                  <a href="egitim.html" class="dropdown-item">
+                    <i class="fas fa-graduation-cap"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">EĞİTİMLER</div>
+                      <div class="dropdown-description">Personel eğitim içerikleri.</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <li class="nav-dropdown dd-safe">
+            <a href="#" class="nav-dropdown-toggle">
+              <i class="fas fa-file-alt"></i>
+              Diğer
+            </a>
+            <div class="nav-dropdown-menu pull-left">
+              <div class="dropdown-content">
+                <div class="dropdown-grid">
+                  <a href="anketler.html" class="dropdown-item">
+                    <i class="fas fa-poll"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">ANKETLER</div>
+                      <div class="dropdown-description">Katılabileceğiniz güncel anketler</div>
+                    </div>
+                  </a>
+                  <a href="yardimci_linkler.html" class="dropdown-item">
+                    <i class="fas fa-link"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">YARDIMCI LİNKLER</div>
+                      <div class="dropdown-description">İş akışı için önemli bağlantılar</div>
+                    </div>
+                  </a>
+                  <a href="vefat_bilgisi.html" class="dropdown-item">
+                    <i class="fas fa-ribbon" style="color: #222"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">VEFAT EDEN BİLGİSİ</div>
+                      <div class="dropdown-description">Vefat eden değerli çalışanlarımız</div>
+                    </div>
+                  </a>
+                  <a href="dogum.html" class="dropdown-item">
+                    <i class="fas fa-birthday-cake"></i>
+                    <div class="dropdown-text">
+                      <div class="dropdown-title">DOĞUM GÜNÜ BİLGİSİ</div>
+                      <div class="dropdown-description">Bugün doğum günü olan personeller</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <div class="nav-right">
+          <div class="profile-dropdown">
+            <button class="profile-btn" id="profileBtn">
+              <img src="../images/login/login.jpg" alt="Profil" class="profile-img" />
+            </button>
+            <div class="profile-menu" id="profileMenu">
+              <div class="profile-info">
+                <img src="../images/login/login.jpg" alt="Profil" class="profile-menu-img" />
+                <div class="profile-details">
+                  <span class="profile-name">Kullanıcı Adı</span>
+                  <span class="profile-role">Personel</span>
+                </div>
+              </div>
+              <ul class="profile-menu-list">
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-user"></i><span>Profilim</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item"
+                    ><i class="fas fa-cog"></i><span>Ayarlar</span></a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="profile-menu-item logout"
+                    ><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="menu-backdrop" id="menuBackdrop"></div>
+    <div class="side-menu" id="sideMenu">
+      <div class="side-menu-header">
+        <div class="side-menu-profile">
+          <img src="../images/login/login.jpg" alt="Profil" class="side-menu-profile-img" />
+          <div class="side-menu-profile-details">
+            <span class="side-menu-profile-name">Kullanıcı Adı</span>
+            <span class="side-menu-profile-email">personel@gebze.bel.tr</span>
+          </div>
+        </div>
+        <button class="close-menu-btn" aria-label="Menüyü kapat">&times;</button>
+      </div>
+      <ul class="side-menu-links">
+        <li>
+          <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
+        </li>
+        <li>
+          <a href="sizden_gelenler.html"><i class="fas fa-comments"></i> Sizden Gelenler</a>
+        </li>
+        <li>
+          <a href="etkinlikler.html"><i class="fas fa-calendar-check"></i> Etkinlikler</a>
+        </li>
+        <li>
+          <a href="duyuru.html"><i class="fas fa-bullhorn"></i> Duyurular</a>
+        </li>
+        <li>
+          <a href="protokol.html"><i class="fas fa-file-signature"></i> Protokoller</a>
+        </li>
+        <li>
+          <a href="dokumanlar.html"><i class="fas fa-comments"></i> Dokümanlar</a>
+        </li>
+        <li>
+          <a href="mevzuat.html"><i class="fas fa-calendar-check"></i> Mevzuatlar</a>
+        </li>
+        <li>
+          <a href="egitim.html"><i class="fas fa-graduation-cap"></i> Eğitimler</a>
+        </li>
+        <li>
+          <a href="videolar.html"><i class="fas fa-video"></i> Videolar</a>
+        </li>
+        <li>
+          <a href="anketler.html"><i class="fas fa-poll"></i> Anketler</a>
+        </li>
+        <li>
+          <a href="yardimci_linkler.html"><i class="fas fa-link"></i> Yardımcı Linkler</a>
+        </li>
+        <li>
+          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i>Vefat Eden Bilgisi</a>
+        </li>
+        <li>
+          <a href="dogum.html"><i class="fas fa-birthday-cake"></i>Doğum Günü Bilgisi</a>
+        </li>
+      </ul>
+    </div>
+    <div class="breadcrumb-section" style="background-color: #f8f9fa; padding: 15px">
+      <div class="breadcrumb-container">
+        <!-- main-container yerine breadcrumb-container -->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page" id="breadcrumbTitle">
+              Mevzuatlar
+            </li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <!-- Sayfa Başlığı -->
+      <header class="page-header">
+        <div class="content">
+          <h1>Mevzuatlar</h1>
+          <p>Kurumsal işleyişi düzenleyen tüm mevzuatları bu sayfada görüntüleyebilirsiniz</p>
+        </div>
+      </header>
+
+      <!-- Kontroller -->
+      <div class="controls-section">
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Mevzuat ara..." id="searchInput" />
+        </div>
+
+        <div class="filter-buttons">
+          <button class="filter-btn" data-filter="protocol">Protokoller</button>
+          <button class="filter-btn" data-filter="document">Dökümanlar</button>
+          <button class="filter-btn active" data-filter="regulation">Mevzuatlar</button>
+          <button class="filter-btn" data-filter="training">Eğitimler</button>
+        </div>
+      </div>
+      <div class="results-header">
+        <select class="sort-dropdown" id="sortSelect">
+          <option value="all">Tüm Mevzuatlar</option>
+          <option value="genel">Genel Mevzuatlar</option>
+          <option value="memur">Memur Mevzuatları</option>
+          <option value="sozlesmeli">Sözleşmeli Memur Mevzuatları</option>
+          <option value="isci">İşçi Mevzuatları</option>
+          <option value="sirket">Şirket Memuru Mevzuatları</option>
+        </select>
+      </div>
+
+      <!-- Dökümanlar Grid -->
+      <div class="documents-grid" id="documentsGrid">
+        <!-- Personel Yönetmeliği -->
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              > <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Resmi Yazışma Kuralları</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kamu kurum ve kuruluşlarında kullanılması esas ve her kamu görevlisi tarafından
+            bilinmesi gereken resmi yazışmalar hakkında mevzuat hükümleri.
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 2.3 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/mevzuatmetin/21.5.2646.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/resm-yazi-ma-kurallari/resm-yazi-ma-kurallari_1373.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+
+        <!-- İzin Talep Formu -->
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Belediye Kanunu</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 5393 Kabul Tarihi : 3/7/2005 Yayımlandığı Resmî Gazete : Tarih :
+            13/7/2005 Sayı : 25874 Yayımlandığı Düstur : Tertip : 5 Cilt : 44
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 845 KB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/mevzuatmetin/1.5.5393.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/5393-sayili-beled-ye-kanunu/5393-sayili-beled-ye-kanunu_8722.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+
+        <!-- Güvenlik Talimatları -->
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Kamu İhale Kanunu</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanunun Numarası : 4734 Kabul Tarihi : 4/1/2002 Yayımlandığı Resmî Gazete : Tarih :
+            22/1/2002 Sayı : 24648 Yayımlandığı Düstur : Tertip : 5 Cilt : 42
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4734.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/kamu-hale-kanunu/kamu-hale-kanunu_4328.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Kamu İhale Sözleşmeleri Kanunu</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 4735 Kabul Tarihi : 5/1/2002 Yayımlandığı Resmî Gazete : Tarih :
+            22/1/2002 Sayı : 24648 Yayımlandığı Düstur : Tertip : 5 Cilt : 42
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/MevzuatMetin/1.5.4735.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/kamu-hale-sozle-meler-kanunu/kamu-hale-sozle-meler-kanunu_8417.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">İmar Kanunu</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 3194 Kabul Tarihi : 3/5/1985 Yayımlandığı R. Gazete : Tarih :9/5/1985
+            Sayı: 18749 Yayımlandığı Düstur : Tertip : 5 Cilt : 24 Sayfa : 378
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument(
+                  'https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=20122665&MevzuatTur=21&MevzuatTertip=5'
+                )
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/3194-sayili-mar-kanunu/3194-sayili-mar-kanunu_9104.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+
+        <div class="document-card" data-category="regulation" data-type="genel">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Kişisel Verilerin Korunması Kanunu</h3>
+              <span class="document-category">Genel Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 6698 Kabul Tarihi : 24/3/2016 Yayımlandığı Resmî Gazete : Tarih :
+            7/4/2016 Sayı : 29677 Yayımlandığı Düstur : Tertip : 5 Cilt : 57
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument(
+                  'https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=6698&MevzuatTur=1&MevzuatTertip=5'
+                )
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/k-sel-ver-ler-n-korunmasi-kanunu/k-sel-ver-ler-n-korunmasi-kanunu_7116.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="memur">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Devlet Memurları Kanunu</h3>
+              <span class="document-category">Memur Mevzuatları</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 657 Kabul Tarihi : 14/7/1965 Yayımlandığı Resmî Gazete : Tarih :
+            23/7/1965 Sayı : 12056 Yayımlandığı Düstur : Tertip : 5 Cilt : 4 Sayfa : 3044
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/MevzuatMetin/1.5.657.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/657-sayili-devlet-memurlari-kanunu/657-sayili-devlet-memurlari-kanunu_1477.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="memur">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">
+                Devlet Memurlarına Verilecek Hastalık Raporları ile Hastalık ve Refakat İznine
+                İlişkin Usul ve Esaslar Hakkında Yönetmenlik
+              </h3>
+              <span class="document-category">Memur Mevzuatları</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Bakanlar Kurulu Kararının Tarihi : 22/8/2011 No : 2011/2226 Dayandığı Kanunun Tarihi :
+            14/7/1965 No : 657 Yayımlandığı R.Gazetenin Tarihi : 29/10/2011 No : 28099 Yayımlandığı
+            Düsturun Tertibi : 5 Cilt : 51
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/MevzuatMetin/3.5.20112226.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/devlet-memurlarina-ver-lecek-hastalik-raporlari-le-hastalik-ve-refakat-zn-ne-l-k-n-usul-ve-esaslar-hakkinda-yonetmel-k/devlet-memurlarina-ver-lecek-hastalik-raporlari-le-hastalik-ve-refakat-zn-ne-l-k-n-usul-ve-esaslar-hakkinda-yonetmel-k_3060.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="memur">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">
+                Memurlar ve Diğer Kamu Görevlilerinin Yargılanması Hakkında Kanun
+              </h3>
+              <span class="document-category">Memur Mevzuatları</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 4483 Kabul Tarihi : 2/12/1999 Yayımlandığı Resmî Gazete : Tarih :
+            4/12/1999 Sayı : 23896 Yayımlandığı Düstur : Tertip : 5 Cilt : 39
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument(
+                  'https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=4483&MevzuatTur=1&MevzuatTertip=5'
+                )
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/memurlar-ve-d-er-kamu-gorevl-ler-n-n-yargilanmasi-hakkinda-kanun/memurlar-ve-d-er-kamu-gorevl-ler-n-n-yargilanmasi-hakkinda-kanun_4777.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="memur">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Mahalli İdareler Disiplin Amirleri Yönetmenliği</h3>
+              <span class="document-category">Memur Mevzuatları</span>
+            </div>
+          </div>
+          <p class="document-description">MAHALLİ İDARELER DİSİPLİN AMİRLERİ YÖNETMELİĞİ</p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument('https://www.mevzuat.gov.tr/MevzuatMetin/yonetmelik/7.5.39416.pdf')
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/mahall-dareler-d-s-pl-n-am-rler-yonetmel/mahall-dareler-d-s-pl-n-am-rler-yonetmel_5784.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="sozlesmeli">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Sözleşmeli Personel Çalıştırılmasına İlişkin Esaslar</h3>
+              <span class="document-category">Sözleşmeli Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Bakanlar Kurulu Kararının; Tarihi ve No'su : 6/6/1978-7/15754 Dayandığı Kanun :
+            28/2/1978-2143 Yayımlandığı Resmi Gazete : 28/6/1978-16330 9/5/2020 tarihli ve 31122
+            sayılı Resmî Gazete'de yayımlanan 8/5/2020 tarihli ve 2506 sayılı Cumhurbaşkanı Kararı
+            uyarınca bu Yönetmelik Cumhurbaşkanlığı Yönetmeliği bölümüne eklenmiştir.
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument(
+                  'https://www.mevzuat.gov.tr/anasayfa/MevzuatFihristDetayIframe?MevzuatTur=21&MevzuatNo=715754&MevzuatTertip=5'
+                )
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/sozle-mel-personel-cali-tirilmasina-l-k-n-esaslar/sozle-mel-personel-cali-tirilmasina-l-k-n-esaslar_7813.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="sozlesmeli">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">Sözleşmeli Personele Ek Ödeme Yapılmasına Dair Karar</h3>
+              <span class="document-category">Sözleşmeli Mevzuatlar</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Bakanlar Kurulu Kararının Tarihi: 3/1/2012 Sayısı: 2012/2665 Yayımlandığı Resmi Gazete
+            Tarihi:10/1/2012 Sayısı: 28169
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="
+                previewDocument(
+                  'https://www.mevzuat.gov.tr/mevzuat?MevzuatNo=20122665&MevzuatTur=21&MevzuatTertip=5'
+                )
+              "
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/sozle-mel-personele-ek-odeme-yapilmasina-da-r-karar/sozle-mel-personele-ek-odeme-yapilmasina-da-r-karar_7257.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+        <div class="document-card" data-category="regulation" data-type="isci">
+          <div class="document-header">
+            <div class="document-icon">
+              <i class="fas fa-folder-open"></i>
+              <!-- En yaygın ve anlamlı olan -->
+            </div>
+            <div class="document-info">
+              <h3 class="document-title">İş Kanunu</h3>
+              <span class="document-category">İşçi Mevzuatları</span>
+            </div>
+          </div>
+          <p class="document-description">
+            Kanun Numarası : 4857 Kabul Tarihi : 22/5/2003 Yayımlandığı Resmî Gazete : Tarih :
+            10/6/2003 Sayı : 25134 Yayımlandığı Düstur : Tertip : 5 Cilt : 42
+          </p>
+          <a href="#" class="read-more-btn">Devamını Oku</a>
+          <div class="document-meta">
+            <div class="document-size">
+              <i class="fas fa-file-pdf"></i>
+              PDF • 1.7 MB
+            </div>
+            <div class="document-date">
+              <i class="fas fa-calendar-alt"></i>
+              04.10.2023
+            </div>
+          </div>
+          <div class="download-section">
+            <button
+              class="preview-btn"
+              onclick="previewDocument('https://www.mevzuat.gov.tr/mevzuatmetin/1.5.4857.pdf')"
+            >
+              Resmi Sayfa
+            </button>
+            <button
+              class="preview-btn2"
+              onclick="
+                previewDocument(
+                  'https://personel.gebze.bel.tr/upload/regulation/4857-sayili-kanunu/4857-sayili-kanunu_8535.pdf'
+                )
+              "
+            >
+              Döküman
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <img src="../images/logo(2).png" class="footer-logo" alt="Gebze Belediyesi" />
+          <p><i class="fas fa-phone"></i> (0262) 123 45 67</p>
+          <p><i class="fas fa-envelope"></i> bilgiislem@gebze.bel.tr</p>
+          <div class="social-icons mt-3">
+            <a href="https://www.facebook.com/gebzebelediye/?locale=tr_TR"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a
+              href="https://x.com/gebze_belediye?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
+              ><i class="fab fa-twitter"></i
+            ></a>
+            <a href="https://www.instagram.com/gebze_belediyesi/?hl=tr"
+              ><i class="fab fa-instagram"></i
+            ></a>
+            <a href="https://www.youtube.com/@gebzebelediyesi7295"
+              ><i class="fab fa-youtube"></i
+            ></a>
+            <a href="https://www.linkedin.com/company/gebze-belediyesi/posts/?feedView=all"
+              ><i class="fab fa-linkedin-in"></i
+            ></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2025 Gebze Belediyesi - Bilgi İşlem Müdürlüğü | Tüm Hakları Saklıdır</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/mevzuat.script.js"></script>
+  </body>
+</html>
