@@ -1,3 +1,13 @@
+<?php 
+include("baglan.php"); 
+
+// Aradaki boşluğu sildik ve tek parça bir değişken yaptık: $haberSorgu
+$haberSorgu = $db->query("SELECT * FROM haberler ORDER BY id DESC");
+$haberler = $haberSorgu->fetchAll(PDO::FETCH_ASSOC);
+
+$duyuruSorgu = $db->query("SELECT * FROM duyurular ORDER BY id DESC");
+$duyurular = $duyuruSorgu->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!doctype html>
 <html lang="tr">
   <head>
@@ -603,6 +613,16 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/ana_sayfa.script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // PHP dizisini JavaScript dizisine (JSON formatına) çeviriyoruz
+        const veritabanindanGelenHaberler = <?php echo json_encode($haberler); ?>;
+
+        const veritabanindanGelenDuyurular = <?php echo json_encode($duyurular); ?>;
+    </script>
+    
     <script src="../JS/ana_sayfa.script.js"></script>
   </body>
 </html>
