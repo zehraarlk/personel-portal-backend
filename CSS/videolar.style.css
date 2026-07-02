@@ -636,7 +636,7 @@ body {
   font-size: var(--font-size-base) !important;
 }
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: #f8f9fa;
 }
 .featured-video-placeholder {
@@ -860,4 +860,10 @@ body {
   left: 25px !important;
   right: auto !important;
   transform: translateX(-50%) !important;
+}
+
+.container {
+  width: 90% !important;
+  max-width: 1600px !important;
+  margin: 0 auto !important;
 }

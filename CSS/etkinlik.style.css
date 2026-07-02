@@ -8,9 +8,9 @@ body {
   padding: 0;
 }
 .container {
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
-  max-width: 1700px;
+  max-width: 1600px;
 }
 .card {
   border-radius: 1rem !important;
@@ -1004,9 +1004,9 @@ body {
   }
 }
 .container {
-  width: 100%;
+  width: 90%;
   margin: 0 auto;
-  max-width: 1700px;
+  max-width: 1600px;
   /* Responsive için ek ayarlar */
   padding: 0 15px;
 }

@@ -365,7 +365,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (duyurularListesi && prevButton && nextButton && sayfaBilgisi) {
     let gecerliSayfa = 1;
-    const duyuruSayisiSayfaBasi = 5;
+    const duyuruSayisiSayfaBasi = 4;
     const toplamSayfa = Math.ceil(tumDuyurular.length / duyuruSayisiSayfaBasi);
     function renderDuyurular() {
       duyurularListesi.innerHTML = "";

@@ -435,7 +435,8 @@ footer .container {
 }
 /* Ana İçerik Konteyneri - Daha belirgin gölge ve kenarlık eklendi */
 .main-content-wrapper {
-  max-width: 1900px; /* Daha geniş ana konteyner */
+  max-width: 1600px;
+  width: 90%;
   margin: 0 auto;
   padding: 1.5rem;
   display: flex;
@@ -452,6 +453,7 @@ footer .container {
 .slider-container {
   position: relative;
   width: 90%;
+  margin: 0 auto;
   border-radius: 1.5rem;
   overflow: hidden;
   box-shadow: none; /* Artık ana kapsayıcıda gölge var, burada kaldırıldı */

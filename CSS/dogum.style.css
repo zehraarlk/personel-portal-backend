@@ -653,7 +653,7 @@ body {
 }
 body {
   background-color: #f4f7f9; /* Daha yumuşak bir arka plan rengi */
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -664,9 +664,9 @@ body {
   flex: 1;
   padding-top: 2rem;
   padding-bottom: 2rem;
-  /* Eski .content-area stillerini güncelledik */
-  margin-left: 65px;
-  padding-right: 65px;
+  width: 90%;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 .page-header {
   display: none;

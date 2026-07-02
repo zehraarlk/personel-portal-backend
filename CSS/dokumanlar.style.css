@@ -658,7 +658,7 @@ body {
   }
 }
 .main-container {
-  max-width: 1650px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 2rem;
   width: 90%; /* Tutarlılık için ekleyin */
@@ -1038,34 +1038,7 @@ body {
     top: auto !important;
   }
 }
-.breadcrumb-section {
-  height: 60px !important; /* İnce sabit yükseklik */
-  padding: 0 !important;
-  margin: 0 !important;
-  border: none !important;
-  display: flex !important;
-  align-items: center !important; /* Ortala */
-}
-.breadcrumb {
-  font-size: 13px !important;
-  line-height: 1 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-.breadcrumb-item,
-.breadcrumb-item a {
-  margin: 0 !important;
-  padding: 0 !important;
-  line-height: 1.1 !important;
-}
-.breadcrumb-item + .breadcrumb-item::before {
-  margin: 0 4px !important;
-  font-size: 11px !important;
-}
-.page-header {
-  padding: 6px 10px !important;
-  margin: 6px 0 !important;
-}
+
 .nav-dropdown-menu.pull-left {
   left: auto !important;
   right: 0 !important; /* Kenara sıfır hizalı */

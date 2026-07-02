@@ -916,8 +916,9 @@ body {
   margin-bottom: 50px;
 }
 .container.py-5 {
-  width: 91% !important;
-  max-width: none !important;
+  width: 90% !important;
+  max-width: 1600px !important;
+  margin: 0 auto !important;
   flex: 1;
   padding-bottom: 0px !important; /* Bu satırı ekleyin */
 }
