@@ -1,3 +1,24 @@
+<?php
+// 1. Veritabanı Bağlantısı (PDO)
+$host = "localhost";
+$dbname = "personel_db";
+$username = "root";
+$password = "";
+
+try {
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
+
+// 2. Verileri Çek (En yeni tarihten eskiye doğru)
+$sorgu = $db->query("SELECT * FROM sizden_gelenler ORDER BY tarih DESC"); 
+$sizdenGelenler = $sorgu->fetchAll(PDO::FETCH_ASSOC);
+
+// 3. Toplam kayıt sayısını al
+$toplamKayit = count($sizdenGelenler);
+?>
 <!doctype html>
 <html lang="tr">
   <head>
@@ -286,8 +307,7 @@
         <!-- Results Section - Logo ile aynı hizaya getirildi -->
         <div class="results-section">
           <div class="results-header">
-            <div class="results-count" id="resultsCount"><strong>156</strong> sonuç bulundu</div>
-            <select class="sort-dropdown" id="sortSelect">
+            <div class="results-count" id="resultsCount"><strong><?php echo $toplamKayit; ?></strong> sonuç bulundu</div>            <select class="sort-dropdown" id="sortSelect">
               <option value="newest">En Yeni</option>
               <option value="oldest">En Eski</option>
               <option value="most-viewed">En Çok Görüntülenen</option>
@@ -357,8 +377,27 @@
         </div>
       </div>
     </footer>
+    <script>
+    const newsData = [
+        <?php if(!empty($sizdenGelenler)): ?>
+            <?php foreach($sizdenGelenler as $veri): ?>
+            {
+                id: <?php echo (int)$veri['id']; ?>,
+                title: "<?php echo addslashes($veri['baslik']); ?>",
+                excerpt: "<?php echo addslashes($veri['ozet']); ?>",
+                category: "<?php echo addslashes($veri['kategori_slug']); ?>",
+                categoryName: "<?php echo addslashes($veri['kategori_adi']); ?>",
+                date: "<?php echo date('d.m.Y', strtotime($veri['tarih'])); ?>",
+                views: <?php echo (int)$veri['goruntulenme']; ?>,
+                image: "<?php echo addslashes($veri['gorsel_yolu']); ?>"
+            },
+            <?php endforeach; ?>
+        <?php endif; ?>
+    ];
+    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bundle.min.js"></script>
     <script src="../JS/sizden_gelenler.script.js"></script>
   </body>
 </html>
+

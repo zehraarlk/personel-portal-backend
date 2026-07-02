@@ -1,12 +1,17 @@
 <?php 
 include("baglan.php"); 
 
-// Aradaki boşluğu sildik ve tek parça bir değişken yaptık: $haberSorgu
+// Haberleri Çek
 $haberSorgu = $db->query("SELECT * FROM haberler ORDER BY id DESC");
 $haberler = $haberSorgu->fetchAll(PDO::FETCH_ASSOC);
 
+// Duyuruları Çek
 $duyuruSorgu = $db->query("SELECT * FROM duyurular ORDER BY id DESC");
 $duyurular = $duyuruSorgu->fetchAll(PDO::FETCH_ASSOC);
+
+// SİZDEN GELENLERİ ÇEK (Yeni eklenen kısım)
+$sizdenGelenlerSorgu = $db->query("SELECT * FROM sizden_gelenler ORDER BY tarih DESC");
+$sizdenGelenler = $sizdenGelenlerSorgu->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="tr">
