@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 /* === TEMEL NAVBAR YAPISI === */
+html {
+  scroll-behavior: smooth;
+}
 .navbar {
   background-color: #022842;
   padding: 1.5rem 0 !important; /* Padding'i biraz azalttık */

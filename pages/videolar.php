@@ -1,3 +1,14 @@
+<?php 
+include("baglan.php"); 
+
+// 1. Alt taraftaki liste için videoları eskiden yeniye (DESC) çekiyoruz
+$videoSorgu = $db->query("SELECT * FROM videolar ORDER BY id DESC");
+$tumVideolar = $videoSorgu->fetchAll(PDO::FETCH_ASSOC);
+
+// 2. Vitrin için AYNI tablodaki EN SON eklenen videoyu (DESC ve LIMIT 1) çekiyoruz
+$vitrinSorgu = $db->query("SELECT * FROM videolar ORDER BY id DESC LIMIT 1");
+$vitrinVideo = $vitrinSorgu->fetch(PDO::FETCH_ASSOC);
+?>
 <!doctype html>
 <html lang="tr">
   <head>
@@ -190,48 +201,48 @@
     </nav>
     <main class="container py-5">
       <section class="row align-items-center mb-5 gx-5 featured-video-section">
-        <div class="col-lg-7 mb-4 mb-lg-0">
-          <div
-            class="featured-video-placeholder rounded-3 shadow-lg card-thumbnail"
-            data-bs-toggle="modal"
-            data-bs-target="#videoModal"
-            data-youtube-id="qLqYPQgUPEc"
-          >
-            <img
-              src="https://img.youtube.com/vi/qLqYPQgUPEc/maxresdefault.jpg"
-              alt="Haftanın Videosu"
-              class="img-fluid rounded-3 w-100 h-100"
-              style="object-fit: cover"
-            />
-            <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-            Haftanın Videosu: Gebze'de Offroad Heyecanı
-          </h1>
-          <p class="lead">
-            Belediyemizin yürüttüğü son projeler ve önemli gelişmeler hakkında personelimizi
-            bilgilendirmek amacıyla hazırlanan özel videomuzu izleyin.
-          </p>
-          <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <button
-              type="button"
-              class="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
-              data-bs-toggle="modal"
-              data-bs-target="#videoModal"
-              data-youtube-id="qLqYPQgUPEc"
-            >
-              Videoyu İzle
-            </button>
-            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Tümünü Gör</button>
-          </div>
-        </div>
-      </section>
-
+  <div class="col-lg-7 mb-4 mb-lg-0">
+    <div
+      class="featured-video-placeholder rounded-3 shadow-lg card-thumbnail"
+      data-bs-toggle="modal"
+      data-bs-target="#videoModal"
+      data-youtube-id="<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>"
+    >
+      <img
+        src="https://img.youtube.com/vi/<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>/maxresdefault.jpg"
+        alt="Haftanın Videosu"
+        class="img-fluid rounded-3 w-100 h-100"
+        style="object-fit: cover"
+      />
+      <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+    </div>
+  </div>
+  
+  <div class="col-lg-5">
+    <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+      Haftanın Videosu: <?php echo !empty($vitrinVideo) ? $vitrinVideo['baslik'] : 'Gebze\'de Offroad Heyecanı'; ?>
+    </h1>
+    <p class="lead">
+      <?php echo !empty($vitrinVideo) ? $vitrinVideo['aciklama'] : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
+    </p>
+    
+    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+      <button
+        type="button"
+        class="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
+        data-bs-toggle="modal"
+        data-bs-target="#videoModal"
+        data-youtube-id="<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>"
+      >
+        Videoyu İzle
+      </button>
+    <a href="#video-grid-baslangic" class="btn btn-outline-secondary btn-lg px-4">Tümünü Gör</a>
+    </div>
+  </div>
+</section>
       <hr class="my-5" />
 
-      <section class="d-flex flex-column flex-md-row align-items-center mb-5">
+      <section id="video-grid-baslangic" class="d-flex flex-column flex-md-row align-items-center mb-5">
         <ul class="nav nav-pills mb-3 mb-md-0">
           <li class="nav-item">
             <a href="#" class="nav-link active" data-category="all">Tümü</a>
@@ -391,6 +402,12 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JS/videolar.script.js"></script>
+  <script>
+        // PHP ile çektiğimiz videoları JavaScript'in anlayacağı JSON formatına çeviriyoruz
+        const veritabanindanGelenVideolar = <?php echo json_encode($tumVideolar); ?>;
+    </script>
+    
     <script src="../JS/videolar.script.js"></script>
   </body>
 </html>
