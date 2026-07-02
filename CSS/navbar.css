@@ -480,3 +480,22 @@ main.container,
 .nav-dropdown.active .dropdown-arrow {
   transform: rotate(180deg);
 }
+/* ==== MOBİL HAMBURGER MENÜ - KESİN DÜZELTME (dosyanın en sonuna ekle) ==== */
+@media (max-width: 992px) {
+  .nav-links {
+    display: none !important;
+  }
+  .mobile-menu-toggle {
+    display: block !important;
+  }
+}
+
+@media (min-width: 993px) {
+  .mobile-menu-toggle {
+    display: none !important;
+  }
+  .side-menu,
+  .menu-backdrop {
+    display: none !important;
+  }
+}
