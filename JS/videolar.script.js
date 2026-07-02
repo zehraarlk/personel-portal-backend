@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       description:
         "Nefes kesen anlar ve çamurlu yollar... Offroad tutkunları bu etkinlikte buluştu.",
       category: "etkinlikler",
-      duration: "15:22",
+      duration: "00:30",
     },
     {
       id: "GWfDmGr6tlg",
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       description:
         "İş sağlığı ve güvenliği temelleri, tüm yeni personelimiz için önemli bir başlangıç.",
       category: "egitimler",
-      duration: "45:10",
+      duration: "03:21",
     },
     {
       id: "eUBQYWMZyH8",
@@ -32,42 +32,42 @@ document.addEventListener("DOMContentLoaded", () => {
       description:
         "Geleneksel bayramlaşma törenimiz hakkında bilgilendirme. Tüm personelimiz davetlidir.",
       category: "duyurular",
-      duration: "01:30",
+      duration: "03:52",
     },
     {
       id: "pAHStsCd9jo",
       title: "Belediye Pikniği 2025",
       description: "Geçtiğimiz hafta sonu düzenlediğimiz personel pikniğinden renkli anlar.",
       category: "etkinlikler",
-      duration: "05:48",
+      duration: "05:15",
     },
     {
       id: "psmlNSPRDsM",
       title: "Önemli Sistem Güncellemesi",
       description: "Bilgi İşlem Daire Başkanlığından önemli duyuru.",
       category: "duyurular",
-      duration: "02:15",
+      duration: "03:22",
     },
     {
       id: "ABIqjRnV5dU",
       title: "Etkili İletişim Teknikleri Semineri",
       description: "Kurum içi iletişimimizi güçlendirmek için düzenlenen eğitim.",
       category: "egitimler",
-      duration: "33:40",
+      duration: "00:22",
     },
     {
       id: "xot-DBvkkq4",
       title: "Gebze Kitap Fuarı Başladı",
       description: "Belediyemizin düzenlediği kitap fuarından ilk görüntüler.",
       category: "etkinlikler",
-      duration: "08:12",
+      duration: "00:27",
     },
     {
       id: "BiY2WK24UHY",
       title: "Maaş Avansı Kullanım Bilgilendirmesi",
       description: "İnsan kaynaklarından personelimize duyuru.",
       category: "duyurular",
-      duration: "03:05",
+      duration: "00:41",
     },
     {
       id: "uUFZvM9kqf4",

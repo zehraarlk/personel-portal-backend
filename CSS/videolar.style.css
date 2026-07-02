@@ -867,3 +867,29 @@ body {
   max-width: 1600px !important;
   margin: 0 auto !important;
 }
+/* Yumuşak kaydırma etkisi */
+html {
+  scroll-behavior: smooth;
+}
+
+/* İlk ekranın sayfayı taşmadan tam kaplaması için */
+.full-view-hero {
+  min-height: 90vh !important; /* Ekranın %90'ını kaplasın */
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* İlk başta alt alanı tamamen yok etmek ve scrollbar oluşmasını engellemek için */
+.video-section-hidden {
+  display: none !important;
+  visibility: hidden;
+}
+
+/* Butona basılınca alanı görünür yapan sınıf */
+.video-section-hidden.show-section {
+  display: block !important;
+  visibility: visible;
+}

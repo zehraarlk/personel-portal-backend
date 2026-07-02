@@ -35,14 +35,14 @@ $duyurular = $duyuruSorgu->fetchAll(PDO::FETCH_ASSOC);
           <button class="mobile-menu-toggle" aria-label="Menüyü aç">
             <i class="fas fa-bars"></i>
           </button>
-          <a href="ana_sayfa.html" class="logo-container">
+          <a href="ana_sayfa.php" class="logo-container">
             <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
           </a>
         </div>
 
         <ul class="nav-links">
           <li class="nav-dropdown">
-            <a href="ana_sayfa.html"> <i class="fas fa-home"></i> AnaSayfa </a>
+            <a href="ana_sayfa.php"> <i class="fas fa-home"></i> AnaSayfa </a>
           </li>
           <li>
             <a href="videolar.html"><i class="fas fa-video"></i>Videolar</a>
@@ -211,7 +211,7 @@ $duyurular = $duyuruSorgu->fetchAll(PDO::FETCH_ASSOC);
       </div>
       <ul class="side-menu-links">
         <li>
-          <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
+          <a href="ana_sayfa.php"><i class="fas fa-home"></i> Anasayfa</a>
         </li>
         <li>
           <a href="sizden_gelenler.html"><i class="fas fa-comments"></i> Sizden Gelenler</a>
