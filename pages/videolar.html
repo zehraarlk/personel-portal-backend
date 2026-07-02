@@ -14,39 +14,9 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
     <link rel="stylesheet" href="../CSS/videolar.style.css" />
     <link rel="stylesheet" href="../CSS/footer.css" />
     <link rel="stylesheet" href="../CSS/navbar.css" />
-
-    <style>
-      /* Yumuşak kaydırma (smooth scroll) etkisi */
-      html {
-        scroll-behavior: smooth;
-      }
-
-      /* İLK EKRANIN SAYFAYI TAM KAPLAMASI İÇİN:
-        Navbar yüksekliğini hesaba katarak haftanın videosu alanını en az 100vh yapıyoruz.
-        Aşağı kaydırma barının (scrollbar) ilk başta çıkmasını engelliyoruz.
-      */
-      .full-view-hero {
-        min-height: calc(
-          100vh - 80px
-        ); /* 80px tahmini navbar yüksekliğidir, kendinize göre esnetebilirsiniz */
-        display: flex;
-        align-items: center;
-      }
-
-      /* Videolar kısmının ilk baştaki gizli hali */
-      .video-section-hidden {
-        display: none;
-      }
-
-      /* Butona basılınca tetiklenecek görünürlük sınıfı */
-      .video-section-hidden.show-section {
-        display: block;
-      }
-    </style>
   </head>
   <body>
     <nav class="navbar">
@@ -218,9 +188,8 @@
         </div>
       </div>
     </nav>
-
-    <main class="container">
-      <section class="row align-items-center gx-5 featured-video-section full-view-hero">
+    <main class="container py-5">
+      <section class="row align-items-center mb-5 gx-5 featured-video-section">
         <div class="col-lg-7 mb-4 mb-lg-0">
           <div
             class="featured-video-placeholder rounded-3 shadow-lg card-thumbnail"
@@ -255,56 +224,52 @@
             >
               Videoyu İzle
             </button>
-            <button type="button" id="view-all-btn" class="btn btn-outline-secondary btn-lg px-4">
-              Tümünü Gör
-            </button>
+            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Tümünü Gör</button>
           </div>
         </div>
       </section>
 
-      <div id="collapsible-videos-section" class="video-section-hidden pb-5">
-        <hr class="my-5" />
+      <hr class="my-5" />
 
-        <section class="d-flex flex-column flex-md-row align-items-center mb-5">
-          <ul class="nav nav-pills mb-3 mb-md-0">
-            <li class="nav-item">
-              <a href="#" class="nav-link active" data-category="all">Tümü</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-category="egitimler">Eğitimler</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-category="etkinlikler">Etkinlikler</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-category="duyurular">Duyurular</a>
-            </li>
-          </ul>
-          <div class="ms-md-auto col-12 col-md-4 col-lg-3">
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                id="video-search-input"
-                placeholder="Video ara..."
-                aria-label="Video ara"
-              />
-              <span class="input-group-text"><i class="fas fa-search"></i></span>
-            </div>
+      <section class="d-flex flex-column flex-md-row align-items-center mb-5">
+        <ul class="nav nav-pills mb-3 mb-md-0">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" data-category="all">Tümü</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-category="egitimler">Eğitimler</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-category="etkinlikler">Etkinlikler</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-category="duyurular">Duyurular</a>
+          </li>
+        </ul>
+        <div class="ms-md-auto col-12 col-md-4 col-lg-3">
+          <div class="input-group">
+            <input
+              type="text"
+              class="form-control"
+              id="video-search-input"
+              placeholder="Video ara..."
+              aria-label="Video ara"
+            />
+            <span class="input-group-text"><i class="fas fa-search"></i></span>
           </div>
-        </section>
-
-        <section id="video-grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"></section>
-
-        <div id="no-results-message" class="text-center py-5" style="display: none">
-          <i class="fas fa-search fa-3x text-muted mb-3"></i>
-          <h3 class="text-muted">Aradığınız kritere uygun video bulunamadı.</h3>
         </div>
+      </section>
 
-        <nav aria-label="Video Sayfaları" class="d-flex justify-content-center mt-5">
-          <ul class="pagination custom-pagination"></ul>
-        </nav>
+      <section id="video-grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"></section>
+
+      <div id="no-results-message" class="text-center py-5" style="display: none">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h3 class="text-muted">Aradığınız kritere uygun video bulunamadı.</h3>
       </div>
+
+      <nav aria-label="Video Sayfaları" class="d-flex justify-content-center mt-5">
+        <ul class="pagination custom-pagination"></ul>
+      </nav>
     </main>
 
     <div
@@ -338,7 +303,6 @@
         </div>
       </div>
     </div>
-
     <div id="menuBackdrop" class="menu-backdrop"></div>
 
     <div id="sideMenu" class="side-menu">
@@ -387,10 +351,10 @@
           <a href="yardimci_linkler.html"><i class="fas fa-link"></i> Yardımcı Linkler</a>
         </li>
         <li>
-          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i> Vefat Eden Bilgisi</a>
+          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i>Vefat Eden Bilgisi</a>
         </li>
         <li>
-          <a href="dogum.html"><i class="fas fa-birthday-cake"></i> Doğum Günü Bilgisi</a>
+          <a href="dogum.html"><i class="fas fa-birthday-cake"></i>Doğum Günü Bilgisi</a>
         </li>
       </ul>
     </div>
@@ -428,24 +392,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JS/videolar.script.js"></script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const viewAllBtn = document.getElementById("view-all-btn");
-        const collapsibleSection = document.getElementById("collapsible-videos-section");
-
-        if (viewAllBtn && collapsibleSection) {
-          viewAllBtn.addEventListener("click", function () {
-            // Gizli alanı sınıf ekleyerek görünür hale getiriyoruz
-            collapsibleSection.classList.add("show-section");
-
-            // Kullanıcıyı bekletmeden yumuşak bir kaydırma animasyonu ile hr çizgisinin olduğu yere odaklıyoruz
-            setTimeout(() => {
-              collapsibleSection.scrollIntoView({ behavior: "smooth", block: "start" });
-            }, 50);
-          });
-        }
-      });
-    </script>
   </body>
 </html>
