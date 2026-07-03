@@ -1,20 +1,418 @@
 <?php
-// Veritabanı bağlantı bilgileri
 $host     = "localhost";
-$db_name  = "personel_db"; // phpMyAdmin'de açtığımız ortak veritabanı adı
-$username = "root";        // XAMPP standart kullanıcı adı
-$password = "";            // XAMPP standart şifresi boştur
+$db_name  = "personel_db";
+$username = "root";
+$password = "";
 
 try {
-    // PDO köprüsünü kuruyoruz ve Türkçe karakter ayarını (UTF8) yapıyoruz
+    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
     $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
-    
-    // Hata yönetimini aktif ediyoruz (Bir hata olursa bize açıkça söylesin diye)
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Bağlantı başarılıysa şimdilik arkada sessizce çalışsın
+    $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+    dbEnsureSchema($db);
 } catch (PDOException $e) {
-    // Eğer bağlantı kurulamazsa hatayı ekrana basıp sistemi durdurur
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
+}
+
+function dbFetchAll(PDO $db, string $sql, array $params = []): array
+{
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function imgUrl(?string $path, string $fallback = "../images/logo(2).png"): string
+{
+    $path = trim((string)$path);
+    if ($path !== "" && imageFileExists($path)) {
+        return normalizeImagePath($path);
+    }
+    if ($fallback !== "" && imageFileExists($fallback)) {
+        return normalizeImagePath($fallback);
+    }
+    return "../images/logo(2).png";
+}
+
+function documentThumbUrl(array $row): ?string
+{
+    $url = trim((string)($row["resim_url"] ?? ""));
+    if ($url !== "" && imageFileExists($url)) {
+        return normalizeImagePath($url);
+    }
+    return null;
+}
+
+function documentIconClass(array $row): string
+{
+    $map = [
+        "protocol"   => "fa-handshake",
+        "document"   => "fa-file-alt",
+        "regulation" => "fa-gavel",
+        "training"   => "fa-graduation-cap",
+    ];
+    return $map[$row["alt_tip"] ?? ""] ?? "fa-file";
+}
+
+function yardimciLinkLogo(array $row): ?string
+{
+    $mapped = otomasyonLogoUrl($row["baslik"] ?? "", $row["logo_url"] ?? "");
+    if ($mapped) {
+        return $mapped;
+    }
+    $url = trim((string)($row["logo_url"] ?? ""));
+    if ($url !== "" && imageFileExists($url)) {
+        return normalizeImagePath($url);
+    }
+    return null;
+}
+
+function normalizeImagePath(string $path): string
+{
+    if (preg_match("#^https?://#i", $path)) {
+        return $path;
+    }
+    if (str_starts_with($path, "../")) {
+        return $path;
+    }
+    if (str_starts_with($path, "images/")) {
+        return "../" . $path;
+    }
+    return "../images/" . ltrim($path, "/");
+}
+
+function imageFileExists(string $webPath): bool
+{
+    if ($webPath === "" || preg_match("#^https?://#i", $webPath)) {
+        return true;
+    }
+    static $root = null;
+    if ($root === null) {
+        $root = realpath(__DIR__ . "/..") ?: "";
+    }
+    $rel = preg_replace("#^\.\./#", "", normalizeImagePath($webPath));
+    return $root !== "" && is_file($root . "/" . str_replace("\\", "/", $rel));
+}
+
+function otomasyonLogoUrl(string $baslik, ?string $logoUrl = ""): ?string
+{
+    $logoUrl = trim((string)$logoUrl);
+    if ($logoUrl !== "" && imageFileExists($logoUrl)) {
+        return normalizeImagePath($logoUrl);
+    }
+
+    $defaults = [
+        "İmar Yönetim Sistemi"              => "../images/otomasyon/imar-yonetim-sistemi_8038.png",
+        "Dijital Arşiv"                     => "../images/otomasyon/dijital-arsiv_415.png",
+        "Sosyal Yardım"                     => "../images/otomasyon/sosyal-yardim_3767.png",
+        "E-Belediye Evlendrme Modülü"       => "../images/otomasyon/e-belediye-evlendirme-modulu_3993.png",
+        "E-Belediye Sosyal Yardım Modülü"   => "../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png",
+    ];
+
+    if (isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
+        return $defaults[$baslik];
+    }
+
+    return null;
+}
+
+function jsonData(mixed $data): string
+{
+    return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+}
+
+function dbFetchOne(PDO $db, string $sql, array $params = []): ?array
+{
+    $rows = dbFetchAll($db, $sql, $params);
+    return $rows[0] ?? null;
+}
+
+function mapEtkinlikler(array $rows): array
+{
+    return array_map(fn($r) => [
+        "id"      => (int)$r["id"],
+        "title"   => $r["baslik"],
+        "excerpt" => $r["aciklama"] ?? "",
+        "date"    => !empty($r["tarih"]) ? date("d.m.Y", strtotime($r["tarih"])) : "",
+        "endDate" => !empty($r["bitis_tarihi"] ?? $r["tarih"]) ? date("d.m.Y", strtotime($r["bitis_tarihi"] ?? $r["tarih"])) : "",
+        "views"   => (int)($r["view"] ?? 0),
+        "status"  => $r["durum"] ?? "aktif",
+        "image"   => imgUrl($r["resim"] ?? ""),
+    ], $rows);
+}
+
+function mapSizdenGelenler(array $rows): array
+{
+    return array_map(fn($r) => [
+        "id"           => (int)$r["id"],
+        "title"        => $r["baslik"],
+        "excerpt"      => $r["ozet"] ?? "",
+        "category"     => $r["kategori_slug"] ?? "",
+        "categoryName" => $r["kategori_adi"] ?? "",
+        "date"         => !empty($r["tarih"]) ? date("d.m.Y", strtotime($r["tarih"])) : "",
+        "views"        => (int)($r["goruntulenme"] ?? 0),
+        "image"        => imgUrl($r["gorsel_yolu"] ?? ""),
+    ], $rows);
+}
+
+function mapPersonelJs(array $rows): array
+{
+    return array_map(fn($r) => [
+        "id"          => (int)$r["id"],
+        "ad"          => $r["ad"],
+        "soyad"       => $r["soyad"],
+        "dogumTarihi" => $r["dogum_tarihi"],
+        "fotoUrl"     => imgUrl($r["foto_url"] ?? "", "../images/login/login.jpg"),
+    ], $rows);
+}
+
+function mapVefat(array $rows): array
+{
+    return array_map(fn($r) => [
+        "name"      => $r["vefat_eden_adi"],
+        "position"  => $r["iliski_pozisyon"] ?? "",
+        "deathDate" => $r["vefat_tarihi_metin"] ?? "",
+        "message"   => $r["cenaze_mesaji"] ?? "",
+    ], $rows);
+}
+
+function dbEnsureSchema(PDO $db): void
+{
+    static $checked = false;
+    if ($checked) {
+        return;
+    }
+    $checked = true;
+
+    $required = [
+        "haberler", "duyurular", "etkinlikler", "videolar",
+        "sizden_gelenler", "personeller", "vefat_bilgileri",
+        "dokumanlar", "yardimci_linkler", "anketler", "haber_galeri",
+    ];
+
+    try {
+        $tables = $db->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+    } catch (PDOException $e) {
+        return;
+    }
+
+    foreach ($required as $table) {
+        if (!in_array($table, $tables, true)) {
+            importPersonelDb();
+            return;
+        }
+    }
+
+    dbEnsureColumn($db, "anketler", "favori", "TINYINT(1) NOT NULL DEFAULT 0");
+    dbEnsureVideoOrder($db);
+}
+
+function dbCanonicalVideoYoutubeIds(): array
+{
+    return [
+        "qLqYPQgUPEc",
+        "aUQ3uIAfL-k",
+        "RhVDYrAb0xQ",
+        "c0vbYSFwMzU",
+        "-0Wxna6PjqQ",
+        "e65zC48s8Wc",
+        "YXat3fIWc7w",
+        "QRizu8RhGnU",
+        "Z2dH2UIXb8Y",
+        "G2KNC3OAnjE",
+        "RhD1ArYsuKo",
+        "IEc5W0JyADU",
+        "3ePuzpC2S0Q",
+        "qdPXmtKXXc4",
+        "uUFZvM9kqf4",
+        "BiY2WK24UHY",
+        "xot-DBvkkq4",
+        "ABIqjRnV5dU",
+        "psmlNSPRDsM",
+        "pAHStsCd9jo",
+        "eUBQYWMZyH8",
+        "GWfDmGr6tlg",
+        "D1b-CZYtCTg",
+    ];
+}
+
+function dbReorderVideolarRows(PDO $db, array $rows): void
+{
+    $db->beginTransaction();
+    try {
+        $db->exec("DELETE FROM videolar");
+        $db->exec("ALTER TABLE videolar AUTO_INCREMENT = 1");
+
+        $stmt = $db->prepare(
+            "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, sure) VALUES (?, ?, ?, ?, ?)"
+        );
+        foreach ($rows as $row) {
+            $stmt->execute([
+                $row["youtube_id"],
+                $row["baslik"],
+                $row["aciklama"],
+                $row["kategori"],
+                $row["sure"],
+            ]);
+        }
+
+        $db->commit();
+    } catch (Throwable $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+        throw $e;
+    }
+}
+
+function dbResequenceVideolar(PDO $db): void
+{
+    $rows = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
+    if (empty($rows)) {
+        $db->exec("ALTER TABLE videolar AUTO_INCREMENT = 1");
+        return;
+    }
+
+    dbReorderVideolarRows($db, $rows);
+}
+
+function dbResequenceVideolarIfNeeded(PDO $db): void
+{
+    $stats = dbFetchOne(
+        $db,
+        "SELECT COUNT(*) AS total, COALESCE(MAX(id), 0) AS max_id FROM videolar"
+    );
+    if (!$stats) {
+        return;
+    }
+
+    $total = (int)$stats["total"];
+    $maxId = (int)$stats["max_id"];
+
+    if ($total > 0 && $total !== $maxId) {
+        dbResequenceVideolar($db);
+    } elseif ($total === 0) {
+        $db->exec("ALTER TABLE videolar AUTO_INCREMENT = 1");
+    } else {
+        $db->exec("ALTER TABLE videolar AUTO_INCREMENT = " . ($maxId + 1));
+    }
+}
+
+function dbEnsureVideoOrder(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    try {
+        $db->query("SELECT 1 FROM videolar LIMIT 1");
+    } catch (PDOException $e) {
+        return;
+    }
+
+    dbResequenceVideolarIfNeeded($db);
+
+    $rows = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
+    if (empty($rows)) {
+        return;
+    }
+
+    $canonical = dbCanonicalVideoYoutubeIds();
+    $byYoutube = [];
+    foreach ($rows as $row) {
+        $byYoutube[$row["youtube_id"]] = $row;
+    }
+
+    $extras = [];
+    foreach ($rows as $row) {
+        if (!in_array($row["youtube_id"], $canonical, true)) {
+            $extras[] = $row;
+        }
+    }
+
+    $expectedIds = array_map(fn($row) => $row["youtube_id"], $extras);
+    foreach ($canonical as $youtubeId) {
+        if (isset($byYoutube[$youtubeId])) {
+            $expectedIds[] = $youtubeId;
+        }
+    }
+
+    $actualIds = array_map(fn($row) => $row["youtube_id"], $rows);
+    if ($actualIds === $expectedIds) {
+        return;
+    }
+
+    $ordered = [];
+    foreach ($extras as $row) {
+        $ordered[] = $row;
+    }
+    foreach ($canonical as $youtubeId) {
+        if (isset($byYoutube[$youtubeId])) {
+            $ordered[] = $byYoutube[$youtubeId];
+        }
+    }
+
+    if (empty($ordered)) {
+        return;
+    }
+
+    try {
+        dbReorderVideolarRows($db, $ordered);
+    } catch (Throwable $e) {
+        // Sessizce geç
+    }
+}
+
+function dbInsertVideo(PDO $db, array $video): int
+{
+    $rows = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
+    array_unshift($rows, [
+        "youtube_id" => $video["youtube_id"],
+        "baslik"     => $video["baslik"],
+        "aciklama"   => $video["aciklama"],
+        "kategori"   => $video["kategori"],
+        "sure"       => $video["sure"],
+    ]);
+
+    dbReorderVideolarRows($db, $rows);
+    return 1;
+}
+
+function dbDeleteVideo(PDO $db, int $id): bool
+{
+    $stmt = $db->prepare("DELETE FROM videolar WHERE id = ?");
+    $stmt->execute([$id]);
+    if ($stmt->rowCount() === 0) {
+        return false;
+    }
+
+    dbResequenceVideolar($db);
+    return true;
+}
+
+function dbEnsureColumn(PDO $db, string $table, string $column, string $definition): void
+{
+    try {
+        $stmt = $db->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
+        $stmt->execute([$column]);
+        if (!$stmt->fetch()) {
+            $db->exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç – tablo henüz oluşmamış olabilir
+    }
+}
+
+function importPersonelDb(): void
+{
+    $sqlFile = realpath(__DIR__ . "/../db/personel_db.sql");
+    $mysql   = "C:/xampp/mysql/bin/mysql.exe";
+    if ($sqlFile && file_exists($mysql)) {
+        $path = str_replace("\\", "/", $sqlFile);
+        shell_exec('"' . $mysql . '" -u root --default-character-set=utf8mb4 -e "SOURCE ' . $path . '" 2>nul');
+    }
 }
 ?>

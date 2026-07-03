@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:pages/protokol.php
 <?php
 require_once "../pages/baglan.php"; // baglan.php dosyanızın gerçek yoluna göre bu satırı düzenleyin
 
@@ -384,3 +385,6 @@ $protokoller = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../JS/protokol.script.js"></script>
   </body>
 </html>
+=======
+<!doctype html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=protokol.php"><script>location.replace("protokol.php");</script></head><body><a href="protokol.php">Devam et</a></body></html>
+>>>>>>> Stashed changes:pages/protokol.html

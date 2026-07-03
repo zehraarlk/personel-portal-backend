@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:pages/dokumanlar.php
 <?php
 require_once "../pages/baglan.php"; // baglan.php dosyanızın gerçek yoluna göre bu satırı düzenleyin
 
@@ -396,3 +397,6 @@ $dokumanlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="../JS/dokumanlar.script.js"></script>
   </body>
 </html>
+=======
+<!doctype html><html><head><meta charset="UTF-8"><meta http-equiv="refresh" content="0;url=dokumanlar.php"><script>location.replace("dokumanlar.php");</script></head><body><a href="dokumanlar.php">Devam et</a></body></html>
+>>>>>>> Stashed changes:pages/dokumanlar.html

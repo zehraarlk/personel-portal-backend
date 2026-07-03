@@ -1,13 +1,7 @@
-<?php 
-include("baglan.php"); 
-
-// 1. Alt taraftaki liste için videoları eskiden yeniye (DESC) çekiyoruz
-$videoSorgu = $db->query("SELECT * FROM videolar ORDER BY id DESC");
-$tumVideolar = $videoSorgu->fetchAll(PDO::FETCH_ASSOC);
-
-// 2. Vitrin için AYNI tablodaki EN SON eklenen videoyu (DESC ve LIMIT 1) çekiyoruz
-$vitrinSorgu = $db->query("SELECT * FROM videolar ORDER BY id DESC LIMIT 1");
-$vitrinVideo = $vitrinSorgu->fetch(PDO::FETCH_ASSOC);
+<?php
+include("baglan.php");
+$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE id = 1");
+$tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
 ?>
 <!doctype html>
 <html lang="tr">
@@ -23,183 +17,12 @@ $vitrinVideo = $vitrinSorgu->fetch(PDO::FETCH_ASSOC);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="../CSS/videolar.style.css" />
-    <link rel="stylesheet" href="../CSS/footer.css" />
-    <link rel="stylesheet" href="../CSS/navbar.css" />
+<?php $pageCss = "videolar.style.css"; include "includes/site-styles.php"; ?>
   </head>
   <body>
-    <nav class="navbar">
-      <div class="nav-container">
-        <div class="nav-left">
-          <button class="mobile-menu-toggle" aria-label="Menüyü aç">
-            <i class="fas fa-bars"></i>
-          </button>
-          <a href="ana_sayfa.html" class="logo-container">
-            <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
-          </a>
-        </div>
-
-        <ul class="nav-links">
-          <li class="nav-dropdown">
-            <a href="ana_sayfa.html"> <i class="fas fa-home"></i> Anasayfa </a>
-          </li>
-          <li>
-            <a href="videolar.html"><i class="fas fa-video"></i>Videolar</a>
-          </li>
-
-          <li class="nav-dropdown dd-safe">
-            <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-newspaper"></i>
-              Etkinlikler
-            </a>
-            <div class="nav-dropdown-menu pull-left">
-              <div class="dropdown-content">
-                <div class="dropdown-grid">
-                  <a href="sizden_gelenler.html" class="dropdown-item">
-                    <i class="fas fa-comments"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">SİZDEN GELENLER</div>
-                      <div class="dropdown-description">Öneri ve geri bildirimleriniz</div>
-                    </div>
-                  </a>
-                  <a href="etkinlikler.html" class="dropdown-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">ETKİNLİKLER</div>
-                      <div class="dropdown-description">Güncel kurumsal etkinlik bilgileri</div>
-                    </div>
-                  </a>
-                  <a href="duyuru.html" class="dropdown-item">
-                    <i class="fas fa-bullhorn"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">DUYURULAR</div>
-                      <div class="dropdown-description">Resmi güncel duyuru paylaşımları</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li class="nav-dropdown dd-safe">
-            <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-landmark"></i>
-              Kaynaklar
-            </a>
-            <div class="nav-dropdown-menu pull-left">
-              <div class="dropdown-content">
-                <div class="dropdown-grid">
-                  <a href="protokol.html" class="dropdown-item">
-                    <i class="fas fa-file-signature"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">PROTOKOLLER</div>
-                      <div class="dropdown-description">Resmi protokol kayıtları.</div>
-                    </div>
-                  </a>
-                  <a href="dokumanlar.html" class="dropdown-item">
-                    <i class="fas fa-comments"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">DOKÜMANLAR</div>
-                      <div class="dropdown-description">Kurumsal doküman arşivi.</div>
-                    </div>
-                  </a>
-                  <a href="mevzuat.html" class="dropdown-item">
-                    <i class="fas fa-calendar-check"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">MEVZUATLAR</div>
-                      <div class="dropdown-description">Güncel mevzuat bilgileri.</div>
-                    </div>
-                  </a>
-                  <a href="egitim.html" class="dropdown-item">
-                    <i class="fas fa-graduation-cap"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">EĞİTİMLER</div>
-                      <div class="dropdown-description">Personel eğitim içerikleri.</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </li>
-
-          <li class="nav-dropdown dd-safe">
-            <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-file-alt"></i>
-              Diğer
-            </a>
-            <div class="nav-dropdown-menu pull-left">
-              <div class="dropdown-content">
-                <div class="dropdown-grid">
-                  <a href="anketler.html" class="dropdown-item">
-                    <i class="fas fa-poll"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">ANKETLER</div>
-                      <div class="dropdown-description">Katılabileceğiniz güncel anketler</div>
-                    </div>
-                  </a>
-                  <a href="yardimci_linkler.html" class="dropdown-item">
-                    <i class="fas fa-link"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">YARDIMCI LİNKLER</div>
-                      <div class="dropdown-description">İş akışı için önemli bağlantılar</div>
-                    </div>
-                  </a>
-                  <a href="vefat_bilgisi.html" class="dropdown-item">
-                    <i class="fas fa-ribbon" style="color: #222"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">VEFAT EDEN BİLGİSİ</div>
-                      <div class="dropdown-description">Vefat eden değerli çalışanlarımız</div>
-                    </div>
-                  </a>
-                  <a href="dogum.html" class="dropdown-item">
-                    <i class="fas fa-birthday-cake"></i>
-                    <div class="dropdown-text">
-                      <div class="dropdown-title">DOĞUM GÜNÜ BİLGİSİ</div>
-                      <div class="dropdown-description">Bugün doğum günü olan personeller</div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
-        <div class="nav-right">
-          <div class="profile-dropdown">
-            <button class="profile-btn" id="profileBtn">
-              <img src="../images/login/login.jpg" alt="Profil" class="profile-img" />
-            </button>
-            <div class="profile-menu" id="profileMenu">
-              <div class="profile-info">
-                <img src="../images/login/login.jpg" alt="Profil" class="profile-menu-img" />
-                <div class="profile-details">
-                  <span class="profile-name">Kullanıcı Adı</span>
-                  <span class="profile-role">Personel</span>
-                </div>
-              </div>
-              <ul class="profile-menu-list">
-                <li>
-                  <a href="#" class="profile-menu-item"
-                    ><i class="fas fa-user"></i><span>Profilim</span></a
-                  >
-                </li>
-                <li>
-                  <a href="#" class="profile-menu-item"
-                    ><i class="fas fa-cog"></i><span>Ayarlar</span></a
-                  >
-                </li>
-                <li>
-                  <a href="#" class="profile-menu-item logout"
-                    ><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <main class="container py-5">
+    <?php include "includes/header-nav.php"; ?>
+    <?php $pageTitle = "Videolar"; include "includes/breadcrumb.php"; ?>
+<main class="container py-5">
       <section class="row align-items-center mb-5 gx-5 featured-video-section">
   <div class="col-lg-7 mb-4 mb-lg-0">
     <div
@@ -220,10 +43,10 @@ $vitrinVideo = $vitrinSorgu->fetch(PDO::FETCH_ASSOC);
   
   <div class="col-lg-5">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-      Haftanın Videosu: <?php echo !empty($vitrinVideo) ? $vitrinVideo['baslik'] : 'Gebze\'de Offroad Heyecanı'; ?>
+      Haftanın Videosu: <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['baslik'], ENT_QUOTES, 'UTF-8') : "Gebze'de Offroad Heyecanı"; ?>
     </h1>
     <p class="lead">
-      <?php echo !empty($vitrinVideo) ? $vitrinVideo['aciklama'] : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
+      <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['aciklama'], ENT_QUOTES, 'UTF-8') : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
     </p>
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
@@ -314,100 +137,13 @@ $vitrinVideo = $vitrinSorgu->fetch(PDO::FETCH_ASSOC);
         </div>
       </div>
     </div>
-    <div id="menuBackdrop" class="menu-backdrop"></div>
-
-    <div id="sideMenu" class="side-menu">
-      <div class="side-menu-header">
-        <div class="side-menu-profile">
-          <img src="../images/login/login.jpg" alt="Profil" class="side-menu-profile-img" />
-          <div class="side-menu-profile-details">
-            <span class="side-menu-profile-name">Kullanıcı Adı</span>
-            <span class="side-menu-profile-email">Personel</span>
-          </div>
-        </div>
-        <button class="close-menu-btn" aria-label="Menüyü kapat">&times;</button>
-      </div>
-      <ul class="side-menu-links">
-        <li>
-          <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
-        </li>
-        <li>
-          <a href="sizden_gelenler.html"><i class="fas fa-comments"></i> Sizden Gelenler</a>
-        </li>
-        <li>
-          <a href="etkinlikler.html"><i class="fas fa-calendar-check"></i> Etkinlikler</a>
-        </li>
-        <li>
-          <a href="duyuru.html"><i class="fas fa-bullhorn"></i> Duyurular</a>
-        </li>
-        <li>
-          <a href="protokol.html"><i class="fas fa-file-signature"></i> Protokoller</a>
-        </li>
-        <li>
-          <a href="dokumanlar.html"><i class="fas fa-comments"></i> Dokümanlar</a>
-        </li>
-        <li>
-          <a href="mevzuat.html"><i class="fas fa-calendar-check"></i> Mevzuatlar</a>
-        </li>
-        <li>
-          <a href="egitim.html"><i class="fas fa-graduation-cap"></i> Eğitimler</a>
-        </li>
-        <li>
-          <a href="videolar.html"><i class="fas fa-video"></i> Videolar</a>
-        </li>
-        <li>
-          <a href="anketler.html"><i class="fas fa-poll"></i> Anketler</a>
-        </li>
-        <li>
-          <a href="yardimci_linkler.html"><i class="fas fa-link"></i> Yardımcı Linkler</a>
-        </li>
-        <li>
-          <a href="vefat_bilgisi.html"><i class="fas fa-ribbon"></i>Vefat Eden Bilgisi</a>
-        </li>
-        <li>
-          <a href="dogum.html"><i class="fas fa-birthday-cake"></i>Doğum Günü Bilgisi</a>
-        </li>
-      </ul>
-    </div>
-
-    <footer>
-      <div class="container">
-        <div class="footer-content">
-          <img src="../images/logo(2).png" class="footer-logo" alt="Gebze Belediyesi" />
-          <p><i class="fas fa-phone"></i> (0262) 123 45 67</p>
-          <p><i class="fas fa-envelope"></i> bilgiislem@gebze.bel.tr</p>
-          <div class="social-icons mt-3">
-            <a href="https://www.facebook.com/gebzebelediye/?locale=tr_TR"
-              ><i class="fab fa-facebook-f"></i
-            ></a>
-            <a
-              href="https://x.com/gebze_belediye?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor"
-              ><i class="fab fa-twitter"></i
-            ></a>
-            <a href="https://www.instagram.com/gebze_belediyesi/?hl=tr"
-              ><i class="fab fa-instagram"></i
-            ></a>
-            <a href="https://www.youtube.com/@gebzebelediyesi7295"
-              ><i class="fab fa-youtube"></i
-            ></a>
-            <a href="https://www.linkedin.com/company/gebze-belediyesi/posts/?feedView=all"
-              ><i class="fab fa-linkedin-in"></i
-            ></a>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2025 Gebze Belediyesi - Bilgi İşlem Müdürlüğü | Tüm Hakları Saklıdır</p>
-        </div>
-      </div>
-    </footer>
+    <?php include "includes/footer.php"; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../JS/videolar.script.js"></script>
-  <script>
-        // PHP ile çektiğimiz videoları JavaScript'in anlayacağı JSON formatına çeviriyoruz
-        const veritabanindanGelenVideolar = <?php echo json_encode($tumVideolar); ?>;
+    <script>
+        const veritabanindanGelenVideolar = <?php echo json_encode($tumVideolar, JSON_UNESCAPED_UNICODE); ?>;
     </script>
-    
     <script src="../JS/videolar.script.js"></script>
+    <script src="../JS/navbar.js"></script>
   </body>
 </html>

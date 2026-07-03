@@ -740,6 +740,81 @@ body {
 .filter-tab.active:hover {
   background: #0056b3;
 }
+.favorites-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+  border: 1px solid #ffe08a;
+  border-radius: 16px;
+}
+.favorites-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.favorites-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #b8860b;
+  margin: 0;
+}
+.favorites-count {
+  font-size: 0.9rem;
+  color: #856404;
+  background: #fff3cd;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.survey-card {
+  position: relative;
+}
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #adb5bd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.favorite-btn:hover {
+  transform: scale(1.08);
+  color: #f0ad4e;
+}
+.favorite-btn.active {
+  color: #f0ad4e;
+  background: #fff8e1;
+}
+.favorite-btn.active i {
+  color: #f0ad4e;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+.empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+.empty-state p {
+  margin: 0;
+  font-size: 1.05rem;
+}
 #surveyContainer {
   margin-top: 10px; /* Filtre tabları ile kartlar arası boşluk azaltıldı */
 }

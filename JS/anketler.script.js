@@ -1,206 +1,165 @@
 // ========== DOM HAZIR OLDUĞUNDA ÇALIŞACAK KODLAR ==========
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Sayfa yüklendi, JavaScript başlatılıyor...");
+  let activeFilter = "all";
 
-  // Cihaz hover destekliyor mu? (Masaüstü) -> hover, Aksi (Mobil/Touch) -> click
-  const isHoverable = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+  function getSurveyItems() {
+    return document.querySelectorAll("#surveyContainer .survey-item");
+  }
 
-  const dropdowns = document.querySelectorAll(".nav-dropdown");
-
-  dropdowns.forEach((dd) => {
-    const toggle = dd.querySelector(".nav-dropdown-toggle");
-    const menu = dd.querySelector(".nav-dropdown-menu");
-    if (!toggle || !menu) return;
-
-    if (isHoverable) {
-      // Masaüstü: hover ile açılacak. Tıklama yeni sayfa açmasın.
-      toggle.addEventListener("click", (e) => e.preventDefault());
-      // (Hover işi CSS ile; burada ekstra JS şart değil ama tutarlılık için aktif sınıfı yönetebiliriz)
-      dd.addEventListener("mouseenter", () => dd.classList.add("active"));
-      dd.addEventListener("mouseleave", () => dd.classList.remove("active"));
+  function updateEmptyState(hasResults, searchTerm = "") {
+    const emptyState = document.getElementById("emptyState");
+    if (!emptyState) return;
+    if (!hasResults) {
+      emptyState.classList.remove("d-none");
     } else {
-      // Mobil/Touch: tıklama ile aç/kapat
-      toggle.addEventListener("click", function (e) {
+      emptyState.classList.add("d-none");
+    }
+  }
+
+  function itemMatchesFilter(item) {
+    const category = item.getAttribute("data-category");
+    const isFavorite = item.getAttribute("data-favorite") === "1";
+
+    if (activeFilter === "all") return true;
+    if (activeFilter === "favorites") return isFavorite;
+    return category === activeFilter;
+  }
+
+  function itemMatchesSearch(item, searchTerm) {
+    if (!searchTerm) return true;
+    const title = item.querySelector(".survey-title");
+    const desc = item.querySelector(".survey-desc");
+    if (!title || !desc) return false;
+    const text = (title.textContent + " " + desc.textContent).toLowerCase();
+    return text.includes(searchTerm);
+  }
+
+  function applyFilters() {
+    const searchTerm = (document.getElementById("searchInput")?.value || "").toLowerCase();
+    let hasResults = false;
+
+    getSurveyItems().forEach((item) => {
+      const visible = itemMatchesFilter(item) && itemMatchesSearch(item, searchTerm);
+      item.style.display = visible ? "" : "none";
+      if (visible) hasResults = true;
+    });
+
+    updateEmptyState(hasResults, searchTerm);
+  }
+
+  function updateFavoritesSection() {
+    const section = document.getElementById("favoritesSection");
+    const container = document.getElementById("favoritesContainer");
+    const countEl = document.getElementById("favoritesCount");
+    if (!section || !container) return;
+
+    const favoriteItems = Array.from(getSurveyItems()).filter(
+      (item) => item.getAttribute("data-favorite") === "1"
+    );
+
+    container.innerHTML = "";
+    favoriteItems.forEach((item) => {
+      container.appendChild(item.cloneNode(true));
+      bindFavoriteButtons(container.lastElementChild);
+    });
+
+    if (countEl) {
+      countEl.textContent = favoriteItems.length + " anket";
+    }
+
+    section.classList.toggle("d-none", favoriteItems.length === 0);
+  }
+
+  function setFavoriteState(item, isFavorite) {
+    item.setAttribute("data-favorite", isFavorite ? "1" : "0");
+    const btn = item.querySelector(".favorite-btn");
+    const icon = btn?.querySelector("i");
+    if (btn) {
+      btn.classList.toggle("active", isFavorite);
+      btn.setAttribute("aria-label", isFavorite ? "Favorilerden çıkar" : "Favorilere ekle");
+      btn.setAttribute("title", isFavorite ? "Favorilerden çıkar" : "Favorilere ekle");
+    }
+    if (icon) {
+      icon.classList.toggle("fas", isFavorite);
+      icon.classList.toggle("far", !isFavorite);
+    }
+  }
+
+  function syncFavoriteState(id, isFavorite) {
+    document.querySelectorAll(`.survey-item[data-id="${id}"]`).forEach((item) => {
+      setFavoriteState(item, isFavorite);
+    });
+  }
+
+  async function toggleFavorite(btn) {
+    const item = btn.closest(".survey-item");
+    if (!item) return;
+
+    const id = item.getAttribute("data-id");
+    const isFavorite = item.getAttribute("data-favorite") !== "1";
+    const newValue = isFavorite ? 1 : 0;
+
+    btn.disabled = true;
+
+    try {
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("favori", String(newValue));
+
+      const response = await fetch("anket_favori.php", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.message || "Favori güncellenemedi.");
+      }
+
+      syncFavoriteState(id, isFavorite);
+      updateFavoritesSection();
+      applyFilters();
+      showToast(isFavorite ? "Anket favorilere eklendi." : "Anket favorilerden çıkarıldı.", isFavorite ? "warning" : "secondary");
+    } catch (error) {
+      showToast(error.message || "Bir hata oluştu.", "danger");
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  function bindFavoriteButtons(root = document) {
+    root.querySelectorAll(".favorite-btn").forEach((btn) => {
+      if (btn.dataset.bound === "1") return;
+      btn.dataset.bound = "1";
+      btn.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        // Diğer açık menüleri kapat
-        dropdowns.forEach((other) => {
-          if (other !== dd) other.classList.remove("active");
-        });
-        // Bu menüyü aç/kapat
-        dd.classList.toggle("active");
-      });
-    }
-  });
-
-  // Dışarı tıklamada kapat
-  document.addEventListener("click", function (e) {
-    dropdowns.forEach((dd) => {
-      if (!dd.contains(e.target)) dd.classList.remove("active");
-    });
-  });
-
-  // ESC ile kapat
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") dropdowns.forEach((dd) => dd.classList.remove("active"));
-  });
-
-  /* --- Profil menüsü, arama, filtre vb. mevcut kodların aynen kalabilir --- */
-
-  // ========== PROFİL DROPDOWN SİSTEMİ ==========
-  const profileBtn = document.getElementById("profileBtn");
-  const profileMenu = document.getElementById("profileMenu");
-
-  if (profileBtn && profileMenu) {
-    console.log("Profil buton ve menü bulundu");
-
-    // Profil butonuna tıklama
-    profileBtn.addEventListener("click", function (e) {
-      console.log("Profil butonuna tıklandı");
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Navbar dropdown'ını kapat
-      if (navDropdown) {
-        navDropdown.classList.remove("active");
-      }
-
-      // Profil menüsünü aç/kapat
-      profileMenu.classList.toggle("show");
-      profileBtn.classList.toggle("active");
-
-      console.log("Profil menü durumu:", profileMenu.classList.contains("show"));
-    });
-
-    // Sayfa herhangi bir yerine tıklandığında menüyü kapat
-    document.addEventListener("click", function (e) {
-      if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
-        profileMenu.classList.remove("show");
-        profileBtn.classList.remove("active");
-      }
-    });
-
-    // Profil menü item'larına tıklama
-    const profileMenuItems = profileMenu.querySelectorAll(".profile-menu-item");
-    profileMenuItems.forEach((item) => {
-      item.addEventListener("click", function (e) {
-        e.preventDefault();
-        console.log("Profil menü item tıklandı:", this.textContent.trim());
-
-        // Çıkış yap butonuna özel işlem
-        if (this.classList.contains("logout")) {
-          if (confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
-            console.log("Çıkış yapılıyor...");
-            // window.location.href = '/logout'; // Gerçek uygulamada kullanılır
-            alert("Çıkış işlemi simülasyonu - Gerçek uygulamada yönlendirme yapılacak");
-          }
-        } else {
-          // Diğer menü itemları için işlem
-          alert("Bu özellik henüz aktif değil: " + this.textContent.trim());
-        }
-
-        // Menüyü kapat
-        profileMenu.classList.remove("show");
-        profileBtn.classList.remove("active");
+        toggleFavorite(this);
       });
     });
-
-    // ESC tuşu ile menüyü kapat
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") {
-        profileMenu.classList.remove("show");
-        profileBtn.classList.remove("active");
-      }
-    });
-  } else {
-    console.log("Profil buton veya menü bulunamadı");
-    console.log("profileBtn:", profileBtn);
-    console.log("profileMenu:", profileMenu);
   }
+
+  bindFavoriteButtons();
 
   // ========== ARAMA FONKSİYONU ==========
   const searchInput = document.getElementById("searchInput");
   if (searchInput) {
-    console.log("Arama input bulundu");
-
-    searchInput.addEventListener("input", function (e) {
-      const searchTerm = e.target.value.toLowerCase();
-      const surveyItems = document.querySelectorAll(".survey-item");
-      let hasResults = false;
-
-      console.log("Arama yapılıyor:", searchTerm);
-
-      surveyItems.forEach((item) => {
-        const title = item.querySelector(".survey-title");
-        const desc = item.querySelector(".survey-desc");
-
-        if (title && desc) {
-          const titleText = title.textContent.toLowerCase();
-          const descText = desc.textContent.toLowerCase();
-
-          if (titleText.includes(searchTerm) || descText.includes(searchTerm)) {
-            item.style.display = "block";
-            hasResults = true;
-          } else {
-            item.style.display = "none";
-          }
-        }
-      });
-
-      // Boş durum mesajını göster/gizle
-      const emptyState = document.getElementById("emptyState");
-      if (emptyState) {
-        if (!hasResults && searchTerm !== "") {
-          emptyState.classList.remove("d-none");
-        } else {
-          emptyState.classList.add("d-none");
-        }
-      }
+    searchInput.addEventListener("input", function () {
+      applyFilters();
     });
-  } else {
-    console.log("Arama input bulunamadı");
   }
 
-  // ========== YENİ FİLTRE TAB SİSTEMİ ==========
+  // ========== FİLTRE TAB SİSTEMİ ==========
   const filterTabs = document.querySelectorAll(".filter-tab");
   if (filterTabs.length > 0) {
-    console.log("Filtre tabları bulundu:", filterTabs.length);
-
     filterTabs.forEach((tab) => {
       tab.addEventListener("click", function () {
-        console.log("Filtre tab tıklandı:", this.getAttribute("data-filter"));
-
-        // Aktif filtre tabını güncelle
         filterTabs.forEach((t) => t.classList.remove("active"));
         this.classList.add("active");
-
-        const filter = this.getAttribute("data-filter");
-        const surveyItems = document.querySelectorAll(".survey-item");
-        let hasResults = false;
-
-        surveyItems.forEach((item) => {
-          const category = item.getAttribute("data-category");
-          if (filter === "all" || category === filter) {
-            item.style.display = "block";
-            hasResults = true;
-          } else {
-            item.style.display = "none";
-          }
-        });
-
-        // Boş durum mesajını göster/gizle
-        const emptyState = document.getElementById("emptyState");
-        if (emptyState) {
-          if (!hasResults) {
-            emptyState.classList.remove("d-none");
-          } else {
-            emptyState.classList.add("d-none");
-          }
-        }
+        activeFilter = this.getAttribute("data-filter") || "all";
+        applyFilters();
       });
     });
-  } else {
-    console.log("Filtre tabları bulunamadı");
   }
 
   // ========== BİLDİRİM SİSTEMİ ==========
@@ -276,48 +235,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   console.log("Tüm JavaScript event listener'ları başarıyla yüklendi");
 });
-
-// ========== FAVORİ TOGGLE FONKSİYONU (GLOBAL) ==========
-function toggleFavorite(btn) {
-  console.log("Favori toggle çağrıldı");
-
-  const icon = btn.querySelector("i");
-  const textNodes = Array.from(btn.childNodes).filter((node) => node.nodeType === Node.TEXT_NODE);
-
-  if (icon) {
-    if (icon.classList.contains("far")) {
-      // Favoriye ekle
-      icon.classList.remove("far");
-      icon.classList.add("fas");
-      btn.classList.remove("btn-outline-warning");
-      btn.classList.add("btn-warning");
-
-      // Text node'u güncelle
-      textNodes.forEach((node) => {
-        if (node.textContent.trim().includes("Favoriye Ekle")) {
-          node.textContent = " Favorilerden Çıkar";
-        }
-      });
-
-      console.log("Favoriye eklendi");
-    } else {
-      // Favorilerden çıkar
-      icon.classList.remove("fas");
-      icon.classList.add("far");
-      btn.classList.remove("btn-warning");
-      btn.classList.add("btn-outline-warning");
-
-      // Text node'u güncelle
-      textNodes.forEach((node) => {
-        if (node.textContent.trim().includes("Favorilerden Çıkar")) {
-          node.textContent = " Favoriye Ekle";
-        }
-      });
-
-      console.log("Favorilerden çıkarıldı");
-    }
-  }
-}
 
 // ========== SIRALAMA YARDIMCI FONKSİYONLARI ==========
 
