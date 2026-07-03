@@ -1,9 +1,25 @@
+<?php
+require_once "../pages/baglan.php"; // baglan.php dosyanızın gerçek yoluna göre bu satırı düzenleyin
+
+$kategoriMap = [
+    "protocol"   => "Protokoller",
+    "document"   => "Dökümanlar",
+    "regulation" => "Mevzuatlar",
+    "training"   => "Eğitimler",
+];
+$aktifFiltre = "protocol";
+$kategoriAdi = $kategoriMap[$aktifFiltre];
+
+$stmt = $db->prepare("SELECT id, baslik, aciklama, kategori, ikon, dosya_yolu, boyut, tarih FROM kaynaklar WHERE kategori = :kategori ORDER BY tarih DESC");
+$stmt->execute(["kategori" => $kategoriAdi]);
+$protokoller = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!doctype html>
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dokümanlar - Gebze Belediyesi Personel Portalı</title>
+    <title>Protokoller - Gebze Belediyesi Personel Portalı</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -14,7 +30,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="../CSS/dokumanlar.style.css" />
+    <link rel="stylesheet" href="../CSS/protokol.style.css" />
     <link rel="stylesheet" href="../CSS/footer.css" />
     <link rel="stylesheet" href="../CSS/navbar.css" />
   </head>
@@ -79,14 +95,14 @@
             <div class="nav-dropdown-menu pull-left">
               <div class="dropdown-content">
                 <div class="dropdown-grid">
-                  <a href="protokol.html" class="dropdown-item">
+                  <a href="protokol.php" class="dropdown-item">
                     <i class="fas fa-file-signature"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">PROTOKOLLER</div>
                       <div class="dropdown-description">Resmi protokol kayıtları.</div>
                     </div>
                   </a>
-                  <a href="dokumanlar.html" class="dropdown-item">
+                  <a href="dokumanlar.php" class="dropdown-item">
                     <i class="fas fa-comments"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">DOKÜMANLAR</div>
@@ -188,6 +204,7 @@
         </div>
       </div>
     </nav>
+
     <div class="menu-backdrop" id="menuBackdrop"></div>
     <div class="side-menu" id="sideMenu">
       <div class="side-menu-header">
@@ -214,10 +231,10 @@
           <a href="duyuru.html"><i class="fas fa-bullhorn"></i> Duyurular</a>
         </li>
         <li>
-          <a href="protokol.html"><i class="fas fa-file-signature"></i> Protokoller</a>
+          <a href="protokol.php"><i class="fas fa-file-signature"></i> Protokoller</a>
         </li>
         <li>
-          <a href="dokumanlar.html"><i class="fas fa-comments"></i> Dokümanlar</a>
+          <a href="dokumanlar.php"><i class="fas fa-comments"></i> Dokümanlar</a>
         </li>
         <li>
           <a href="mevzuat.html"><i class="fas fa-calendar-check"></i> Mevzuatlar</a>
@@ -250,7 +267,7 @@
               <a href="ana_sayfa.html"><i class="fas fa-home"></i> Anasayfa</a>
             </li>
             <li class="breadcrumb-item active" aria-current="page" id="breadcrumbTitle">
-              Dökümanlar
+              Protokoller
             </li>
           </ol>
         </nav>
@@ -258,160 +275,79 @@
     </div>
 
     <div class="main-container">
+      <!-- Sayfa Başlığı -->
       <header class="page-header">
         <div class="content">
-          <h1>Dökümanlar</h1>
-          <p>Personel için önemli belgeler, formlar ve yönergeler</p>
+          <h1>Protokoller</h1>
+          <p>
+            İlgili birimlerle yapılan tüm protokolleri görüntüleyebilir, detaylarına
+            ulaşabilirsiniz.
+          </p>
         </div>
       </header>
 
+      <!-- Kontroller -->
       <div class="controls-section">
         <div class="search-box">
           <i class="fas fa-search search-icon"></i>
-          <input type="text" class="search-input" placeholder="Döküman ara..." id="searchInput" />
+          <input type="text" class="search-input" placeholder="Protokol ara..." id="searchInput" />
         </div>
 
         <div class="filter-buttons">
-          <button class="filter-btn" data-filter="protocol">Protokoller</button>
-          <button class="filter-btn active" data-filter="document">Dökümanlar</button>
+          <button class="filter-btn active" data-filter="protocol">Protokoller</button>
+          <button class="filter-btn" data-filter="document">Dökümanlar</button>
           <button class="filter-btn" data-filter="regulation">Mevzuatlar</button>
           <button class="filter-btn" data-filter="training">Eğitimler</button>
         </div>
       </div>
 
+      <!-- Protokoller Grid -->
       <div class="documents-grid" id="documentsGrid">
-        <div class="document-card" data-category="document">
-          <div class="document-header">
-            <div class="document-icon">
-              <i class="fas fa-user-friends"></i>
+        <?php if (count($protokoller) > 0): ?>
+          <?php foreach ($protokoller as $row):
+              $uzanti = strtolower(pathinfo($row['dosya_yolu'], PATHINFO_EXTENSION));
+              $tarihFormat = !empty($row['tarih']) ? date("d.m.Y", strtotime($row['tarih'])) : "";
+              $ikon = !empty($row['ikon']) ? $row['ikon'] : "fa-file-signature";
+          ?>
+          <div class="document-card" data-category="protocol">
+            <div class="document-header">
+              <div class="document-icon">
+                <i class="fas <?= htmlspecialchars($ikon) ?>"></i>
+              </div>
+              <div class="document-info">
+                <h3 class="document-title"><?= htmlspecialchars($row['baslik']) ?></h3>
+                <span class="document-category">Protokoller</span>
+              </div>
             </div>
-            <div class="document-info">
-              <h3 class="document-title">Aile Bildirim Formu</h3>
-              <span class="document-category">Dökümanlar</span>
-            </div>
-          </div>
-          <p class="document-description">
-            Personelin medeni durumu, eş, çocuk ve bakmakla yükümlü olduğu aile bireylerine ilişkin
-            bilgileri bildirmek veya güncellemek amacıyla kullanılan resmi form.
-          </p>
-          <div class="document-meta">
-            <div class="document-size">
-              <i class="fas fa-file-pdf"></i>
-              PDF • 2.3 MB
-            </div>
-            <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
-              04.10.2023
-            </div>
-          </div>
-          <div class="download-section" style="margin-top: 50px">
-            <a
-              href="../images/dokumanlar/a-le-durum-b-ld-r-r-formu_7664 (1).xlsx"
-              download
-              class="download-btn"
-            >
-              <i class="fas fa-download"></i> İndir
-            </a>
 
-            <button
-              class="preview-btn"
-              onclick="
-                previewDocument(
-                  'https://personel.gebze.bel.tr/upload/document/a-le-durum-b-ld-r-r-formu/a-le-durum-b-ld-r-r-formu_7664.xlsx'
-                )
-              "
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
+            <p class="document-description">
+              <?= nl2br(htmlspecialchars($row['aciklama'])) ?>
+            </p>
 
-        <div class="document-card" data-category="document">
-          <div class="document-header">
-            <div class="document-icon">
-              <i class="fas fa-briefcase"></i>
+            <div class="document-meta">
+              <div class="document-size">
+                <i class="fas fa-file-pdf"></i>
+                <?= strtoupper($uzanti ?: 'PDF') ?> • <?= htmlspecialchars($row['boyut']) ?>
+              </div>
+              <div class="document-date">
+                <i class="fas fa-calendar-alt"></i>
+                <?= $tarihFormat ?>
+              </div>
             </div>
-            <div class="document-info">
-              <h3 class="document-title">Mal Bildirim Formu</h3>
-              <span class="document-category">Dökümanlar</span>
-            </div>
-          </div>
-          <p class="document-description">
-            Kamu görevlilerinin kendileri, eşleri ve velayetleri altındaki çocuklarına ait taşınır
-            ve taşınmaz mallar ile diğer mal varlığı unsurlarını 3628 sayılı Kanun gereğince beyan
-            etmek amacıyla kullanılan form.
-          </p>
-          <div class="document-meta">
-            <div class="document-size">
-              <i class="fas fa-file-pdf"></i>
-              PDF • 845 KB
-            </div>
-            <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
-              08.01.2025
-            </div>
-          </div>
-          <div class="download-section">
-            <a href="../images/dokumanlar/mal-b-ld-r-m-formu_501.doc" download class="download-btn">
-              <i class="fas fa-download"></i> İndir
-            </a>
-            <button
-              class="preview-btn"
-              onclick="
-                previewDocument(
-                  'https://personel.gebze.bel.tr/upload/document/mal-b-ld-r-m-formu/mal-b-ld-r-m-formu_501.doc'
-                )
-              "
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
 
-        <div class="document-card" data-category="document">
-          <div class="document-header">
-            <div class="document-icon">
-              <i class="fas fa-sign-out-alt"></i>
-            </div>
-            <div class="document-info">
-              <h3 class="document-title">Personel İlişki Kesme Formu</h3>
-              <span class="document-category">Dökümanlar</span>
-            </div>
-          </div>
-          <p class="document-description">
-            Kurumdan ayrılan personelin zimmetli eşyalarının teslimi ve ilgili birimlerle ilişiğinin
-            resmi olarak kesilmesi amacıyla kullanılan form.
-          </p>
-          <div class="document-meta">
-            <div class="document-size">
-              <i class="fas fa-file-pdf"></i>
-              PDF • 1.7 MB
-            </div>
-            <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
-              20.12.2024
+            <div class="download-section">
+              <button
+                class="preview-btn"
+                onclick="previewDocument('<?= htmlspecialchars($row['dosya_yolu'], ENT_QUOTES) ?>')"
+              >
+                Detaylı Bilgi İçin Tıklayınız
+              </button>
             </div>
           </div>
-          <div class="download-section" style="margin-top: 50px">
-            <a
-              href="../images/dokumanlar/personel-l-k-kesme-formu_9657.docx"
-              download
-              class="download-btn"
-            >
-              <i class="fas fa-download"></i> İndir
-            </a>
-            <button
-              class="preview-btn"
-              onclick="
-                previewDocument(
-                  'https://personel.gebze.bel.tr/upload/document/personel-l-k-kesme-formu/personel-l-k-kesme-formu_9657.docx'
-                )
-              "
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
+          <?php endforeach; ?>
+        <?php else: ?>
+          <p>Henüz eklenmiş protokol bulunmuyor.</p>
+        <?php endif; ?>
       </div>
     </div>
     <footer>
@@ -444,8 +380,7 @@
         </div>
       </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../JS/dokumanlar.script.js"></script>
+    <script src="../JS/protokol.script.js"></script>
   </body>
 </html>
