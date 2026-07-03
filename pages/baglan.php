@@ -55,16 +55,60 @@ function documentIconClass(array $row): string
     return $map[$row["alt_tip"] ?? ""] ?? "fa-file";
 }
 
+function yardimciLinkLogoDefaults(): array
+{
+    return [
+        "OMIS"                              => "../images/otomasyon/omis_7572.png",
+        "Ulakbel"                           => "../images/otomasyon/ulakbel_5496.png",
+        "İmar Yönetim Sistemi"              => "../images/otomasyon/imar-yonetim-sistemi_8038.png",
+        "Dijital Arşiv"                     => "../images/otomasyon/dijital-arsiv_415.png",
+        "Outlook"                           => "../images/otomasyon/outlook_4005.png",
+        "Sosyal Yardım"                     => "../images/otomasyon/sosyal-yardim_3767.png",
+        "Netcad"                            => "../images/otomasyon/netcad_3888.png",
+        "E-Belediye Sistemi"                => "../images/otomasyon/ebys_8493.png",
+        "E-Belediye Evlendrme Modülü"       => "../images/otomasyon/e-belediye-evlendirme-modulu_3993.png",
+        "E-Belediye Sosyal Yardım Modülü"   => "../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png",
+        "Gebze Belediyesi"                  => "../images/yardimci_linkler/web_siteleri/gebze-belediyesi.png",
+        "Kocaeli Büyükşehir Belediyesi"     => "../images/yardimci_linkler/web_siteleri/kocaeli-buyuksehir-belediyesi.png",
+        "Kocaeli Valiliği"                  => "../images/yardimci_linkler/web_siteleri/kocaeli-vali.jpg",
+        "Gebze Kaymakamlığı"                => "../images/yardimci_linkler/web_siteleri/gebze-kaymakam.png",
+        "Türkiye Belediyeler Birliği"       => "../images/yardimci_linkler/bilgi_portallari/turkiye-belediyeler-birligi_2430.png",
+        "Cumhurbaşkanlığı Uzaktan Eğitim Kapısı" => "../images/yardimci_linkler/bilgi_portallari/cumhur.jpg",
+        "BTK Akademi Eğitim Portalı"        => "../images/yardimci_linkler/bilgi_portallari/btk-akademi.jpg",
+        "Memurlar.Net"                      => "../images/yardimci_linkler/faydali_linkler/memurlar.png",
+        "İlan"                              => "../images/yardimci_linkler/faydali_linkler/ilan.png",
+        "Resmi Gazete"                      => "../images/yardimci_linkler/faydali_linkler/resmi.png",
+    ];
+}
+
 function yardimciLinkLogo(array $row): ?string
 {
-    $mapped = otomasyonLogoUrl($row["baslik"] ?? "", $row["logo_url"] ?? "");
-    if ($mapped) {
-        return $mapped;
-    }
     $url = trim((string)($row["logo_url"] ?? ""));
     if ($url !== "" && imageFileExists($url)) {
         return normalizeImagePath($url);
     }
+
+    $baslik = trim((string)($row["baslik"] ?? ""));
+    $defaults = yardimciLinkLogoDefaults();
+    if ($baslik !== "" && isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
+        return $defaults[$baslik];
+    }
+
+    return otomasyonLogoUrl($baslik, $url);
+}
+
+function otomasyonLogoUrl(string $baslik, ?string $logoUrl = ""): ?string
+{
+    $logoUrl = trim((string)$logoUrl);
+    if ($logoUrl !== "" && imageFileExists($logoUrl)) {
+        return normalizeImagePath($logoUrl);
+    }
+
+    $defaults = yardimciLinkLogoDefaults();
+    if (isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
+        return $defaults[$baslik];
+    }
+
     return null;
 }
 
@@ -95,26 +139,32 @@ function imageFileExists(string $webPath): bool
     return $root !== "" && is_file($root . "/" . str_replace("\\", "/", $rel));
 }
 
-function otomasyonLogoUrl(string $baslik, ?string $logoUrl = ""): ?string
+function dbEnsureYardimciLinkLogos(PDO $db): void
 {
-    $logoUrl = trim((string)$logoUrl);
-    if ($logoUrl !== "" && imageFileExists($logoUrl)) {
-        return normalizeImagePath($logoUrl);
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    try {
+        $db->query("SELECT 1 FROM yardimci_linkler LIMIT 1");
+    } catch (PDOException $e) {
+        return;
     }
 
-    $defaults = [
-        "İmar Yönetim Sistemi"              => "../images/otomasyon/imar-yonetim-sistemi_8038.png",
-        "Dijital Arşiv"                     => "../images/otomasyon/dijital-arsiv_415.png",
-        "Sosyal Yardım"                     => "../images/otomasyon/sosyal-yardim_3767.png",
-        "E-Belediye Evlendrme Modülü"       => "../images/otomasyon/e-belediye-evlendirme-modulu_3993.png",
-        "E-Belediye Sosyal Yardım Modülü"   => "../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png",
-    ];
+    dbEnsureColumn($db, "yardimci_linkler", "logo_url", "VARCHAR(255) DEFAULT NULL");
 
-    if (isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
-        return $defaults[$baslik];
+    $stmt = $db->prepare(
+        "UPDATE yardimci_linkler SET logo_url = ? WHERE baslik = ? AND (logo_url IS NULL OR logo_url = '')"
+    );
+
+    foreach (yardimciLinkLogoDefaults() as $baslik => $logo) {
+        if (!imageFileExists($logo)) {
+            continue;
+        }
+        $stmt->execute([$logo, $baslik]);
     }
-
-    return null;
 }
 
 function jsonData(mixed $data): string
@@ -177,6 +227,50 @@ function mapVefat(array $rows): array
     ], $rows);
 }
 
+function dbTableList(PDO $db): array
+{
+    static $tables = null;
+    if ($tables === null) {
+        $tables = $db->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+    }
+    return $tables;
+}
+
+function dbHasAnyTable(PDO $db, array $names): bool
+{
+    $tables = dbTableList($db);
+    foreach ($names as $name) {
+        if (in_array($name, $tables, true)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function dbAnasayfaDuyurularTable(PDO $db): string
+{
+    return dbHasAnyTable($db, ["anasayfa_duyurular"]) ? "anasayfa_duyurular" : "duyurular";
+}
+
+function dbEtkinliklerDuyurularTable(PDO $db): string
+{
+    return dbHasAnyTable($db, ["etkinlikler_duyurular"]) ? "etkinlikler_duyurular" : "dokumanlar";
+}
+
+function dbFetchAnasayfaDuyurular(PDO $db): array
+{
+    $table = dbAnasayfaDuyurularTable($db);
+    return dbFetchAll($db, "SELECT * FROM `{$table}` ORDER BY id DESC");
+}
+
+function dbFetchEtkinliklerDuyurular(PDO $db): array
+{
+    if (dbEtkinliklerDuyurularTable($db) === "etkinlikler_duyurular") {
+        return dbFetchAll($db, "SELECT * FROM etkinlikler_duyurular ORDER BY id");
+    }
+    return dbFetchAll($db, "SELECT * FROM dokumanlar WHERE sayfa_tipi = ? ORDER BY id", ["duyuru"]);
+}
+
 function dbEnsureSchema(PDO $db): void
 {
     static $checked = false;
@@ -186,9 +280,9 @@ function dbEnsureSchema(PDO $db): void
     $checked = true;
 
     $required = [
-        "haberler", "duyurular", "etkinlikler", "videolar",
+        "haberler", "etkinlikler", "videolar",
         "sizden_gelenler", "personeller", "vefat_bilgileri",
-        "dokumanlar", "yardimci_linkler", "anketler", "haber_galeri",
+        "yardimci_linkler", "anketler", "haber_galeri",
     ];
 
     try {
@@ -204,8 +298,24 @@ function dbEnsureSchema(PDO $db): void
         }
     }
 
+    if (!dbHasAnyTable($db, ["anasayfa_duyurular", "duyurular"])) {
+        importPersonelDb();
+        return;
+    }
+
+    if (!dbHasAnyTable($db, ["etkinlikler_duyurular", "dokumanlar"])) {
+        importPersonelDb();
+        return;
+    }
+
+    if (!dbHasAnyTable($db, ["kaynaklar", "dokumanlar"])) {
+        importPersonelDb();
+        return;
+    }
+
     dbEnsureColumn($db, "anketler", "favori", "TINYINT(1) NOT NULL DEFAULT 0");
     dbEnsureVideoOrder($db);
+    dbEnsureYardimciLinkLogos($db);
 }
 
 function dbCanonicalVideoYoutubeIds(): array

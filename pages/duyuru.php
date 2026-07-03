@@ -1,6 +1,6 @@
 <?php
 include("baglan.php");
-$kayitlar = dbFetchAll($db, "SELECT * FROM dokumanlar WHERE sayfa_tipi = ? ORDER BY id", ["duyuru"]);
+$kayitlar = dbFetchEtkinliklerDuyurular($db);
 ?>
 <!doctype html>
 <html lang="tr">

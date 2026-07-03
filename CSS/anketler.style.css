@@ -10,7 +10,8 @@ body {
   display: flex;
   flex-direction: column;
 }
-.container.py-5 {
+.container.py-5,
+main.container.py-5 {
   flex: 1;
 }
 html {
@@ -36,7 +37,7 @@ body {
   z-index: 999;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
-.nav-container {
+.navbar .nav-container {
   display: flex;
   justify-content: space-between; /* Anahtar kural: Elemanları aralıklı hizalar */
   align-items: center;
@@ -605,7 +606,7 @@ body {
   .profile-arrow {
     display: none;
   }
-  .nav-container {
+  .navbar .nav-container {
     display: flex;
     justify-content: space-between; /* En sola ve en sağa yasla */
     align-items: center;
@@ -740,65 +741,32 @@ body {
 .filter-tab.active:hover {
   background: #0056b3;
 }
-.favorites-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-  border: 1px solid #ffe08a;
-  border-radius: 16px;
-}
-.favorites-section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-  flex-wrap: wrap;
-}
-.favorites-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #b8860b;
-  margin: 0;
-}
-.favorites-count {
-  font-size: 0.9rem;
-  color: #856404;
-  background: #fff3cd;
-  padding: 0.35rem 0.85rem;
-  border-radius: 999px;
-  font-weight: 600;
-}
-.survey-card {
-  position: relative;
-}
-.favorite-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 2;
-  width: 38px;
-  height: 38px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
-  color: #adb5bd;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+.favorite-toggle-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
+  gap: 0.35rem;
+  background: #fff;
+  color: #856404;
+  border: 1px solid #ffe08a;
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
   transition: all 0.25s ease;
+  cursor: pointer;
 }
-.favorite-btn:hover {
-  transform: scale(1.08);
-  color: #f0ad4e;
+.favorite-toggle-btn:hover {
+  background: #fff9e6;
+  border-color: #f0ad4e;
+  color: #b8860b;
 }
-.favorite-btn.active {
-  color: #f0ad4e;
+.favorite-toggle-btn.active {
   background: #fff8e1;
+  border-color: #f0ad4e;
+  color: #b8860b;
 }
-.favorite-btn.active i {
+.favorite-toggle-btn.active i {
   color: #f0ad4e;
 }
 .empty-state {
@@ -908,8 +876,9 @@ body {
   font-size: 0.85rem;
 }
 .survey-btn {
-  background-color: #0056b3;
-  color: white;
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
   border-radius: 25px;
   padding: 8px 20px;
   font-weight: 500;
@@ -921,15 +890,10 @@ body {
   border: none;
 }
 .survey-btn:hover {
-  background-color: #003f8a;
+  background-color: #218838 !important;
+  border-color: #1e7e34 !important;
   transform: scale(1.05);
-  color: white;
-}
-.survey-btn.completed {
-  background-color: #28a745;
-}
-.survey-btn.expired {
-  background-color: #6c757d;
+  color: white !important;
 }
 .status-badge {
   position: absolute;
@@ -990,12 +954,10 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   margin-bottom: 50px;
 }
-.container.py-5 {
-  width: 90% !important;
-  max-width: 1600px !important;
-  margin: 0 auto !important;
+main.main-container.container.py-5 {
   flex: 1;
-  padding-bottom: 0px !important; /* Bu satırı ekleyin */
+  padding-top: 0.5rem !important;
+  padding-bottom: 2rem !important;
 }
 .activity-item {
   padding: 10px 0;

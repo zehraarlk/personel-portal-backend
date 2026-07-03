@@ -7,12 +7,13 @@ const path = require("path");
 const dbDir = path.join(__dirname, "..", "db");
 
 const tableFiles = [
-  { file: "tum_veriler.sql", tables: ["haberler", "duyurular"] },
+  { file: "tum_veriler.sql", tables: ["haberler", "anasayfa_duyurular"] },
   { file: "etkinlikler.sql", tables: ["etkinlikler"] },
   { file: "videolar.sql", tables: ["videolar"] },
   { file: "sizden_gelenler.sql", tables: ["sizden_gelenler"] },
   { file: "personeller.sql", tables: ["personeller"] },
   { file: "vefat_bilgileri.sql", tables: ["vefat_bilgileri"] },
+  { file: "etkinlikler_duyurular.sql", tables: ["etkinlikler_duyurular"] },
   { file: "dokumanlar.sql", tables: ["dokumanlar"] },
   { file: "yardimci_linkler.sql", tables: ["yardimci_linkler"] },
   { file: "anketler.sql", tables: ["anketler"] },
@@ -81,6 +82,8 @@ DROP TABLE IF EXISTS \`personeller\`;
 DROP TABLE IF EXISTS \`sizden_gelenler\`;
 DROP TABLE IF EXISTS \`videolar\`;
 DROP TABLE IF EXISTS \`etkinlikler\`;
+DROP TABLE IF EXISTS \`etkinlikler_duyurular\`;
+DROP TABLE IF EXISTS \`anasayfa_duyurular\`;
 DROP TABLE IF EXISTS \`duyurular\`;
 DROP TABLE IF EXISTS \`haberler\`;
 SET FOREIGN_KEY_CHECKS = 1;

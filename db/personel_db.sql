@@ -15,6 +15,9 @@ DROP TABLE IF EXISTS `portal_icerik`;
 DROP TABLE IF EXISTS `haber_galeri`;
 DROP TABLE IF EXISTS `anketler`;
 DROP TABLE IF EXISTS `yardimci_linkler`;
+DROP TABLE IF EXISTS `etkinlikler_duyurular`;
+DROP TABLE IF EXISTS `anasayfa_duyurular`;
+DROP TABLE IF EXISTS `kaynaklar`;
 DROP TABLE IF EXISTS `dokumanlar`;
 DROP TABLE IF EXISTS `vefat_bilgileri`;
 DROP TABLE IF EXISTS `personeller`;
@@ -37,13 +40,13 @@ ALTER TABLE `haberler` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 -- --------------------------------------------------------
--- Tablo: `duyurular`
+-- Tablo: `anasayfa_duyurular`
 -- --------------------------------------------------------
 
-CREATE TABLE `duyurular` ( `id` int(11) NOT NULL, `baslik` varchar(255) NOT NULL, `aciklama` text NOT NULL, `resim` varchar(255) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; INSERT INTO `duyurular` (`id`, `baslik`, `aciklama`, `resim`) VALUES (1, 'Stajyer Oryantasyon Eğitimi Tamamlandı', 'Belediyemizde yeni döneme başlayan stajyer öğrencilerimiz için oryantasyon programı düzenlendi.', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'), (2, 'Geleneksel Bayramlaşma Töreni Gerçekleşti', 'Kurban Bayramı vesilesiyle tüm personelimizin katılımıyla coşkulu bir bayramlaşma programı yapıldı.', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'), (3, '8 Mart Dünya Kadınlar Günü Kutlandı', 'Belediyemizdeki kadın personelimizin Dünya Kadınlar Günü\'nü özel bir etkinlikle kutladık.', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'), (4, 'Personel İftar Programı Büyük İlgi Gördü', 'Ramazan ayının manevi atmosferinde personelimizle birlikte iftar sofrasında buluştuk.', '../images/personel-ftar-program_109.jpg'), (5, 'Öğretmenler Günü Unutulmadı', 'Gebze\'deki öğretmenlerimizi bu özel günlerinde yalnız bırakmadık ve çeşitli ziyaretler gerçekleştirdik.', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'), (6, 'Dağ Bisikleti Kupası Gebze\'de Nefes Kesti', 'Türkiye Ulusal Dağ Bisikleti Kupası\'nın bir ayağına ev sahipliği yapmanın gururunu yaşadık.', '../images/ulusal-da-bisikleti-kupas-yar-lar_128.jpg'), (7, 'Personelimize Ağız ve Diş Sağlığı Taraması', 'Çalışanlarımızın sağlığını önemsiyor, düzenli olarak sağlık taramaları gerçekleştiriyoruz.', '../images/personellerimizin-a-z-ve-di-sa-l-n-onemsiyoruz_7091.jpg'), (8, 'Yaz Sezonunu Piknikle Açtık', 'Yoğun çalışma temposuna mola vererek tüm birimlerimizin katıldığı bir piknik organizasyonu düzenledik.', '../images/personel-p-kn-k-programi_9118.jpg'), (9, 'Stajyerlerle Film Okuma Etkinliği', 'Gençlerimizin vizyonunu geliştirmek amacıyla film okuma ve analiz programları düzenliyoruz.', '../images/stajyer-f-lm-okuma-programi_3604.jpg'), (10, 'İkinci Geleneksel İftar Buluşması', 'Personelimiz ve aileleriyle birlikte Ramazan ayının bereketini paylaştığımız iftar programımız.', '../images/personel-ftar-program_109.jpg'), (11, 'Stajyer Dönem Sonu Veda Programı', 'Staj dönemini başarıyla tamamlayan öğrencilerimiz için bir veda ve teşekkür etkinliği düzenlendi.', '../images/stajyer-donem-sonu-etk-nl_6028.jpg'), (12, 'Yeni Stajyerlerimize \"Hoş Geldin\" Dedik', 'Belediye çalışmalarını yakından tanımaları için yeni stajyerlerimize yönelik bir oryantasyon yapıldı.', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'), (13, 'Kadın Personelimize Özel İkramlar', '8 Mart kapsamında belediyemizdeki tüm kadın çalışanlarımıza küçük bir jest hazırladık.', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'), (14, 'Ramazan Bayramı Buluşması', 'Ramazan Bayramı dolayısıyla personelimizle bir araya gelerek bayramlaştık.', '../images/personel-bayramla-ma-programi_5965.jpg'), (15, 'Birlik ve Beraberlik İftarı', 'İftar programımız, personelimiz arasındaki birlik ve beraberliği pekiştirdi.', '../images/personel-ftar-program_109.jpg');
+CREATE TABLE `anasayfa_duyurular` ( `id` int(11) NOT NULL, `baslik` varchar(255) NOT NULL, `aciklama` text NOT NULL, `resim` varchar(255) NOT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; INSERT INTO `anasayfa_duyurular` (`id`, `baslik`, `aciklama`, `resim`) VALUES (1, 'Stajyer Oryantasyon Eğitimi Tamamlandı', 'Belediyemizde yeni döneme başlayan stajyer öğrencilerimiz için oryantasyon programı düzenlendi.', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'), (2, 'Geleneksel Bayramlaşma Töreni Gerçekleşti', 'Kurban Bayramı vesilesiyle tüm personelimizin katılımıyla coşkulu bir bayramlaşma programı yapıldı.', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'), (3, '8 Mart Dünya Kadınlar Günü Kutlandı', 'Belediyemizdeki kadın personelimizin Dünya Kadınlar Günü\'nü özel bir etkinlikle kutladık.', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'), (4, 'Personel İftar Programı Büyük İlgi Gördü', 'Ramazan ayının manevi atmosferinde personelimizle birlikte iftar sofrasında buluştuk.', '../images/personel-ftar-program_109.jpg'), (5, 'Öğretmenler Günü Unutulmadı', 'Gebze\'deki öğretmenlerimizi bu özel günlerinde yalnız bırakmadık ve çeşitli ziyaretler gerçekleştirdik.', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'), (6, 'Dağ Bisikleti Kupası Gebze\'de Nefes Kesti', 'Türkiye Ulusal Dağ Bisikleti Kupası\'nın bir ayağına ev sahipliği yapmanın gururunu yaşadık.', '../images/ulusal-da-bisikleti-kupas-yar-lar_128.jpg'), (7, 'Personelimize Ağız ve Diş Sağlığı Taraması', 'Çalışanlarımızın sağlığını önemsiyor, düzenli olarak sağlık taramaları gerçekleştiriyoruz.', '../images/personellerimizin-a-z-ve-di-sa-l-n-onemsiyoruz_7091.jpg'), (8, 'Yaz Sezonunu Piknikle Açtık', 'Yoğun çalışma temposuna mola vererek tüm birimlerimizin katıldığı bir piknik organizasyonu düzenledik.', '../images/personel-p-kn-k-programi_9118.jpg'), (9, 'Stajyerlerle Film Okuma Etkinliği', 'Gençlerimizin vizyonunu geliştirmek amacıyla film okuma ve analiz programları düzenliyoruz.', '../images/stajyer-f-lm-okuma-programi_3604.jpg'), (10, 'İkinci Geleneksel İftar Buluşması', 'Personelimiz ve aileleriyle birlikte Ramazan ayının bereketini paylaştığımız iftar programımız.', '../images/personel-ftar-program_109.jpg'), (11, 'Stajyer Dönem Sonu Veda Programı', 'Staj dönemini başarıyla tamamlayan öğrencilerimiz için bir veda ve teşekkür etkinliği düzenlendi.', '../images/stajyer-donem-sonu-etk-nl_6028.jpg'), (12, 'Yeni Stajyerlerimize \"Hoş Geldin\" Dedik', 'Belediye çalışmalarını yakından tanımaları için yeni stajyerlerimize yönelik bir oryantasyon yapıldı.', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'), (13, 'Kadın Personelimize Özel İkramlar', '8 Mart kapsamında belediyemizdeki tüm kadın çalışanlarımıza küçük bir jest hazırladık.', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'), (14, 'Ramazan Bayramı Buluşması', 'Ramazan Bayramı dolayısıyla personelimizle bir araya gelerek bayramlaştık.', '../images/personel-bayramla-ma-programi_5965.jpg'), (15, 'Birlik ve Beraberlik İftarı', 'İftar programımız, personelimiz arasındaki birlik ve beraberliği pekiştirdi.', '../images/personel-ftar-program_109.jpg');
 
-ALTER TABLE `duyurular` ADD PRIMARY KEY (`id`);
-ALTER TABLE `duyurular` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `anasayfa_duyurular` ADD PRIMARY KEY (`id`);
+ALTER TABLE `anasayfa_duyurular` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
 -- --------------------------------------------------------
@@ -188,17 +191,25 @@ CREATE TABLE `vefat_bilgileri` ( `id` int(11) NOT NULL AUTO_INCREMENT, `vefat_ed
 
 
 -- --------------------------------------------------------
--- Tablo: `dokumanlar`
+-- Tablo: `etkinlikler_duyurular`
 -- --------------------------------------------------------
 
-CREATE TABLE `dokumanlar` ( `id` int(11) NOT NULL AUTO_INCREMENT, `sayfa_tipi` varchar(50) NOT NULL, `baslik` varchar(255) NOT NULL, `aciklama` text, `kategori_adi` varchar(150) DEFAULT NULL, `alt_tip` varchar(50) DEFAULT NULL, `resim_url` varchar(255) DEFAULT NULL, `dosya_url` varchar(500) DEFAULT NULL, `video_url` varchar(500) DEFAULT NULL, `tarih` date DEFAULT NULL, PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; INSERT INTO `dokumanlar` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `kategori_adi`, `alt_tip`, `resim_url`, `dosya_url`, `video_url`, `tarih`) VALUES
+CREATE TABLE `etkinlikler_duyurular` ( `id` int(11) NOT NULL AUTO_INCREMENT, `sayfa_tipi` varchar(50) NOT NULL, `baslik` varchar(255) NOT NULL, `aciklama` text, `kategori_adi` varchar(150) DEFAULT NULL, `alt_tip` varchar(50) DEFAULT NULL, `resim_url` varchar(255) DEFAULT NULL, `dosya_url` varchar(500) DEFAULT NULL, `video_url` varchar(500) DEFAULT NULL, `tarih` date DEFAULT NULL, PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; INSERT INTO `etkinlikler_duyurular` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `kategori_adi`, `alt_tip`, `resim_url`, `dosya_url`, `video_url`, `tarih`) VALUES
 (1, 'duyuru', 'DİL EĞİTİM MODELLERİNDE GEÇERLİ %50 İNDİRİM!', 'KURUMUMUZ PERSONELİ VE 1. DERECE YAKINLARINA ÖZEL AMERICAN VIP DİL OKULLARINDA GEÇERLİ %50 İNİDİRİM ANLAŞMASI İMZALANDI.', 'İnsan Kaynakları', 'insan', '../images/d-l-e-t-m-modeller-nde-gecerl-50-nd-r-m_4469.jpg', NULL, NULL, '2023-10-04'),
 (2, 'duyuru', 'Gebze''de Zabıta Haftası Kutlandı', 'Gebze Belediye Başkanı Zinnur Büyükgöz, her yıl 1-7 Eylül tarihleri arasında kutlanan Zabıta Haftası münasebetiyle zabıta personelleriyle bir araya geldi.', 'İnsan Kaynakları', 'insan', '../images/gebze-de-zab-ta-haftas-kutland_5157 (1).jpg', NULL, NULL, '2023-10-04'),
 (3, 'duyuru', 'GEBZE''DE EK ZAM PROTOKOLÜ İMZALANDI', 'Gebze Belediyesi, bünyesinde görev yapan tüm işçilerin maaşlarına %20 zam müjdesini verdi. Ek zam protokolü Gebze Belediye Başkanı Zinnur BÜYÜKGÖZ ve Hizmet-İş ve Özgüven-Sen Sendikası yetkilileri arasında imzalandı.', 'İnsan Kaynakları', 'insan', '../images/gebze-de-ek-zam-protokolu-mzalandi_4681.jpg', NULL, NULL, '2023-10-04'),
 (4, 'duyuru', 'Gebze''nin Filosu Büyüyor;', 'Gebze''nin mahallelerine daha kaliteli hizmet verebilmek adına makine ve araç filosuna yeni takviyeler yapılmasını sağlayan Gebze Belediye Başkanı Zinnur Büyükgöz, belediyenin öz kaynaklarıyla satın alınan 100 yeni aracı filoya kazandırdı.', 'İnsan Kaynakları', 'insan', '../images/gebze-nin-filosu-buyuyor_2355.jpg', NULL, NULL, '2023-10-04'),
 (5, 'duyuru', 'Daha Sağlıklı Personel İçin', 'Gebze Belediyesi bünyesinde görev yapan tüm personellerimiz ve 1. derece yakınları (anne, baba, eş ve çocuk ) anlaşmalı sağlık kurumlarında indirimli fiyatlardan faydalanabilme olanağına sahip olacaklardır.', 'İnsan Kaynakları', 'insan', '../images/daha-saazlikli-ba-r-personel-a-a-a-n_7523.jpg', NULL, NULL, '2023-10-04'),
-(6, 'duyuru', 'Parola Güvenlik Politika Geçişi', 'T.C. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi Başkanlığı koordinasyonunda başlatılan "Bilgi ve İletişim Güvenliği Rehberi" uyum süreci doğrultusunda gerçekleştireceğimiz "Güvenli Parola Politikası" geçişi kapsamında, bilgisayar oturumu açma parolaları değişecektir.', 'Bilgi İşlem', 'bilgi', '../images/parola-guvenlik-politikasi-duyurusu_2090.jpg', NULL, NULL, '2023-10-04'),
+(6, 'duyuru', 'Parola Güvenlik Politika Geçişi', 'T.C. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi Başkanlığı koordinasyonunda başlatılan "Bilgi ve İletişim Güvenliği Rehberi" uyum süreci doğrultusunda gerçekleştireceğimiz "Güvenli Parola Politikası" geçişi kapsamında, bilgisayar oturumu açma parolaları değişecektir.', 'Bilgi İşlem', 'bilgi', '../images/parola-guvenlik-politikasi-duyurusu_2090.jpg', NULL, NULL, '2023-10-04');
+
+
+-- --------------------------------------------------------
+-- Tablo: `dokumanlar`
+-- --------------------------------------------------------
+
+CREATE TABLE `dokumanlar` ( `id` int(11) NOT NULL AUTO_INCREMENT, `sayfa_tipi` varchar(50) NOT NULL, `baslik` varchar(255) NOT NULL, `aciklama` text, `kategori_adi` varchar(150) DEFAULT NULL, `alt_tip` varchar(50) DEFAULT NULL, `resim_url` varchar(255) DEFAULT NULL, `dosya_url` varchar(500) DEFAULT NULL, `video_url` varchar(500) DEFAULT NULL, `tarih` date DEFAULT NULL, PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci; INSERT INTO `dokumanlar` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `kategori_adi`, `alt_tip`, `resim_url`, `dosya_url`, `video_url`, `tarih`) VALUES
 (7, 'dokuman', 'Aile Bildirim Formu', 'Personelin medeni durumu, eş, çocuk ve bakmakla yükümlü olduğu aile bireylerine ilişkin bilgileri bildirmek veya güncellemek amacıyla kullanılan resmi form.', 'Dökümanlar', 'document', '', '../images/dokumanlar/a-le-durum-b-ld-r-r-formu_7664 (1).xlsx', NULL, '2023-10-04'),
 (8, 'dokuman', 'Mal Bildirim Formu', 'Kamu görevlilerinin kendileri, eşleri ve velayetleri altındaki çocuklarına ait taşınır ve taşınmaz mallar ile diğer mal varlığı unsurlarını 3628 sayılı Kanun gereğince beyan etmek amacıyla kullanılan form.', 'Dökümanlar', 'document', '', '../images/dokumanlar/mal-b-ld-r-m-formu_501.doc', NULL, '2025-01-08'),
 (9, 'dokuman', 'Personel İlişki Kesme Formu', 'Kurumdan ayrılan personelin zimmetli eşyalarının teslimi ve ilgili birimlerle ilişiğinin resmi olarak kesilmesi amacıyla kullanılan form.', 'Dökümanlar', 'document', '', '../images/dokumanlar/personel-l-k-kesme-formu_9657.docx', NULL, '2024-12-20'),
@@ -244,16 +255,16 @@ CREATE TABLE `yardimci_linkler` ( `id` int(11) NOT NULL AUTO_INCREMENT, `baslik`
 (8, 'E-Belediye Sistemi', 'kurum-ici', '../images/otomasyon/ebys_8493.png', 'https://www.belediye.gov.tr/'),
 (9, 'E-Belediye Evlendrme Modülü', 'kurum-ici', '../images/otomasyon/e-belediye-evlendirme-modulu_3993.png', 'https://www.belediye.gov.tr/evlendirme-modulu'),
 (10, 'E-Belediye Sosyal Yardım Modülü', 'kurum-ici', '../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png', 'https://www.belediye.gov.tr/sosyal-yardim-takip-sistemi-syts-modulu'),
-(11, 'Gebze Belediyesi', 'website', '', 'https://www.gebze.bel.tr/'),
-(12, 'Kocaeli Büyükşehir Belediyesi', 'website', '', 'https://www.kocaeli.bel.tr/'),
-(13, 'Kocaeli Valiliği', 'website', '', 'http://www.kocaeli.gov.tr/'),
-(14, 'Gebze Kaymakamlığı', 'website', '', 'http://www.gebze.gov.tr/'),
-(15, 'Türkiye Belediyeler Birliği', 'bilgi', '', 'https://www.tbb.gov.tr/tr'),
-(16, 'Cumhurbaşkanlığı Uzaktan Eğitim Kapısı', 'bilgi', '', 'https://uzaktanegitimkapisi.cbiko.gov.tr/Giris'),
-(17, 'BTK Akademi Eğitim Portalı', 'bilgi', '', 'https://www.btkakademi.gov.tr/'),
-(18, 'Memurlar.Net', 'faydalı', '', 'https://www.memurlar.net/'),
-(19, 'İlan', 'faydalı', '', 'https://www.ilan.gov.tr/'),
-(20, 'Resmi Gazete', 'faydalı', '', 'https://www.resmigazete.gov.tr/');
+(11, 'Gebze Belediyesi', 'website', '../images/yardimci_linkler/web_siteleri/gebze-belediyesi.png', 'https://www.gebze.bel.tr/'),
+(12, 'Kocaeli Büyükşehir Belediyesi', 'website', '../images/yardimci_linkler/web_siteleri/kocaeli-buyuksehir-belediyesi.png', 'https://www.kocaeli.bel.tr/'),
+(13, 'Kocaeli Valiliği', 'website', '../images/yardimci_linkler/web_siteleri/kocaeli-vali.jpg', 'http://www.kocaeli.gov.tr/'),
+(14, 'Gebze Kaymakamlığı', 'website', '../images/yardimci_linkler/web_siteleri/gebze-kaymakam.png', 'http://www.gebze.gov.tr/'),
+(15, 'Türkiye Belediyeler Birliği', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/turkiye-belediyeler-birligi_2430.png', 'https://www.tbb.gov.tr/tr'),
+(16, 'Cumhurbaşkanlığı Uzaktan Eğitim Kapısı', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/cumhur.jpg', 'https://uzaktanegitimkapisi.cbiko.gov.tr/Giris'),
+(17, 'BTK Akademi Eğitim Portalı', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/btk-akademi.jpg', 'https://www.btkakademi.gov.tr/'),
+(18, 'Memurlar.Net', 'faydalı', '../images/yardimci_linkler/faydali_linkler/memurlar.png', 'https://www.memurlar.net/'),
+(19, 'İlan', 'faydalı', '../images/yardimci_linkler/faydali_linkler/ilan.png', 'https://www.ilan.gov.tr/'),
+(20, 'Resmi Gazete', 'faydalı', '../images/yardimci_linkler/faydali_linkler/resmi.png', 'https://www.resmigazete.gov.tr/');
 
 
 -- --------------------------------------------------------

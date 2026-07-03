@@ -491,7 +491,7 @@ function changePage(page) {
 // Open news detail (placeholder)
 function openNewsDetail(id) {
   console.log("Haber detayı açılıyor:", id);
-  window.location.href = `etkinlikd.html?id=${id}`;
+  window.location.href = `etkinlikd.php?id=${id}`;
 }
 
 // Debounce function

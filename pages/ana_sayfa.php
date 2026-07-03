@@ -7,7 +7,7 @@ $haberler = array_map(function ($h) {
 $duyurular = array_map(function ($d) {
     $d["resim"] = imgUrl($d["resim"] ?? "");
     return $d;
-}, dbFetchAll($db, "SELECT * FROM duyurular ORDER BY id DESC"));
+}, dbFetchAnasayfaDuyurular($db));
 $personeller = mapPersonelJs(dbFetchAll($db, "SELECT * FROM personeller ORDER BY ad"));
 $otomasyonLinkleri = dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
 $ilkHaber = $haberler[0] ?? null;

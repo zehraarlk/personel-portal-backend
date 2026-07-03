@@ -5,7 +5,7 @@ if (empty($pageTitle)) {
 }
 ?>
     <div class="breadcrumb-section">
-      <div class="nav-container">
+      <div class="breadcrumb-container">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item">

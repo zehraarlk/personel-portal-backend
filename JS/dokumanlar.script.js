@@ -116,13 +116,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Yönlendirme için sayfa isimlerini burada belirt
       if (target === "protocol") {
-        window.location.href = "protokol.html";
+        window.location.href = "protokol.php";
       } else if (target === "document") {
-        window.location.href = "dokumanlar.html";
+        window.location.href = "dokumanlar.php";
       } else if (target === "regulation") {
-        window.location.href = "mevzuat.html";
+        window.location.href = "mevzuat.php";
       } else if (target === "training") {
-        window.location.href = "egitim.html";
+        window.location.href = "egitim.php";
       }
     });
   });

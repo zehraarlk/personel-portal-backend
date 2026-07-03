@@ -8,9 +8,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateEmptyState(hasResults, searchTerm = "") {
     const emptyState = document.getElementById("emptyState");
+    const emptyStateText = document.getElementById("emptyStateText");
     if (!emptyState) return;
     if (!hasResults) {
       emptyState.classList.remove("d-none");
+      if (emptyStateText) {
+        if (activeFilter === "favorites") {
+          emptyStateText.textContent = "Henüz favori anketiniz bulunmuyor.";
+        } else if (searchTerm) {
+          emptyStateText.textContent = "Aradığınız kriterlere uygun anket bulunamadı.";
+        } else {
+          emptyStateText.textContent = "Bu kategoride anket bulunamadı.";
+        }
+      }
     } else {
       emptyState.classList.add("d-none");
     }
@@ -47,41 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
     updateEmptyState(hasResults, searchTerm);
   }
 
-  function updateFavoritesSection() {
-    const section = document.getElementById("favoritesSection");
-    const container = document.getElementById("favoritesContainer");
-    const countEl = document.getElementById("favoritesCount");
-    if (!section || !container) return;
-
-    const favoriteItems = Array.from(getSurveyItems()).filter(
-      (item) => item.getAttribute("data-favorite") === "1"
-    );
-
-    container.innerHTML = "";
-    favoriteItems.forEach((item) => {
-      container.appendChild(item.cloneNode(true));
-      bindFavoriteButtons(container.lastElementChild);
-    });
-
-    if (countEl) {
-      countEl.textContent = favoriteItems.length + " anket";
-    }
-
-    section.classList.toggle("d-none", favoriteItems.length === 0);
-  }
-
   function setFavoriteState(item, isFavorite) {
     item.setAttribute("data-favorite", isFavorite ? "1" : "0");
-    const btn = item.querySelector(".favorite-btn");
-    const icon = btn?.querySelector("i");
+    const btn = item.querySelector(".favorite-toggle-btn");
     if (btn) {
       btn.classList.toggle("active", isFavorite);
-      btn.setAttribute("aria-label", isFavorite ? "Favorilerden çıkar" : "Favorilere ekle");
-      btn.setAttribute("title", isFavorite ? "Favorilerden çıkar" : "Favorilere ekle");
-    }
-    if (icon) {
-      icon.classList.toggle("fas", isFavorite);
-      icon.classList.toggle("far", !isFavorite);
+      const label = isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle";
+      btn.setAttribute("aria-label", label);
+      btn.innerHTML = `<i class="${isFavorite ? "fas" : "far"} fa-star me-2"></i>${label}`;
     }
   }
 
@@ -117,9 +100,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       syncFavoriteState(id, isFavorite);
-      updateFavoritesSection();
       applyFilters();
-      showToast(isFavorite ? "Anket favorilere eklendi." : "Anket favorilerden çıkarıldı.", isFavorite ? "warning" : "secondary");
+      showToast(
+        isFavorite ? "Anket favorilere eklendi." : "Anket favorilerden çıkarıldı.",
+        isFavorite ? "warning" : "secondary"
+      );
     } catch (error) {
       showToast(error.message || "Bir hata oluştu.", "danger");
     } finally {
@@ -128,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function bindFavoriteButtons(root = document) {
-    root.querySelectorAll(".favorite-btn").forEach((btn) => {
+    root.querySelectorAll(".favorite-toggle-btn").forEach((btn) => {
       if (btn.dataset.bound === "1") return;
       btn.dataset.bound = "1";
       btn.addEventListener("click", function (e) {

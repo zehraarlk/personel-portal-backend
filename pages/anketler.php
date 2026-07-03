@@ -1,7 +1,6 @@
 <?php
 include("baglan.php");
 $kayitlar = dbFetchAll($db, "SELECT * FROM anketler ORDER BY id");
-$favoriler = array_values(array_filter($kayitlar, fn($k) => (int)($k["favori"] ?? 0) === 1));
 
 $badgeMap = [
     "active"    => ["Aktif", "status-active", "fa-play-circle"],
@@ -21,15 +20,6 @@ function renderAnketCard(array $k, array $badgeMap): void
 ?>
         <div class="col-md-6 col-lg-4 survey-item" data-id="<?= $id ?>" data-category="<?= htmlspecialchars($k["kategori"]) ?>" data-favorite="<?= $favori ? "1" : "0" ?>">
           <div class="survey-card h-100 d-flex flex-column">
-            <button
-              type="button"
-              class="favorite-btn<?= $favori ? " active" : "" ?>"
-              data-id="<?= $id ?>"
-              aria-label="<?= $favori ? "Favorilerden çıkar" : "Favorilere ekle" ?>"
-              title="<?= $favori ? "Favorilerden çıkar" : "Favorilere ekle" ?>"
-            >
-              <i class="<?= $favori ? "fas" : "far" ?> fa-star"></i>
-            </button>
             <span class="status-badge <?= $badgeClass ?>"><i class="fas <?= $badgeIcon ?> me-1"></i><?= $durum ?></span>
             <img src="<?= htmlspecialchars(imgUrl($k["resim_url"] ?? "")) ?>" class="survey-img" alt="<?= htmlspecialchars($k["baslik"]) ?>" />
             <div class="p-4 d-flex flex-column justify-content-between flex-grow-1">
@@ -47,8 +37,16 @@ function renderAnketCard(array $k, array $badgeMap): void
                   </div>
                 </div>
               </div>
-              <div class="mt-3">
-                <a href="#" class="btn survey-btn w-100 <?= htmlspecialchars($k["kategori"]) ?>"><i class="fas fa-edit me-2"></i>Ankete Katıl</a>
+              <div class="mt-3 d-grid gap-2">
+                <a href="#" class="btn survey-btn w-100"><i class="fas fa-edit me-2"></i>Ankete Katıl</a>
+                <button
+                  type="button"
+                  class="btn favorite-toggle-btn w-100<?= $favori ? " active" : "" ?>"
+                  data-id="<?= $id ?>"
+                >
+                  <i class="<?= $favori ? "fas" : "far" ?> fa-star me-2"></i>
+                  <?= $favori ? "Favorilerden Çıkar" : "Favorilere Ekle" ?>
+                </button>
               </div>
             </div>
           </div>
@@ -75,7 +73,7 @@ function renderAnketCard(array $k, array $badgeMap): void
   <body>
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Anketler"; include "includes/breadcrumb.php"; ?>
-<div class="container py-5">
+    <main class="main-container container py-5">
       <div class="surveys-header">
         <h1 class="surveys-title">Anketler</h1>
         <div class="surveys-controls">
@@ -91,16 +89,6 @@ function renderAnketCard(array $k, array $badgeMap): void
           </select>
         </div>
       </div>
-
-      <section id="favoritesSection" class="favorites-section<?= empty($favoriler) ? " d-none" : "" ?>">
-        <div class="favorites-section-header">
-          <h2 class="favorites-title"><i class="fas fa-star me-2"></i>Favorilerim</h2>
-          <span class="favorites-count" id="favoritesCount"><?= count($favoriler) ?> anket</span>
-        </div>
-        <div class="row g-4" id="favoritesContainer">
-<?php foreach ($favoriler as $k): renderAnketCard($k, $badgeMap); endforeach; ?>
-        </div>
-      </section>
 
       <div class="filter-tabs">
         <button class="filter-tab active" data-filter="all">
@@ -126,9 +114,9 @@ function renderAnketCard(array $k, array $badgeMap): void
 
       <div id="emptyState" class="empty-state d-none">
         <i class="fas fa-search"></i>
-        <p>Aradığınız kriterlere uygun anket bulunamadı.</p>
+        <p id="emptyStateText">Aradığınız kriterlere uygun anket bulunamadı.</p>
       </div>
-    </div>
+    </main>
     <?php include "includes/footer.php"; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
