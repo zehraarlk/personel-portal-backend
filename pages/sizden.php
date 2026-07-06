@@ -2,13 +2,29 @@
 include("baglan.php");
 $kayitId = isset($_GET["id"]) ? (int)$_GET["id"] : 1;
 $kayit = dbFetchOne($db, "SELECT * FROM sizden_gelenler WHERE id = ?", [$kayitId]);
+if (!$kayit) {
+    header("Location: sizden_gelenler.php");
+    exit;
+}
+
+// Görüntülenme sayısını 1 artır ve güncel değeri ekranda göstermek için diziyi de güncelle
+$db->prepare("UPDATE sizden_gelenler SET goruntulenme = goruntulenme + 1 WHERE id = ?")
+   ->execute([$kayitId]);
+$kayit['goruntulenme'] = (int)$kayit['goruntulenme'] + 1;
+
+$digerKayitlar = dbFetchAll(
+    $db,
+    "SELECT * FROM sizden_gelenler WHERE id != ? ORDER BY tarih DESC LIMIT 18",
+    [$kayitId]
+);
+$digerKayitSayfalari = array_chunk($digerKayitlar, 6);
 ?>
 <!doctype html>
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Haber Detayı - Gebze Belediyesi Personel Portalı</title>
+    <title><?php echo htmlspecialchars($kayit['baslik']); ?> - Gebze Belediyesi Personel Portalı</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -31,19 +47,19 @@ $kayit = dbFetchOne($db, "SELECT * FROM sizden_gelenler WHERE id = ?", [$kayitId
             <article class="news-detail-card">
               <div class="article-header">
                 <span class="article-category" id="articleCategory"
-                  >İnsan Kaynakları Ve Eğitim Müdürlüğü</span
+                  ><?php echo htmlspecialchars($kayit['kategori_adi']); ?></span
                 >
                 <h1 class="article-title" id="articleTitle">
-                  Eğitim Faaliyetleri Hakkında Bilgilendirme
+                  <?php echo htmlspecialchars($kayit['baslik']); ?>
                 </h1>
                 <div class="article-meta">
                   <div class="meta-item">
                     <i class="fas fa-calendar-alt"></i>
-                    <span id="articleDate">Tarih</span>
+                    <span id="articleDate"><?php echo date("d.m.Y", strtotime($kayit['tarih'])); ?></span>
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-eye"></i>
-                    <span id="articleViews">0</span> görüntülenme
+                    <span id="articleViews"><?php echo (int)$kayit['goruntulenme']; ?></span> görüntülenme
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-user"></i>
@@ -56,110 +72,17 @@ $kayit = dbFetchOne($db, "SELECT * FROM sizden_gelenler WHERE id = ?", [$kayitId
               <div class="article-image-section">
                 <div class="article-image-container">
                   <img
-                    src="../images/sizden_gelenler/insan_kaynaklari/nsan-kaynaklar-ve-e-itim-mudurlu-u_5093.jpg"
-                    alt=""
+                    src="<?php echo htmlspecialchars($kayit['gorsel_yolu']); ?>"
+                    alt="<?php echo htmlspecialchars($kayit['baslik']); ?>"
                     class="article-image"
                     id="mainArticleImage"
                   />
-                </div>
-
-                <!-- Küçük resimler slider'ı -->
-                <div class="article-gallery-slider">
-                  <div class="gallery-container">
-                    <div class="gallery-track" id="galleryTrack">
-                      <div
-                        class="gallery-item active"
-                        data-image="../images/sizden_gelenler/insan_kaynaklari/nsan-kaynaklar-ve-e-itim-mudurlu-u_5093.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/insan_kaynaklari/nsan-kaynaklar-ve-e-itim-mudurlu-u_5093.jpg"
-                          alt="Eğitim 1"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.jpg"
-                          alt="Eğitim 2"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/park_bahce/park-ve-bahceler-mudurlu-u_1011.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/park_bahce/park-ve-bahceler-mudurlu-u_1011.jpg"
-                          alt="Eğitim 3"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/temizlik_isleri/temizlik-leri-mudurlu-u_2142.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/temizlik_isleri/temizlik-leri-mudurlu-u_2142.jpg"
-                          alt="Eğitim 4"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_1035.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_1035.jpg"
-                          alt="Eğitim 5"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_4326.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_4326.jpg"
-                          alt="Eğitim 6"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_6319.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_6319.jpg"
-                          alt="Eğitim 7"
-                        />
-                      </div>
-                      <div
-                        class="gallery-item"
-                        data-image="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_7967.jpg"
-                      >
-                        <img
-                          src="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_7967.jpg"
-                          alt="Eğitim 8"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="gallery-controls">
-                    <button class="gallery-btn prev" id="galleryPrevBtn">
-                      <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="gallery-btn next" id="galleryNextBtn">
-                      <i class="fas fa-chevron-right"></i>
-                    </button>
-                  </div>
                 </div>
               </div>
 
               <div class="article-content">
                 <div class="article-body" id="articleBody">
-                  Müdürlüğümüz koordinatörlüğünde yürütülen çalışmalar kapsamında, kurumumuzun
-                  çeşitli birimlerinde görev yapan personellerin ihtiyaç duyduğu eğitimler
-                  titizlikle planlanarak başarıyla tamamlanmıştır. Bu süreçte, personelimizin
-                  mesleki gelişimlerine katkı sağlamak ve hizmet kalitesini artırmak amacıyla
-                  gerekli içerikler doğrultusunda eğitim programları etkili bir şekilde
-                  uygulanmıştır.
+                  <?php echo nl2br(htmlspecialchars($kayit['ozet'])); ?>
                 </div>
               </div>
 
@@ -186,190 +109,32 @@ $kayit = dbFetchOne($db, "SELECT * FROM sizden_gelenler WHERE id = ?", [$kayitId
               <!-- SLIDER: 6 haber için güncellenmiş yapı -->
               <div class="departments-slider">
                 <div class="departments-track" id="deptTrack">
-                  <!-- SAYFA 1 - 6 Haber -->
+                  <?php if (empty($digerKayitSayfalari)): ?>
                   <div class="department-item">
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.jpg"
-                        class="other-news-img me-3"
-                        alt="Fen İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Fen İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Altyapı Çalışmaları Devam Ediyor</h5>
-                        <p class="other-news-description">
-                          Köşklü Çeşme Mahallesi, 553 Sokak'ın üstyapısını.....
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/park_bahce/park-ve-bahceler-mudurlu-u_1011.jpg"
-                        class="other-news-img me-3"
-                        alt="Park ve Bahçeler"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Park ve Bahçeler Müdürlüğü</div>
-                        <h5 class="other-news-title">Yeşil Alan Çalışmaları</h5>
-                        <p class="other-news-description">
-                          park ve bahçelerde bakım çalışmalarına devam ediyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/temizlik_isleri/temizlik-leri-mudurlu-u_2142.jpg"
-                        class="other-news-img me-3"
-                        alt="Temizlik İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Temizlik İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Temizlik Seferberliği</h5>
-                        <p class="other-news-description">
-                          Şehir genelinde kapsamlı temizlik çalışmaları başlatıldı.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_1035.jpg"
-                        class="other-news-img me-3"
-                        alt="Veteriner İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Veteriner İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Sokak Hayvanları Projesi</h5>
-                        <p class="other-news-description">
-                          Sokak hayvanlarının için yeni projeler hayata geçiriliyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/zabita/zab-ta-mudurlu-u_4326.jpg"
-                        class="other-news-img me-3"
-                        alt="Zabıta"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Zabıta Müdürlüğü</div>
-                        <h5 class="other-news-title">Denetim Çalışmaları</h5>
-                        <p class="other-news-description">
-                          İşyerleri ve sokak satıcıları düzenli olarak denetleniyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_5216.jpg"
-                        class="other-news-img me-3"
-                        alt="Fen İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Fen İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Yol Yapım Çalışmaları</h5>
-                        <p class="other-news-description">
-                          yol yapım ve mevcut yolların onarım çalışmaları
-                        </p>
-                      </div>
-                    </div>
+                    <p class="text-muted px-2 mb-0">Gösterilecek başka kayıt bulunmuyor.</p>
                   </div>
-
-                  <!-- SAYFA 2 - 6 Haber -->
+                  <?php else: ?>
+                    <?php foreach ($digerKayitSayfalari as $sayfa): ?>
                   <div class="department-item">
-                    <div class="other-news-item d-flex mb-3">
+                      <?php foreach ($sayfa as $item): ?>
+                    <a href="sizden.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item d-flex mb-3 text-decoration-none text-reset">
                       <img
-                        src="../images/sizden_gelenler/insan_kaynaklari/nsan-kaynaklar-ve-e-itim-mudurlu-u_3146.jpeg"
+                        src="<?php echo htmlspecialchars(imgUrl($item['gorsel_yolu'] ?? '')); ?>"
                         class="other-news-img me-3"
-                        alt="Bilgi İşlem"
+                        alt="<?php echo htmlspecialchars($item['baslik']); ?>"
                       />
                       <div class="other-news-content">
-                        <div class="department-category">İnsan Kaynakları ve Eğitim Müdürlüğü</div>
-                        <h5 class="other-news-title">Oryantasyon Programı</h5>
+                        <div class="department-category"><?php echo htmlspecialchars($item['kategori_adi']); ?></div>
+                        <h5 class="other-news-title"><?php echo htmlspecialchars($item['baslik']); ?></h5>
                         <p class="other-news-description">
-                          Stajyerler için oryantasyon programı düzenlendi.
+                          <?php echo htmlspecialchars(mb_strimwidth(strip_tags($item['ozet']), 0, 90, '...')); ?>
                         </p>
                       </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.jpg"
-                        class="other-news-img me-3"
-                        alt="Fen İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Fen İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Altyapı Çalışmaları</h5>
-                        <p class="other-news-description">
-                          Kent genelinde altyapı çalışmaları devam ediyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/park_bahce/park-ve-bahceler-mudurlu-u_1011.jpg"
-                        class="other-news-img me-3"
-                        alt="Park Bahçe"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Park ve Bahçeler Müdürlüğü</div>
-                        <h5 class="other-news-title">Peyzaj Çalışmaları</h5>
-                        <p class="other-news-description">
-                          Yeni peyzaj düzenlemeleri tamamlanıyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/temizlik_isleri/temizlik-leri-mudurlu-u_2142.jpg"
-                        class="other-news-img me-3"
-                        alt="Temizlik İşleri"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Temizlik İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Çevre Temizliği</h5>
-                        <p class="other-news-description">
-                          Çevresel temizlik kampanyaları sürdürülüyor.
-                        </p>
-                      </div>
-                    </div>
-
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_1035.jpg"
-                        class="other-news-img me-3"
-                        alt="Veteriner"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Veteriner İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Aşı Kampanyası</h5>
-                        <p class="other-news-description">
-                          Sokak hayvanları için aşı kampanyası devam ediyor.
-                        </p>
-                      </div>
-                    </div>
-                    <div class="other-news-item d-flex mb-3">
-                      <img
-                        src="../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_1035.jpg"
-                        class="other-news-img me-3"
-                        alt="Veteriner"
-                      />
-                      <div class="other-news-content">
-                        <div class="department-category">Veteriner İşleri Müdürlüğü</div>
-                        <h5 class="other-news-title">Aşı Kampanyası</h5>
-                        <p class="other-news-description">
-                          Sokak hayvanları için aşı kampanyası devam ediyor.
-                        </p>
-                      </div>
-                    </div>
+                    </a>
+                      <?php endforeach; ?>
                   </div>
+                    <?php endforeach; ?>
+                  <?php endif; ?>
                 </div>
               </div>
 

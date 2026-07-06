@@ -43,8 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
   initializeNavigation();
   initializeGallery();
   initializeDepartmentSlider();
-  initializeArticleData();
-  initializeViewCounter();
+  // Not: Başlık, kategori, tarih, görüntülenme ve içerik artık PHP tarafından
+  // veritabanından basılıyor. Eskiden burada çalışan initializeArticleData()
+  // ve initializeViewCounter() sahte/örnek verilerle bu gerçek verilerin
+  // üzerine yazıyordu, bu yüzden kaldırıldı.
 
   console.log("Tüm JavaScript fonksiyonları başarıyla başlatıldı");
 });

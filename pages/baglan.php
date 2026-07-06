@@ -11,7 +11,9 @@ try {
     $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
-    dbEnsureSchema($db);
+    // dbEnsureSchema($db); // GEÇİCİ OLARAK KAPATILDI: her sayfa yüklemesinde
+    // db/personel_db.sql'i tekrar import edip etkinlikler/sizden_gelenler
+    // tablolarındaki güncel verileri eski demo veriyle eziyordu.
 } catch (PDOException $e) {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
