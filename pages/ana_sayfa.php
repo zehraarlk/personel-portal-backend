@@ -41,7 +41,7 @@ $ilkHaber = $haberler[0] ?? null;
                 <!-- Haberler Başlığı -->
                 <div class="d-flex align-items-center mb-3" style="width: 100%; max-width: 1600px">
                   <div class="title-v1">
-                    <h2 class="title-v2"><i class="fas fa-bullhorn"></i> Haberler & Etkinlikler</h2>
+                    <h2 class="title-v2"><i class="fas fa-bullhorn"></i> Haberler</h2>
                   </div>
                 </div>
                 <!-- Ana Haber Resmi ve Başlığı -->
