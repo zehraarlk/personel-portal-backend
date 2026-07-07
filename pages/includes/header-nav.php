@@ -1,3 +1,15 @@
+<?php
+// Eğer bu sayfa dahil edilmeden önce session_start() başlatılmadıysa otomatik başlatıyoruz kanka
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Oturum açmış personelin verileri yoksa varsayılan değerler atıyoruz ki hata fırlatmasın
+$session_ad = isset($_SESSION['ad']) ? $_SESSION['ad'] : 'Kullanıcı';
+$session_soyad = isset($_SESSION['soyad']) ? $_SESSION['soyad'] : 'Adı';
+$session_email = isset($_SESSION['email']) ? $_SESSION['email'] : 'personel@gebze.bel.tr';
+$session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../images/login/login.jpg';
+?>
     <nav class="navbar">
       <div class="nav-container">
         <div class="nav-left">
@@ -134,27 +146,38 @@
         <div class="nav-right">
           <div class="profile-dropdown">
             <button class="profile-btn" id="profileBtn" type="button" aria-expanded="false" aria-haspopup="true">
-              <img src="../images/login/login.jpg" alt="Profil" class="profile-img" />
+              <img src="<?php echo $session_foto; ?>" alt="Profil" class="profile-img" />
             </button>
             <div class="profile-menu" id="profileMenu">
               <div class="profile-info">
-                <img src="../images/login/login.jpg" alt="Profil" class="profile-menu-img" />
+                <img src="<?php echo $session_foto; ?>" alt="Profil" class="profile-menu-img" />
                 <div class="profile-details">
-                  <span class="profile-name">Kullanıcı Adı</span>
+                  <span class="profile-name"><?php echo $session_ad . " " . $session_soyad; ?></span>
                   <span class="profile-role">Personel</span>
                 </div>
               </div>
-              <ul class="profile-menu-list">
-                <li>
-                  <a href="#" class="profile-menu-item"><i class="fas fa-user"></i><span>Profilim</span></a>
-                </li>
-                <li>
-                  <a href="#" class="profile-menu-item"><i class="fas fa-cog"></i><span>Ayarlar</span></a>
-                </li>
-                <li>
-                  <a href="#" class="profile-menu-item logout"><i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span></a>
-                </li>
-              </ul>
+             <ul class="profile-menu-list" style="list-style: none; padding: 0; margin: 0;">
+  <li>
+    <a href="email_degistir.php" class="profile-menu-item">
+      <i class="fas fa-envelope"></i><span>Email Değiştir</span>
+    </a>
+  </li>
+  <li>
+    <a href="sifre_degistir.php" class="profile-menu-item">
+      <i class="fas fa-key"></i><span>Şifre Değiştir</span>
+    </a>
+  </li>
+  <li>
+    <a href="oturum_bilgileri.php" class="profile-menu-item">
+      <i class="fas fa-history"></i><span>Oturum Bilgileri</span>
+    </a>
+  </li>
+  <li>
+    <a href="cikis.php" class="profile-menu-item logout">
+      <i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span>
+    </a>
+  </li>
+</ul>
             </div>
           </div>
         </div>
@@ -162,13 +185,14 @@
     </nav>
 
     <div class="menu-backdrop" id="menuBackdrop"></div>
+    
     <div class="side-menu" id="sideMenu">
       <div class="side-menu-header">
         <div class="side-menu-profile">
-          <img src="../images/login/login.jpg" alt="Profil" class="side-menu-profile-img" />
+          <img src="<?php echo $session_foto; ?>" alt="Profil" class="side-menu-profile-img" />
           <div class="side-menu-profile-details">
-            <span class="side-menu-profile-name">Kullanıcı Adı</span>
-            <span class="side-menu-profile-email">personel@gebze.bel.tr</span>
+            <span class="side-menu-profile-name"><?php echo $session_ad . " " . $session_soyad; ?></span>
+            <span class="side-menu-profile-email"><?php echo $session_email; ?></span>
           </div>
         </div>
         <button class="close-menu-btn" type="button" aria-label="Menüyü kapat">&times;</button>
@@ -187,5 +211,10 @@
         <li><a href="yardimci_linkler.php"><i class="fas fa-link"></i> Yardımcı Linkler</a></li>
         <li><a href="vefat_bilgisi.php"><i class="fas fa-ribbon"></i> Vefat Eden Bilgisi</a></li>
         <li><a href="dogum.php"><i class="fas fa-birthday-cake"></i> Doğum Günü Bilgisi</a></li>
+        <hr class="my-2 bg-secondary opacity-25">
+       <li><a href="email_degistir.php"><i class="fas fa-envelope"></i> Email Değiştir</a></li>
+<li><a href="sifre_degistir.php"><i class="fas fa-key"></i> Şifre Değiştir</a></li>
+<li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
+        <li><a href="cikis.php" class="text-danger"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
       </ul>
     </div>

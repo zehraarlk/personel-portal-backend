@@ -11,6 +11,14 @@ $duyurular = array_map(function ($d) {
 $personeller = mapPersonelJs(dbFetchAll($db, "SELECT * FROM personeller ORDER BY ad"));
 $otomasyonLinkleri = dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
 $ilkHaber = $haberler[0] ?? null;
+$sql_dogum = "SELECT * FROM personeller WHERE MONTH(dogum_tarihi) = MONTH(NOW()) AND DAY(dogum_tarihi) = DAY(NOW()) ORDER BY ad";
+$anasayfaDogumKayitlari = mapPersonelJs(dbFetchAll($db, $sql_dogum));
+
+// 🇹🇷 Ekrandaki tarihi dinamik olarak Türkçe basmak için dizi kurgusu
+$aylar = ["", "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+$gunler = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+
+$anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y") . " " . $gunler[date("w")];
 ?>
 <!doctype html>
 <html lang="tr">
@@ -98,34 +106,33 @@ $ilkHaber = $haberler[0] ?? null;
               </div>
             </div>
           </div>
-          <div class="row g-4 justify-content-center mt-4">
-            <div class="col-12">
-              <div class="card shadow-lg border-0 rounded-4 p-4">
-                <div class="content-area">
-                  <div class="container-fluid px-4 py-4">
-                    <div class="page-header-container">
-                      <div class="header-icon-wrapper">
-                        <i class="fa-solid fa-cake-candles"></i>
-                      </div>
-                      <div class="header-text-wrapper">
-                        <h2 class="header-title-main">Mutlu Yıllar !</h2>
-                        <p class="header-subtitle">25 Ağustos 2025</p>
-                      </div>
-                    </div>
-                    <div
-                      id="personelListesi"
-                      class="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4"
-                    ></div>
-
-                    <div id="bosMesaj" class="alert alert-secondary text-center mt-4 d-none">
-                      Bugün doğum günü olan personel bulunmamaktadır.
-                    </div>
-                  </div>
-                </div>
-              </div>
+         <div class="row g-4 justify-content-center mt-4">
+  <div class="col-12">
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+      <div class="content-area">
+        <div class="container-fluid px-4 py-4">
+          <div class="page-header-container">
+            <div class="header-icon-wrapper">
+              <i class="fa-solid fa-cake-candles"></i>
+            </div>
+            <div class="header-text-wrapper">
+              <h2 class="header-title-main">Mutlu Yıllar !</h2>
+              <!-- Tarih artık veritabanı/sunucu saatiyle dinamik geliyor kanka -->
+              <p class="header-subtitle"><?php echo $anasayfaBugunTarih; ?></p>
             </div>
           </div>
+          
+          <!-- Karışıklık olmasın diye ID'leri anasayfaya özel güncelledik -->
+          <div id="personelListesiAnasayfa" class="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4"></div>
 
+          <div id="bosMesajAnasayfa" class="alert alert-secondary text-center mt-4 d-none">
+            Bugün doğum günü olan personel bulunmamaktadır.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
           <!-- Otomasyon Sistemleri Bölümü -->
           <div class="row g-4 justify-content-center mt-4">
             <div class="col-12">
@@ -179,5 +186,35 @@ $ilkHaber = $haberler[0] ?? null;
     </script>
     <script src="../JS/ana_sayfa.script.js"></script>
       <script src="../JS/navbar.js"></script>
+      <script>
+  // PHP'deki veriyi JavaScript'e aktarıyoruz
+  const anasayfaPersonelleri = <?php echo json_encode($anasayfaDogumKayitlari, JSON_UNESCAPED_UNICODE); ?>;
+  
+  document.addEventListener("DOMContentLoaded", function () {
+    const listeElementi = document.getElementById("personelListesiAnasayfa");
+    const bosMesajElementi = document.getElementById("bosMesajAnasayfa");
+
+    if (listeElementi && anasayfaPersonelleri.length > 0) {
+      anasayfaPersonelleri.forEach((personel) => {
+        // İstediğin row-cols-lg-6 grid yapısına tam oturan doğum günü kart tasarımı
+       const cardHtml = `
+  <div class="col">
+    <div class="birthday-card text-center border-0 shadow-sm p-3 rounded-4 h-100 bg-white d-flex flex-column align-items-center justify-content-center" style="transition: transform 0.2s; min-height: 160px;">
+      <div class="mb-2 d-flex justify-content-center align-items-center" style="width: 80px; height: 80px;">
+        <img src="${personel.fotoUrl}" class="rounded-circle img-fluid" alt="${personel.ad} ${personel.soyad}" style="width: 80px; height: 80px; object-fit: cover; border: 3px solid #6368a3;">
+      </div>
+      <h6 class="card-title mb-0 fw-bold text-dark text-center w-100 mt-1" style="font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        ${personel.ad} ${personel.soyad}
+      </h6>
+    </div>
+  </div>
+`;
+        listeElementi.innerHTML += cardHtml;
+      });
+    } else if (bosMesajElementi) {
+      bosMesajElementi.classList.remove("d-none");
+    }
+  });
+</script>
   </body>
 </html>

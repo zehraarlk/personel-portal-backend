@@ -72,14 +72,16 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
-          window.location.href = "login.php";
+          window.location.href = "cikis.php";
         }
       });
     }
 
     profileMenu.querySelectorAll(".profile-menu-item:not(.logout)").forEach((item) => {
-      item.addEventListener("click", (e) => {
-        e.preventDefault();
+      item.addEventListener("click", () => {
+        // Not: preventDefault() ÇAĞIRMIYORUZ, çünkü bu butonlar
+        // aslında profilim.php'ye giden form submit butonları.
+        // Sadece menüyü kapatıyoruz, yönlendirmeye engel olmuyoruz.
         closeNavMenus();
       });
     });

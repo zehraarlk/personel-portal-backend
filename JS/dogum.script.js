@@ -79,72 +79,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // GÜNCELLENMİŞ DOĞUM GÜNÜ LİSTELEME VE ETKİLEŞİM KODLARI
   // ========================================================
 
-  // Örnek personel verisi (Departman bilgisi eklendi)
-  const personeller = [
-    {
-      id: 1,
-      ad: "Tümay",
-      soyad: "AKSAN",
-      dogumTarihi: "1995-08-21",
-      fotoUrl: "../images/dogum_gunu/37604190820-tumay-aksan_3957.jpg",
-    },
-
-    {
-      id: 2,
-      ad: "Yavuz",
-      soyad: "AĞAÇ",
-      dogumTarihi: "1992-08-21",
-      fotoUrl: "../images/dogum_gunu/32980582726-yavuz-a-ac_5843.jpg",
-    },
-
-    {
-      id: 3,
-      ad: "Zeynep",
-      soyad: "YILMAZ",
-      dogumTarihi: "1995-08-21",
-      fotoUrl: "../images/dogum_gunu/manzara.jpg",
-    },
-
-    {
-      id: 4,
-      ad: "Fatih",
-      soyad: "SULTAN MEHMET",
-      dogumTarihi: "1990-08-21",
-      fotoUrl: "../images/dogum_gunu/Fatih.jpg",
-    },
-
-    {
-      id: 4,
-      ad: "Fatih",
-      soyad: "SULTAN MEHMET",
-      dogumTarihi: "1990-08-21",
-      fotoUrl: "../images/dogum_gunu/Fatih.jpg",
-    },
-
-    {
-      id: 4,
-      ad: "Fatih",
-      soyad: "SULTAN MEHMET",
-      dogumTarihi: "1990-08-21",
-      fotoUrl: "../images/dogum_gunu/Fatih.jpg",
-    },
-
-    {
-      id: 4,
-      ad: "Fatih",
-      soyad: "SULTAN MEHMET",
-      dogumTarihi: "1990-08-21",
-      fotoUrl: "../images/dogum_gunu/Fatih.jpg",
-    },
-
-    {
-      id: 4,
-      ad: "Fatih",
-      soyad: "SULTAN MEHMET",
-      dogumTarihi: "1990-08-21",
-      fotoUrl: "../images/dogum_gunu/Fatih.jpg",
-    },
-  ];
+  // Veritabanından gelen gerçek veri (dogum.php içinde "const personellerFromDb = ..." olarak tanımlanıyor)
+  // Not: const/let ile tanımlanan değişkenler window nesnesine eklenmez,
+  // bu yüzden window.personellerFromDb DEĞİL, doğrudan personellerFromDb kullanılmalı.
+  const personeller = (typeof personellerFromDb !== "undefined" && Array.isArray(personellerFromDb))
+    ? personellerFromDb
+    : [];
 
   const bugun = new Date();
   const bugunAy = String(bugun.getMonth() + 1).padStart(2, "0");
