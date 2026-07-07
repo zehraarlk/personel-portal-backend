@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 06 Tem 2026, 13:39:47
+-- Üretim Zamanı: 07 Tem 2026, 14:25:27
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -30,18 +30,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `personeller` (
   `id` int(11) NOT NULL,
   `sicil_no` varchar(50) NOT NULL,
+  `ad` varchar(50) NOT NULL,
+  `soyad` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `sifre` varchar(255) NOT NULL,
   `dogum_tarihi` date NOT NULL,
-  `fotograf` varchar(255) NOT NULL
+  `foto_url` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `personeller`
 --
 
-INSERT INTO `personeller` (`id`, `sicil_no`, `email`, `sifre`, `dogum_tarihi`, `fotograf`) VALUES
-(1, '12345', 'test@gebze.bel.tr', '827ccb0eea8a706c4c34a16891f84e7b', '1996-07-06', '../images/login/login.jpg');
+INSERT INTO `personeller` (`id`, `sicil_no`, `ad`, `soyad`, `email`, `sifre`, `dogum_tarihi`, `foto_url`) VALUES
+(1, '12345', 'zehra', 'aralık', 'test3@gebze.bel.tr', '827ccb0eea8a706c4c34a16891f84e7b', '2006-07-07', '../images/gebze_logo.jpg');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
