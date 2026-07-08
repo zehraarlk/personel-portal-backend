@@ -77,4 +77,8 @@ $vefatKayitlari = dbFetchAll($db, "SELECT * FROM vefat_bilgileri ORDER BY vefat_
     <script src="../JS/vefat_bilgisi.script.js"></script>
       <script src="../JS/navbar.js"></script>
   </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533

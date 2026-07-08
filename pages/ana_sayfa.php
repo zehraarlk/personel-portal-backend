@@ -3,17 +3,25 @@ include("baglan.php");
 $haberler = array_map(function ($h) {
     $h["resim"] = imgUrl($h["resim"] ?? "");
     return $h;
+<<<<<<< HEAD
 }, dbFetchAll($db, "SELECT * FROM etkinlikler ORDER BY tarih DESC, id DESC"));
+=======
+}, dbFetchAll($db, "SELECT * FROM haberler ORDER BY id DESC"));
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 $duyurular = array_map(function ($d) {
     $d["resim"] = imgUrl($d["resim"] ?? "");
     return $d;
 }, dbFetchAnasayfaDuyurular($db));
 $personeller = mapPersonelJs(dbFetchAll($db, "SELECT * FROM personeller ORDER BY ad"));
+<<<<<<< HEAD
 // Anasayfa "Kurum İçi Otomasyon Sistemleri" linkleri artık ayrı tabloda tutulur.
 // Geriye dönük uyumluluk: tablo yoksa eski kaynaktan okumaya devam et.
 $otomasyonLinkleri = dbHasAnyTable($db, ["anasayfa_linkler"])
     ? dbFetchAll($db, "SELECT * FROM anasayfa_linkler ORDER BY id")
     : dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
+=======
+$otomasyonLinkleri = dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 $ilkHaber = $haberler[0] ?? null;
 $sql_dogum = "SELECT * FROM personeller WHERE MONTH(dogum_tarihi) = MONTH(NOW()) AND DAY(dogum_tarihi) = DAY(NOW()) ORDER BY ad";
 $anasayfaDogumKayitlari = mapPersonelJs(dbFetchAll($db, $sql_dogum));
@@ -66,7 +74,11 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
                     style="max-height: 500px"
                   />
                   <div class="ana-haber-baslik-container">
+<<<<<<< HEAD
                     <a href="etkinlikd.php?id=<?= (int)($ilkHaber['id'] ?? 1) ?>" id="ana-haber-link" class="ana-haber-baslik-link">
+=======
+                    <a href="" id="ana-haber-link" class="ana-haber-baslik-link">
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
                       <h3 id="ana-haber-baslik" class="ana-haber-baslik">
                         8 Mart Dünya Kadınlar Günü Programı
                       </h3>

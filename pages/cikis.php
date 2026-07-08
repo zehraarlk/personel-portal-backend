@@ -2,10 +2,13 @@
 session_start();
 include("baglan.php");
 
+<<<<<<< HEAD
 // Kalıcı oturum cookie/token temizle
 $pid = isset($_SESSION["personel_id"]) ? (int)$_SESSION["personel_id"] : null;
 authClearRememberToken($db, $pid);
 
+=======
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 if (isset($_SESSION['oturum_id'])) {
     $oturum_id = $_SESSION['oturum_id'];
     

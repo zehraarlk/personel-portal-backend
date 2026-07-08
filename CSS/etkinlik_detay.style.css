@@ -8,11 +8,14 @@
   max-width: 1600px !important;
   margin: 0 auto !important;
 }
+<<<<<<< HEAD
 .content-area .row {
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: flex-start !important; /* sol kart + sağ liste aynı üst hizada */
 }
+=======
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 .col-lg-8 {
   flex: 0 0 68% !important;
   max-width: 68% !important;
@@ -107,6 +110,7 @@
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+<<<<<<< HEAD
   margin-top: 0;
   margin-bottom: 80px;
   border-right: 30px;
@@ -203,6 +207,11 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 4px !important;
+=======
+  margin-bottom: 80px;
+  border-right: 30px;
+  border-left: 30px;
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .article-header {
   padding: 30px 30px 0 30px;
@@ -408,6 +417,91 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(2, 40, 66, 0.3);
 }
+<<<<<<< HEAD
+=======
+.other-departments-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 80px;
+  height: fit-content;
+}
+.departments-header {
+  padding: 25px 25px 20px 25px;
+  border-bottom: 2px solid #e9ecef;
+}
+.departments-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #022842;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.departments-title i {
+  color: #022842;
+  font-size: 1.2rem;
+}
+.departments-slider {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+.departments-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
+.department-item {
+  width: 100%;
+  flex-shrink: 0;
+  padding: 10px 20px; /* Üst ve alt boşluğu azalttık */
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 0px;
+}
+.other-news-item {
+  border-bottom: 1px solid #e9ecef;
+  padding: 15px 12px;
+  margin: 0;
+  display: flex;
+  align-items: flex-start; /* Resim ve yazının üstten hizalanmasını sağlıyoruz */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2px;
+  transition: all 0.3s ease;
+}
+.other-news-item:hover {
+  background: #f8f9fa;
+  transform: translateX(3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.other-news-item:last-child {
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 0;
+}
+.other-news-img {
+  width: 120px;
+  height: 85px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+.other-news-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 50px;
+  gap: 0px !important; /* Aradaki boşluğu tamamen kapatır */
+}
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 .department-category {
   display: inline-block;
   background: linear-gradient(135deg, #022842 0%, #1e4a6b 100%);
@@ -448,6 +542,7 @@
   /* height satırını sildik */
 }
 .departments-pagination {
+<<<<<<< HEAD
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
@@ -459,22 +554,39 @@
   border-top: 1px solid #e9ecef;
   width: 100%;
   box-sizing: border-box;
+=======
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 30px 70px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .pagination-btn {
   background: none;
   border: none;
   width: 40px;
   height: 40px;
+<<<<<<< HEAD
   min-width: 40px;
   border-radius: 50%;
   display: inline-flex;
+=======
+  border-radius: 50%;
+  display: flex;
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
   color: #6c757d;
   font-size: 14px;
+<<<<<<< HEAD
   flex-shrink: 0;
+=======
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .pagination-btn:hover:not(:disabled) {
   background-color: #022842;
@@ -492,6 +604,7 @@
   transform: none;
 }
 .pagination-dots {
+<<<<<<< HEAD
   display: inline-flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
@@ -500,6 +613,11 @@
   gap: 8px;
   flex: 0 1 auto;
   min-width: 0;
+=======
+  display: flex;
+  align-items: center;
+  gap: 8px;
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .pagination-dot {
   width: 12px;
@@ -510,7 +628,10 @@
   transition: all 0.3s ease;
   border: none;
   padding: 0;
+<<<<<<< HEAD
   flex-shrink: 0;
+=======
+>>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .pagination-dot.active {
   background-color: #022842;
