@@ -2,6 +2,8 @@
 include("baglan.php");
 
 $duyuruTable = dbAnasayfaDuyurularTable($db);
+dbEnsureColumn($db, $duyuruTable, "view", "INT(11) NOT NULL DEFAULT 0");
+
 $duyuruId = isset($_GET["id"]) ? (int)$_GET["id"] : 0;
 $duyuru = $duyuruId > 0
     ? dbFetchOne($db, "SELECT * FROM `{$duyuruTable}` WHERE id = ?", [$duyuruId])
@@ -11,6 +13,10 @@ if (!$duyuru) {
     header("Location: duyuru.php");
     exit;
 }
+
+$db->prepare("UPDATE `{$duyuruTable}` SET `view` = COALESCE(`view`, 0) + 1 WHERE id = ?")
+   ->execute([$duyuruId]);
+$duyuru["view"] = (int)($duyuru["view"] ?? 0) + 1;
 
 $digerDuyurular = dbFetchAll(
     $db,
@@ -51,6 +57,10 @@ $digerDuyuruSayfalari = array_chunk($digerDuyurular, 6);
                   <div class="meta-item">
                     <i class="fas fa-bell"></i>
                     <span>Duyuru</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="fas fa-eye"></i>
+                    <span id="articleViews"><?php echo (int)$duyuru['view']; ?></span> görüntülenme
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-user"></i>

@@ -163,8 +163,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (duyurularListesi && prevButton && nextButton && sayfaBilgisi) {
     let gecerliSayfa = 1;
-    const duyuruSayisiSayfaBasi = 4;
-    const toplamSayfa = Math.ceil(tumDuyurular.length / duyuruSayisiSayfaBasi);
+    let duyuruSayisiSayfaBasi = 4;
+    let toplamSayfa = 1;
 
     function escapeHtml(value) {
       return String(value ?? "")
@@ -175,25 +175,73 @@ document.addEventListener("DOMContentLoaded", function () {
         .replace(/'/g, "&#39;");
     }
 
+    function buildDuyuruElement(duyuru) {
+      const duyuruId = Number(duyuru.id) || 0;
+      const detayUrl = duyuruId > 0 ? `duyurud.php?id=${encodeURIComponent(duyuruId)}` : "duyuru.php";
+      const el = document.createElement("a");
+      el.href = detayUrl;
+      el.className = "duyuru-item";
+      el.innerHTML = `<img src="${escapeHtml(duyuru.resim)}" alt="${escapeHtml(duyuru.baslik)}" class="duyuru-resim"><div class="duyuru-icerik"><h3 class="duyuru-baslik">${escapeHtml(duyuru.baslik)}</h3><p class="duyuru-aciklama">${escapeHtml(duyuru.aciklama)}</p></div>`;
+      return el;
+    }
+
+    function calculateItemsPerPage() {
+      if (!tumDuyurular.length) return 1;
+
+      // Liste alanını olabildiğince doldur; taşanlar sonraki sayfada kalsın
+      duyurularListesi.style.overflow = "hidden";
+      duyurularListesi.innerHTML = "";
+      const available = duyurularListesi.clientHeight || 360;
+      const probe = buildDuyuruElement(tumDuyurular[0]);
+      probe.style.visibility = "hidden";
+      probe.style.position = "absolute";
+      duyurularListesi.appendChild(probe);
+      const styles = window.getComputedStyle(duyurularListesi);
+      const gap = parseFloat(styles.rowGap || styles.gap || "0") || 0;
+      const itemH = Math.max(probe.offsetHeight, 88);
+      duyurularListesi.innerHTML = "";
+      const perPage = Math.max(1, Math.floor((available + gap) / (itemH + gap)));
+      return perPage;
+    }
+
     function renderDuyurular() {
       duyurularListesi.innerHTML = "";
       const baslangic = (gecerliSayfa - 1) * duyuruSayisiSayfaBasi;
       const bitis = baslangic + duyuruSayisiSayfaBasi;
       const gosterilecekDuyurular = tumDuyurular.slice(baslangic, bitis);
       gosterilecekDuyurular.forEach((duyuru) => {
-        const duyuruId = Number(duyuru.id) || 0;
-        const detayUrl = duyuruId > 0 ? `duyurud.php?id=${encodeURIComponent(duyuruId)}` : "duyuru.php";
-        const duyuruElementi = `<a href="${detayUrl}" class="duyuru-item"><img src="${escapeHtml(duyuru.resim)}" alt="${escapeHtml(duyuru.baslik)}" class="duyuru-resim"><div class="duyuru-icerik"><h3 class="duyuru-baslik">${escapeHtml(duyuru.baslik)}</h3><p class="duyuru-aciklama">${escapeHtml(duyuru.aciklama)}</p></div></a>`;
-        duyurularListesi.innerHTML += duyuruElementi;
+        duyurularListesi.appendChild(buildDuyuruElement(duyuru));
       });
-      sayfaBilgisi.textContent = `Sayfa ${gecerliSayfa} / ${toplamSayfa}`;
-      prevButton.disabled = gecerliSayfa === 1;
-      nextButton.disabled = gecerliSayfa === toplamSayfa;
+      const safeTotal = Math.max(toplamSayfa, 1);
+      sayfaBilgisi.textContent = `Sayfa ${gecerliSayfa} / ${safeTotal}`;
+      prevButton.disabled = gecerliSayfa <= 1;
+      nextButton.disabled = gecerliSayfa >= safeTotal;
     }
 
-    prevButton.addEventListener("click", () => { if (gecerliSayfa > 1) { gecerliSayfa--; renderDuyurular(); } });
-    nextButton.addEventListener("click", () => { if (gecerliSayfa < toplamSayfa) { gecerliSayfa++; renderDuyurular(); } });
-    if (toplamSayfa > 0) renderDuyurular();
+    function recalcAndRender(keepPage = true) {
+      duyuruSayisiSayfaBasi = calculateItemsPerPage();
+      toplamSayfa = Math.max(1, Math.ceil(tumDuyurular.length / duyuruSayisiSayfaBasi));
+      if (!keepPage) gecerliSayfa = 1;
+      if (gecerliSayfa > toplamSayfa) gecerliSayfa = toplamSayfa;
+      renderDuyurular();
+    }
+
+    prevButton.addEventListener("click", () => {
+      if (gecerliSayfa > 1) {
+        gecerliSayfa--;
+        renderDuyurular();
+      }
+    });
+    nextButton.addEventListener("click", () => {
+      if (gecerliSayfa < toplamSayfa) {
+        gecerliSayfa++;
+        renderDuyurular();
+      }
+    });
+
+    // Sol haber kartı yüksekliği otursun diye kısa gecikmeyle hesapla
+    requestAnimationFrame(() => recalcAndRender(false));
+    window.addEventListener("resize", () => recalcAndRender(true));
   }
 
   // --- DOĞUM GÜNÜ SİSTEMİ ---

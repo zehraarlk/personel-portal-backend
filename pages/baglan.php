@@ -1,16 +1,26 @@
 <?php
+if (!headers_sent()) {
+    header("Content-Type: text/html; charset=utf-8");
+}
+mb_internal_encoding("UTF-8");
+
 $host     = "localhost";
 $db_name  = "personel_db";
 $username = "root";
 $password = "";
 
 try {
-    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password);
+    $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password, [
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci",
+    ]);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->exec("CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
-    $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
+    $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password, [
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci",
+    ]);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+    $db->exec("SET CHARACTER SET utf8mb4");
     // dbEnsureSchema($db); // GEÇİCİ OLARAK KAPATILDI: her sayfa yüklemesinde
     // db/personel_db.sql'i tekrar import edip etkinlikler/sizden_gelenler
     // tablolarındaki güncel verileri eski demo veriyle eziyordu.
@@ -806,10 +816,18 @@ function dbDeleteVideo(PDO $db, int $id): bool
 function dbEnsureColumn(PDO $db, string $table, string $column, string $definition): void
 {
     try {
-        $stmt = $db->prepare("SHOW COLUMNS FROM `$table` LIKE ?");
-        $stmt->execute([$column]);
-        if (!$stmt->fetch()) {
-            $db->exec("ALTER TABLE `$table` ADD COLUMN `$column` $definition");
+        // MySQL'de LIKE '?' sakıncalı olabilir; INFORMATION_SCHEMA kullan
+        $stmt = $db->prepare(
+            "SELECT COUNT(*) AS c
+             FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME = ?
+               AND COLUMN_NAME = ?"
+        );
+        $stmt->execute([$table, $column]);
+        $exists = (int)($stmt->fetch(PDO::FETCH_ASSOC)["c"] ?? 0) > 0;
+        if (!$exists) {
+            $db->exec("ALTER TABLE `{$table}` ADD COLUMN `{$column}` {$definition}");
         }
     } catch (PDOException $e) {
         // Sessizce geç – tablo henüz oluşmamış olabilir

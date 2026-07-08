@@ -47,9 +47,9 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
     <div class="content-area">
       <div class="container bg-light py-4 py-sm-5">
         <div class="container-fluid">
-          <div class="row g-4 g-lg-5 justify-content-center">
+          <div class="row g-4 g-lg-5 justify-content-center align-items-stretch">
             <div class="col-12 col-lg-8">
-              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4">
+              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4 h-100">
                 <!-- Haberler Başlığı -->
                 <div class="d-flex align-items-center mb-3" style="width: 100%; max-width: 1600px">
                   <div class="title-v1">
@@ -90,19 +90,19 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
               </div>
             </div>
 
-            <div class="col-12 col-lg-4">
-              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4 h-100 d-flex flex-column">
+            <div class="col-12 col-lg-4 d-flex">
+              <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4 w-100 duyurular-card">
                 <div class="duyurular-header">
                   <h2 class="duyurular-baslik"><i class="fas fa-bell me-2"></i>Duyurular</h2>
                 </div>
-                <hr />
+                <hr class="duyurular-divider" />
                 <div id="duyurular-listesi" class="duyurular-govde"></div>
 
-                <div id="pagination-controls" class="pagination-controls mt-auto pt-3">
+                <div id="pagination-controls" class="pagination-controls">
                   <button id="prev-page" class="pagination-arrow" title="Önceki Sayfa">
                     <i class="fas fa-chevron-left"></i>
                   </button>
-                  <span id="sayfa-bilgisi" class="sayfa-bilgisi">Sayfa 1 / 5</span>
+                  <span id="sayfa-bilgisi" class="sayfa-bilgisi">Sayfa 1 / 1</span>
                   <button id="next-page" class="pagination-arrow" title="Sonraki Sayfa">
                     <i class="fas fa-chevron-right"></i>
                   </button>
