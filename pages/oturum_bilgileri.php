@@ -7,9 +7,36 @@ if (!isset($_SESSION['personel_id'])) {
     exit;
 }
 
-$personel_id = $_SESSION['personel_id'];
+$personel_id = (int)$_SESSION['personel_id'];
+$aktifOturumId = isset($_SESSION['oturum_id']) ? (int)$_SESSION['oturum_id'] : 0;
 
-$oturumlar = dbFetchAll($db, "SELECT giris_zamani, cikis_zamani FROM oturum_kayitlari WHERE personel_id = ? ORDER BY id DESC LIMIT 10", [$personel_id]);
+$oturumlar = dbFetchAll(
+    $db,
+    "SELECT id, giris_zamani, cikis_zamani, kapanis_tipi, ip_adresi, son_aktivite
+     FROM oturum_kayitlari
+     WHERE personel_id = ?
+     ORDER BY id DESC
+     LIMIT 15",
+    [$personel_id]
+);
+
+function oturumDurumEtiket(?string $cikis, ?string $tip, int $id, int $aktifId): array
+{
+    if (empty($cikis)) {
+        if ($aktifId > 0 && $id === $aktifId) {
+            return ["🔵 Açık", "badge-acik", "Aktif Seans"];
+        }
+        return ["⚪ Açık (eski)", "bg-secondary text-white", "Kapanmamış"];
+    }
+    $map = [
+        "manuel"   => "Manuel çıkış",
+        "sekme"    => "Sekme/tarayıcı kapanışı",
+        "otomatik" => "Otomatik kapanış",
+        "eski"     => "Eski kayıt temizliği",
+    ];
+    $tipText = $map[$tip ?? ""] ?? "Kapatıldı";
+    return ["🟢 Kapatıldı", "bg-success-subtle text-success", $tipText];
+}
 ?>
 <!doctype html>
 <html lang="tr">
@@ -59,7 +86,7 @@ $oturumlar = dbFetchAll($db, "SELECT giris_zamani, cikis_zamani FROM oturum_kayi
     <?php $pageTitle = "Oturum Bilgileri"; include "includes/breadcrumb.php"; ?>
 
     <div class="content-area">
-      <div class="container py-4" style="max-width: 950px;">
+      <div class="container py-4" style="max-width: 980px;">
         <div class="card profil-card">
           <div class="card-header d-flex justify-content-between align-items-center">
             <span><i class="fas fa-history"></i>Oturum Bilgileri</span>
@@ -68,33 +95,48 @@ $oturumlar = dbFetchAll($db, "SELECT giris_zamani, cikis_zamani FROM oturum_kayi
             </a>
           </div>
           <div class="card-body p-4">
-            <p class="text-muted small">Sisteme yaptığınız son 10 başarılı giriş ve çıkış kaydı:</p>
+            <p class="text-muted small mb-3">
+              Son 15 giriş kaydı. Site/sekme kapatıldığında oturum otomatik kapanır.
+            </p>
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead class="table-light">
                   <tr>
-                    <th>Giriş Tarihi / Saati</th>
-                    <th>Çıkış Tarihi / Saati</th>
+                    <th>Giriş</th>
+                    <th>Çıkış</th>
+                    <th>Kapanış</th>
                     <th>Durum</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php if (!empty($oturumlar)): ?>
-                    <?php foreach ($oturumlar as $oturum): ?>
+                    <?php foreach ($oturumlar as $oturum):
+                        [$durum, $badgeClass, $tipText] = oturumDurumEtiket(
+                            $oturum["cikis_zamani"] ?? null,
+                            $oturum["kapanis_tipi"] ?? null,
+                            (int)$oturum["id"],
+                            $aktifOturumId
+                        );
+                    ?>
                       <tr>
-                        <td><i class="far fa-clock text-success me-2"></i><?php echo date('d.m.Y H:i:s', strtotime($oturum['giris_zamani'])); ?></td>
                         <td>
-                          <?php
-                            echo !empty($oturum['cikis_zamani'])
-                                ? "<i class='far fa-clock text-danger me-2'></i>" . date('d.m.Y H:i:s', strtotime($oturum['cikis_zamani']))
-                                : "<span class='badge badge-acik'>Aktif Seans</span>";
-                          ?>
+                          <i class="far fa-clock text-success me-2"></i>
+                          <?php echo date("d.m.Y H:i:s", strtotime($oturum["giris_zamani"])); ?>
                         </td>
-                        <td><?php echo !empty($oturum['cikis_zamani']) ? '🟢 Kapatıldı' : '🔵 Açık'; ?></td>
+                        <td>
+                          <?php if (!empty($oturum["cikis_zamani"])): ?>
+                            <i class="far fa-clock text-danger me-2"></i>
+                            <?php echo date("d.m.Y H:i:s", strtotime($oturum["cikis_zamani"])); ?>
+                          <?php else: ?>
+                            <span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars($tipText); ?></span>
+                          <?php endif; ?>
+                        </td>
+                        <td class="small text-muted"><?php echo htmlspecialchars($tipText); ?></td>
+                        <td><?php echo $durum; ?></td>
                       </tr>
                     <?php endforeach; ?>
                   <?php else: ?>
-                    <tr><td colspan="3" class="text-center text-muted py-3">Kayıtlı oturum geçmişi bulunamadı.</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted py-3">Kayıtlı oturum geçmişi bulunamadı.</td></tr>
                   <?php endif; ?>
                 </tbody>
               </table>

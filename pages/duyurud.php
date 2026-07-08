@@ -2,8 +2,6 @@
 include("baglan.php");
 
 $duyuruTable = dbAnasayfaDuyurularTable($db);
-dbEnsureColumn($db, $duyuruTable, "view", "INT(11) NOT NULL DEFAULT 0");
-
 $duyuruId = isset($_GET["id"]) ? (int)$_GET["id"] : 0;
 $duyuru = $duyuruId > 0
     ? dbFetchOne($db, "SELECT * FROM `{$duyuruTable}` WHERE id = ?", [$duyuruId])
@@ -14,16 +12,34 @@ if (!$duyuru) {
     exit;
 }
 
-$db->prepare("UPDATE `{$duyuruTable}` SET `view` = COALESCE(`view`, 0) + 1 WHERE id = ?")
-   ->execute([$duyuruId]);
-$duyuru["view"] = (int)($duyuru["view"] ?? 0) + 1;
+// Aynı / çok benzer etkinlik varsa ortak detaya yönlendir
+$etkinlikId = dbResolveAnasayfaDuyuruEtkinlikId($db, $duyuru);
+if ($etkinlikId) {
+    header("Location: etkinlikd.php?id=" . $etkinlikId);
+    exit;
+}
 
-$digerDuyurular = dbFetchAll(
-    $db,
-    "SELECT * FROM `{$duyuruTable}` WHERE id != ? ORDER BY id DESC LIMIT 18",
-    [$duyuruId]
-);
-$digerDuyuruSayfalari = array_chunk($digerDuyurular, 6);
+// Eşleşme yoksa duyurunun kendi detayı + kendi izlenme sayacı
+$viewResult = dbBumpUniqueView($db, $duyuruTable, $duyuruId, "view");
+$duyuru["view"] = $viewResult["count"];
+
+$digerKaynak = dbFetchAll($db, "SELECT * FROM etkinlikler ORDER BY tarih DESC LIMIT 18");
+if (count($digerKaynak) < 2) {
+    $digerKaynak = dbFetchAll(
+        $db,
+        "SELECT * FROM `{$duyuruTable}` WHERE id != ? ORDER BY id DESC LIMIT 18",
+        [$duyuruId]
+    );
+    $digerSayfalari = array_chunk($digerKaynak, 6);
+    $sideTitle = "Diğer Duyurular";
+    $sideIcon = "fa-bell";
+    $useEtkinlikLinks = false;
+} else {
+    $digerSayfalari = array_chunk($digerKaynak, 6);
+    $sideTitle = "Diğer Etkinlikler";
+    $sideIcon = "fa-calendar-days";
+    $useEtkinlikLinks = true;
+}
 ?>
 <!doctype html>
 <html lang="tr">
@@ -41,15 +57,15 @@ $digerDuyuruSayfalari = array_chunk($digerDuyurular, 6);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "etkinlik_detay.style.css"; include "includes/site-styles.php"; ?>
+<?php $pageCss = "etkinlik_detay.style.css"; $useDetailLayout = true; include "includes/site-styles.php"; ?>
   </head>
-  <body>
+  <body class="detail-page">
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Duyuru Detayı"; include "includes/breadcrumb.php"; ?>
 <div class="content-area">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8">
+        <div class="row detail-layout-row gx-3 gx-lg-4 gy-0">
+          <div class="col-12 col-lg-8">
             <article class="news-detail-card">
               <div class="article-header">
                 <h1 class="article-title" id="articleTitle"><?php echo htmlspecialchars($duyuru['baslik']); ?></h1>
@@ -97,35 +113,48 @@ $digerDuyuruSayfalari = array_chunk($digerDuyurular, 6);
             </article>
           </div>
 
-          <div class="col-lg-4">
+          <div class="col-12 col-lg-4">
             <div class="other-departments-card">
               <div class="departments-header">
                 <h3 class="departments-title">
-                  <i class="fas fa-bell"></i>
-                  Diğer Duyurular
+                  <i class="fas <?php echo $sideIcon; ?>"></i>
+                  <?php echo htmlspecialchars($sideTitle); ?>
                 </h3>
               </div>
 
               <div class="departments-slider">
                 <div class="departments-track" id="deptTrack">
-                  <?php if (empty($digerDuyuruSayfalari)): ?>
+                  <?php if (empty($digerSayfalari)): ?>
                   <div class="department-item">
-                    <p class="text-muted px-2 mb-0">Gösterilecek başka duyuru bulunmuyor.</p>
+                    <p class="text-muted px-2 mb-0">Gösterilecek başka kayıt bulunmuyor.</p>
                   </div>
                   <?php else: ?>
-                    <?php foreach ($digerDuyuruSayfalari as $sayfa): ?>
+                    <?php foreach ($digerSayfalari as $sayfa): ?>
                   <div class="department-item">
-                      <?php foreach ($sayfa as $item): ?>
-                    <a href="duyurud.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item">
+                      <?php foreach ($sayfa as $item):
+                          if ($useEtkinlikLinks) {
+                              $href = "etkinlikd.php?id=" . (int)$item["id"];
+                              $img = imgUrl($item["resim"] ?? "");
+                              $title = $item["baslik"] ?? "";
+                              $desc = $item["aciklama"] ?? "";
+                          } else {
+                              $mapped = mapAnasayfaDuyurular($db, [$item]);
+                              $href = $mapped[0]["detail_url"] ?? ("duyurud.php?id=" . (int)$item["id"]);
+                              $img = imgUrl($item["resim"] ?? "");
+                              $title = $item["baslik"] ?? "";
+                              $desc = $item["aciklama"] ?? "";
+                          }
+                      ?>
+                    <a href="<?php echo htmlspecialchars($href); ?>" class="other-news-item">
                       <img
-                        src="<?php echo htmlspecialchars(imgUrl($item['resim'] ?? '')); ?>"
+                        src="<?php echo htmlspecialchars($img); ?>"
                         class="other-news-img"
-                        alt="<?php echo htmlspecialchars($item['baslik']); ?>"
+                        alt="<?php echo htmlspecialchars($title); ?>"
                       />
                       <div class="other-news-content">
-                        <h5 class="other-news-title"><?php echo htmlspecialchars($item['baslik']); ?></h5>
+                        <h5 class="other-news-title"><?php echo htmlspecialchars($title); ?></h5>
                         <p class="other-news-description">
-                          <?php echo htmlspecialchars(mb_strimwidth(strip_tags($item['aciklama'] ?? ''), 0, 90, '...')); ?>
+                          <?php echo htmlspecialchars(mb_strimwidth(strip_tags($desc), 0, 90, '...')); ?>
                         </p>
                       </div>
                     </a>
@@ -137,14 +166,15 @@ $digerDuyuruSayfalari = array_chunk($digerDuyurular, 6);
               </div>
 
               <div class="departments-pagination">
-                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki duyurular">
+                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki sayfa" type="button">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-                <div class="pagination-dots" id="paginationDots"></div>
-                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki duyurular">
+                <span class="dept-page-info" id="deptPageInfo">Sayfa 1 / 1</span>
+                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki sayfa" type="button">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </div>
+              <div class="pagination-dots" id="paginationDots" hidden></div>
             </div>
           </div>
         </div>

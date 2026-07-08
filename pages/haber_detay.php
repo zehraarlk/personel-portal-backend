@@ -1,7 +1,12 @@
 <?php
 include("baglan.php");
 $haberId = isset($_GET["id"]) ? (int)$_GET["id"] : 1;
+dbEnsureColumn($db, "haberler", "view", "INT(11) NOT NULL DEFAULT 0");
 $haber = dbFetchOne($db, "SELECT * FROM haberler WHERE id = ?", [$haberId]);
+if ($haber) {
+    $viewResult = dbBumpUniqueView($db, "haberler", $haberId, "view");
+    $haber["view"] = $viewResult["count"];
+}
 $galeri = dbFetchAll($db, "SELECT * FROM haber_galeri WHERE haber_id = ? ORDER BY sira", [$haberId]);
 if (empty($galeri) && $haber) {
     $galeri = [["resim_url" => $haber["resim"] ?? ""]];
@@ -91,7 +96,7 @@ $digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY 
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
                     <i class="fas fa-eye"></i>
-                    <span id="articleViews">0</span> görüntülenme
+                    <span id="articleViews"><?= (int)($haber["view"] ?? 0) ?></span> görüntülenme
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
                     <i class="fas fa-user"></i>

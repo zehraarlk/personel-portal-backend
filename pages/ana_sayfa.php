@@ -7,7 +7,7 @@ $haberler = array_map(function ($h) {
 $duyurular = array_map(function ($d) {
     $d["resim"] = imgUrl($d["resim"] ?? "");
     return $d;
-}, dbFetchAnasayfaDuyurular($db));
+}, mapAnasayfaDuyurular($db, dbFetchAnasayfaDuyurular($db)));
 $personeller = mapPersonelJs(dbFetchAll($db, "SELECT * FROM personeller ORDER BY ad"));
 // Anasayfa "Kurum İçi Otomasyon Sistemleri" linkleri artık ayrı tabloda tutulur.
 // Geriye dönük uyumluluk: tablo yoksa eski kaynaktan okumaya devam et.
@@ -68,7 +68,7 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
                   <div class="ana-haber-baslik-container">
                     <a href="etkinlikd.php?id=<?= (int)($ilkHaber['id'] ?? 1) ?>" id="ana-haber-link" class="ana-haber-baslik-link">
                       <h3 id="ana-haber-baslik" class="ana-haber-baslik">
-                        8 Mart Dünya Kadınlar Günü Programı
+                        <?= htmlspecialchars($ilkHaber['baslik'] ?? 'Haberler & Etkinlikler') ?>
                       </h3>
                     </a>
                   </div>

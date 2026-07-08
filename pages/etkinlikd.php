@@ -7,10 +7,8 @@ if (!$etkinlik) {
     exit;
 }
 
-// Görüntülenme sayısını 1 artır ve güncel değeri ekranda göstermek için diziyi de güncelle
-$db->prepare("UPDATE etkinlikler SET view = view + 1 WHERE id = ?")
-   ->execute([$etkinlikId]);
-$etkinlik['view'] = (int)$etkinlik['view'] + 1;
+$viewResult = dbBumpUniqueView($db, "etkinlikler", $etkinlikId, "view");
+$etkinlik["view"] = $viewResult["count"];
 
 $digerEtkinlikler = dbFetchAll(
     $db,
@@ -35,15 +33,15 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "etkinlik_detay.style.css"; include "includes/site-styles.php"; ?>
+<?php $pageCss = "etkinlik_detay.style.css"; $useDetailLayout = true; include "includes/site-styles.php"; ?>
   </head>
-  <body>
+  <body class="detail-page">
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Etkinlik Detayı"; include "includes/breadcrumb.php"; ?>
 <div class="content-area">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8">
+        <div class="row detail-layout-row gx-3 gx-lg-4 gy-0">
+          <div class="col-12 col-lg-8">
             <article class="news-detail-card">
               <div class="article-header">
                 <h1 class="article-title" id="articleTitle"><?php echo htmlspecialchars($etkinlik['baslik']); ?></h1>
@@ -67,7 +65,7 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
               <div class="article-image-section">
                 <div class="article-image-container">
                   <img
-                    src="<?php echo htmlspecialchars($etkinlik['resim']); ?>"
+                    src="<?php echo htmlspecialchars(imgUrl($etkinlik['resim'] ?? '')); ?>"
                     alt="<?php echo htmlspecialchars($etkinlik['baslik']); ?>"
                     class="article-image"
                     id="mainArticleImage"
@@ -92,16 +90,15 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
             </article>
           </div>
 
-          <div class="col-lg-4">
+          <div class="col-12 col-lg-4">
             <div class="other-departments-card">
               <div class="departments-header">
                 <h3 class="departments-title">
-                  <i class="fas fa-building"></i>
-                  Diğer Müdürlükler
+                  <i class="fas fa-calendar-days"></i>
+                  Diğer Etkinlikler
                 </h3>
               </div>
 
-              <!-- SLIDER: 6 haber için güncellenmiş yapı -->
               <div class="departments-slider">
                 <div class="departments-track" id="deptTrack">
                   <?php if (empty($digerEtkinlikSayfalari)): ?>
@@ -132,21 +129,16 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
                 </div>
               </div>
 
-              <!-- Nokta göstergeleri ile güncellenen sayfalandırma -->
               <div class="departments-pagination">
-                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki müdürlük">
+                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki sayfa" type="button">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-
-                <!-- Nokta göstergeleri -->
-                <div class="pagination-dots" id="paginationDots">
-                  <!-- JavaScript ile dinamik olarak oluşturulacak -->
-                </div>
-
-                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki müdürlük">
+                <span class="dept-page-info" id="deptPageInfo">Sayfa 1 / 1</span>
+                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki sayfa" type="button">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </div>
+              <div class="pagination-dots" id="paginationDots" hidden></div>
             </div>
           </div>
         </div>

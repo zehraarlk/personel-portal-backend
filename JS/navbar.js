@@ -67,24 +67,27 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
     });
 
+    profileMenu.querySelectorAll(".profile-menu-item:not(.logout)").forEach((item) => {
+      item.addEventListener("click", () => {
+        try {
+          sessionStorage.setItem("pp_internal_nav", "1");
+        } catch (err) {}
+        closeNavMenus();
+      });
+    });
+
     const logoutBtn = profileMenu.querySelector(".logout");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", (e) => {
         e.preventDefault();
         if (confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
+          try {
+            sessionStorage.setItem("pp_internal_nav", "1");
+          } catch (err) {}
           window.location.href = "cikis.php";
         }
       });
     }
-
-    profileMenu.querySelectorAll(".profile-menu-item:not(.logout)").forEach((item) => {
-      item.addEventListener("click", () => {
-        // Not: preventDefault() ÇAĞIRMIYORUZ, çünkü bu butonlar
-        // aslında profilim.php'ye giden form submit butonları.
-        // Sadece menüyü kapatıyoruz, yönlendirmeye engel olmuyoruz.
-        closeNavMenus();
-      });
-    });
   }
 
   navDropdowns.forEach((dropdown) => {

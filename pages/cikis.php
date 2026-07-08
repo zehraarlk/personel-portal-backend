@@ -2,19 +2,25 @@
 session_start();
 include("baglan.php");
 
-// Kalıcı oturum cookie/token temizle
 $pid = isset($_SESSION["personel_id"]) ? (int)$_SESSION["personel_id"] : null;
 authClearRememberToken($db, $pid);
 
-if (isset($_SESSION['oturum_id'])) {
-    $oturum_id = $_SESSION['oturum_id'];
-    
-    // 🕒 Çıkış yapılan zamanı veritabanına işliyoruz
-    $cikis_guncelle = $db->prepare("UPDATE oturum_kayitlari SET cikis_zamani = NOW() WHERE id = ?");
-    $cikis_guncelle->execute([$oturum_id]);
+if (isset($_SESSION["oturum_id"])) {
+    oturumClose($db, (int)$_SESSION["oturum_id"], "manuel");
 }
 
-// Bütün seansları temizle ve giriş sayfasına yönlendir
+$_SESSION = [];
+if (ini_get("session.use_cookies")) {
+    $p = session_get_cookie_params();
+    setcookie(session_name(), "", [
+        "expires"  => time() - 42000,
+        "path"     => $p["path"],
+        "domain"   => $p["domain"],
+        "secure"   => $p["secure"],
+        "httponly" => $p["httponly"],
+        "samesite" => $p["samesite"] ?? "Lax",
+    ]);
+}
 session_destroy();
 header("Location: login.php");
 exit;

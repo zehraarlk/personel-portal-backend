@@ -21,11 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sicil_no']) && isset($
             $_SESSION['ad']           = $personel['ad'];
             $_SESSION['soyad']        = $personel['soyad'];
 
-            // 🕒 Giriş Zamanını Veritabanına Kaydediyoruz
-            $giris_ekle = $db->prepare("INSERT INTO oturum_kayitlari (personel_id, giris_zamani) VALUES (?, NOW())");
-            $giris_ekle->execute([$personel['id']]);
-
-            $_SESSION['oturum_id'] = $db->lastInsertId();
+            // 🕒 Giriş: eski açık oturumları kapat, yenisini aç
+            $_SESSION['oturum_id'] = oturumStart($db, (int)$personel['id']);
 
             echo json_encode(["status" => "success"]);
             exit;
@@ -43,6 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sicil_no']) && isset($
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Personel Portalı - Giriş</title>
+    <link rel="icon" type="image/png" href="../images/favicon.png" />
+    <link rel="shortcut icon" type="image/png" href="../images/favicon.png" />
+    <link rel="apple-touch-icon" href="../images/favicon.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
     <style>

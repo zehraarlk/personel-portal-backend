@@ -153,7 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
       id: duyuru.id,
       resim: duyuru.resim,
       baslik: duyuru.baslik,
-      aciklama: duyuru.aciklama
+      aciklama: duyuru.aciklama,
+      detail_url: duyuru.detail_url || (duyuru.etkinlik_id ? `etkinlikd.php?id=${duyuru.etkinlik_id}` : `duyurud.php?id=${duyuru.id}`)
   })) : [];
   
   const duyurularListesi = document.getElementById("duyurular-listesi");
@@ -176,8 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function buildDuyuruElement(duyuru) {
-      const duyuruId = Number(duyuru.id) || 0;
-      const detayUrl = duyuruId > 0 ? `duyurud.php?id=${encodeURIComponent(duyuruId)}` : "duyuru.php";
+      const detayUrl = duyuru.detail_url || "duyuru.php";
       const el = document.createElement("a");
       el.href = detayUrl;
       el.className = "duyuru-item";

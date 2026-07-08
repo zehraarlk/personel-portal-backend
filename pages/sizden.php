@@ -7,10 +7,8 @@ if (!$kayit) {
     exit;
 }
 
-// Görüntülenme sayısını 1 artır ve güncel değeri ekranda göstermek için diziyi de güncelle
-$db->prepare("UPDATE sizden_gelenler SET goruntulenme = goruntulenme + 1 WHERE id = ?")
-   ->execute([$kayitId]);
-$kayit['goruntulenme'] = (int)$kayit['goruntulenme'] + 1;
+$viewResult = dbBumpUniqueView($db, "sizden_gelenler", $kayitId, "goruntulenme");
+$kayit["goruntulenme"] = $viewResult["count"];
 
 $digerKayitlar = dbFetchAll(
     $db,
@@ -35,15 +33,15 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "sizden_gelen_detay.style.css"; include "includes/site-styles.php"; ?>
+<?php $pageCss = "sizden_gelen_detay.style.css"; $useDetailLayout = true; include "includes/site-styles.php"; ?>
   </head>
-  <body>
+  <body class="detail-page">
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Sizden Gelenler"; include "includes/breadcrumb.php"; ?>
 <div class="content-area">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-8">
+        <div class="row detail-layout-row gx-3 gx-lg-4 gy-0">
+          <div class="col-12 col-lg-8">
             <article class="news-detail-card">
               <div class="article-header">
                 <span class="article-category" id="articleCategory"
@@ -68,11 +66,10 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
                 </div>
               </div>
 
-              <!-- Ana resim ve küçük resimler slider'ı -->
               <div class="article-image-section">
                 <div class="article-image-container">
                   <img
-                    src="<?php echo htmlspecialchars($kayit['gorsel_yolu']); ?>"
+                    src="<?php echo htmlspecialchars(imgUrl($kayit['gorsel_yolu'] ?? '')); ?>"
                     alt="<?php echo htmlspecialchars($kayit['baslik']); ?>"
                     class="article-image"
                     id="mainArticleImage"
@@ -97,16 +94,15 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
             </article>
           </div>
 
-          <div class="col-lg-4">
+          <div class="col-12 col-lg-4">
             <div class="other-departments-card">
               <div class="departments-header">
                 <h3 class="departments-title">
-                  <i class="fas fa-building"></i>
-                  Diğer Müdürlükler
+                  <i class="fas fa-comments"></i>
+                  Diğer Paylaşımlar
                 </h3>
               </div>
 
-              <!-- SLIDER: 6 haber için güncellenmiş yapı -->
               <div class="departments-slider">
                 <div class="departments-track" id="deptTrack">
                   <?php if (empty($digerKayitSayfalari)): ?>
@@ -117,10 +113,10 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
                     <?php foreach ($digerKayitSayfalari as $sayfa): ?>
                   <div class="department-item">
                       <?php foreach ($sayfa as $item): ?>
-                    <a href="sizden.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item d-flex mb-3 text-decoration-none text-reset">
+                    <a href="sizden.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item">
                       <img
                         src="<?php echo htmlspecialchars(imgUrl($item['gorsel_yolu'] ?? '')); ?>"
-                        class="other-news-img me-3"
+                        class="other-news-img"
                         alt="<?php echo htmlspecialchars($item['baslik']); ?>"
                       />
                       <div class="other-news-content">
@@ -138,21 +134,16 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
                 </div>
               </div>
 
-              <!-- Nokta göstergeleri ile güncellenen sayfalandırma -->
               <div class="departments-pagination">
-                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki müdürlük">
+                <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki sayfa" type="button">
                   <i class="fas fa-chevron-left"></i>
                 </button>
-
-                <!-- Nokta göstergeleri -->
-                <div class="pagination-dots" id="paginationDots">
-                  <!-- JavaScript ile dinamik olarak oluşturulacak -->
-                </div>
-
-                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki müdürlük">
+                <span class="dept-page-info" id="deptPageInfo">Sayfa 1 / 1</span>
+                <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki sayfa" type="button">
                   <i class="fas fa-chevron-right"></i>
                 </button>
               </div>
+              <div class="pagination-dots" id="paginationDots" hidden></div>
             </div>
           </div>
         </div>
@@ -162,6 +153,6 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JS/sizden_gelen_detay.script.js"></script>
-      <script src="../JS/navbar.js"></script>
+    <script src="../JS/navbar.js"></script>
   </body>
 </html>

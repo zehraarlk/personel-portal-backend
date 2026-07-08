@@ -9,7 +9,86 @@ $session_ad = isset($_SESSION['ad']) ? $_SESSION['ad'] : 'Kullanıcı';
 $session_soyad = isset($_SESSION['soyad']) ? $_SESSION['soyad'] : 'Adı';
 $session_email = isset($_SESSION['email']) ? $_SESSION['email'] : 'personel@gebze.bel.tr';
 $session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../images/login/login.jpg';
+$session_oturum_aktif = !empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id']);
+
+// Aktif oturumun son aktivite zamanını yenile
+if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
+    oturumTouch($db, (int)$_SESSION['oturum_id']);
+}
 ?>
+<?php if ($session_oturum_aktif): ?>
+<script>
+(function () {
+  if (window.__ppSessionGuard) return;
+  window.__ppSessionGuard = true;
+
+  var endpoint = "oturum_kapat.php";
+  var NAV_KEY = "pp_internal_nav";
+  var sent = false;
+
+  // Önceki sayfadan kalan bayrağı temizle
+  try { sessionStorage.removeItem(NAV_KEY); } catch (e0) {}
+
+  function markInternalNav() {
+    try { sessionStorage.setItem(NAV_KEY, "1"); } catch (e1) {}
+  }
+
+  function isInternalNav() {
+    try { return sessionStorage.getItem(NAV_KEY) === "1"; } catch (e2) { return false; }
+  }
+
+  function sameOriginHref(href) {
+    if (!href || href.charAt(0) === "#" || href.indexOf("javascript:") === 0) return false;
+    try {
+      var url = new URL(href, window.location.href);
+      return url.origin === window.location.origin;
+    } catch (e3) {
+      return href.indexOf("http") !== 0;
+    }
+  }
+
+  // mousedown: click'ten önce — profil menü linklerinde de yakalar
+  function onPossibleNav(e) {
+    var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    if (a.target && a.target !== "" && a.target !== "_self") return;
+    if (sameOriginHref(a.getAttribute("href") || a.href || "")) {
+      markInternalNav();
+    }
+  }
+
+  document.addEventListener("mousedown", onPossibleNav, true);
+  document.addEventListener("touchstart", onPossibleNav, true);
+  document.addEventListener("click", onPossibleNav, true);
+  document.addEventListener("submit", function () { markInternalNav(); }, true);
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "F5" || ((e.ctrlKey || e.metaKey) && (e.key === "r" || e.key === "R"))) {
+      markInternalNav();
+    }
+  });
+
+  function closeSession() {
+    if (sent || isInternalNav()) return;
+    sent = true;
+    try {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(endpoint, new Blob(["1"], { type: "text/plain" }));
+        return;
+      }
+    } catch (e4) {}
+    try {
+      fetch(endpoint, { method: "POST", keepalive: true, credentials: "same-origin", cache: "no-store" });
+    } catch (e5) {}
+  }
+
+  // Sadece gerçek sekme/tarayıcı kapanışında kapat (site içi gezinmede değil)
+  window.addEventListener("pagehide", function (e) {
+    if (e.persisted) return;
+    closeSession();
+  });
+})();
+</script>
+<?php endif; ?>
     <nav class="navbar">
       <div class="nav-container">
         <div class="nav-left">
@@ -18,6 +97,7 @@ $session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../imag
           </button>
           <a href="ana_sayfa.php" class="logo-container">
             <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
+
           </a>
         </div>
 
@@ -215,6 +295,6 @@ $session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../imag
        <li><a href="email_degistir.php"><i class="fas fa-envelope"></i> Email Değiştir</a></li>
 <li><a href="sifre_degistir.php"><i class="fas fa-key"></i> Şifre Değiştir</a></li>
 <li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
-        <li><a href="cikis.php" class="text-danger"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+        <li><a href="cikis.php" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav','1')}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
       </ul>
     </div>

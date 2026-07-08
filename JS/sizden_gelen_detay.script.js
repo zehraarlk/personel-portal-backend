@@ -19,6 +19,7 @@ const departmentItems = document.querySelectorAll(".department-item");
 const prevDeptBtn = document.getElementById("prevDeptBtn");
 const nextDeptBtn = document.getElementById("nextDeptBtn");
 const paginationDots = document.getElementById("paginationDots"); // Yeni eklendi
+const deptPageInfo = document.getElementById("deptPageInfo");
 
 // Article Elements
 const articleTitle = document.getElementById("articleTitle");
@@ -351,6 +352,10 @@ function updateDepartmentButtons() {
     nextDeptBtn.disabled = currentDeptIndex === totalDeptItems - 1;
     nextDeptBtn.style.opacity = currentDeptIndex === totalDeptItems - 1 ? "0.5" : "1";
   }
+  if (deptPageInfo) {
+    const total = Math.max(totalDeptItems, 1);
+    deptPageInfo.textContent = `Sayfa ${currentDeptIndex + 1} / ${total}`;
+  }
 }
 
 // Nokta göstergelerini güncelle
@@ -516,29 +521,12 @@ function updateArticleDate() {
 // ========== GÖRÜNTÜLENME SAYACI ==========
 
 function initializeViewCounter() {
-  console.log("Görüntülenme sayacı başlatılıyor...");
-
-  // Sayfa yüklendiğinde görüntülenme sayısını artır
-  incrementViewCount();
-
-  // Sayfa açık kaldığı süreyi takip et
-  trackPageTime();
+  // İzlenme sayacı PHP tarafında hesap/ziyaretçi başına tekil tutuluyor.
+  // LocalStorage ile arttırma/yanlış sayım yapılmaz.
 }
 
 function incrementViewCount() {
-  // LocalStorage'dan önceki görüntülenme sayısını al
-  const currentViews = localStorage.getItem("articleViews") || "0";
-  viewCount = parseInt(currentViews) + 1;
-
-  // Yeni sayıyı kaydet
-  localStorage.setItem("articleViews", viewCount.toString());
-
-  // Sayfada göster
-  if (articleViews) {
-    articleViews.textContent = viewCount;
-  }
-
-  console.log("Görüntülenme sayısı güncellendi:", viewCount);
+  // no-op: DB/PHP tekil izlenme kullanılıyor
 }
 
 function trackPageTime() {

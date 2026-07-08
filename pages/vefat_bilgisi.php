@@ -23,9 +23,8 @@ $vefatKayitlari = dbFetchAll($db, "SELECT * FROM vefat_bilgileri ORDER BY vefat_
   <body>
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Vefat Bilgisi"; include "includes/breadcrumb.php"; ?>
-<!-- Breadcrumb Section - Logo ile aynı hizaya getirildi --><div class="main-content container py-5">
+    <div class="main-content container">
       <div class="container">
-        <!-- Sayfa Başlığı -->
         <div class="page-header">
           <div class="header-content">
             <i class="fas fa-ribbon header-icon"></i>
@@ -33,12 +32,8 @@ $vefatKayitlari = dbFetchAll($db, "SELECT * FROM vefat_bilgileri ORDER BY vefat_
           </div>
         </div>
 
-        <!-- Vefat Kartları Grid -->
-        <div class="vefat-grid" id="vefatGrid">
-          <!-- Kartlar JavaScript ile doldurulacak -->
-        </div>
+        <div class="vefat-grid" id="vefatGrid"></div>
 
-        <!-- Sayfalama -->
         <div class="pagination-container">
           <nav aria-label="Vefat bilgileri sayfalama">
             <ul class="pagination">
