@@ -2,10 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // --- GALERİ SİSTEMİ (DİNAMİK VERİ) ---
   const detayGorseller = (typeof veritabanindanGelenHaberler !== 'undefined') ? veritabanindanGelenHaberler.map(haber => ({
-<<<<<<< HEAD
       id: haber.id,
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
       resim: haber.resim,
       baslik: haber.baslik,
       aciklama: haber.aciklama
@@ -13,10 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const mainImage = document.getElementById("main-haber-gorsel");
   const mainTitle = document.getElementById("ana-haber-baslik");
-<<<<<<< HEAD
   const mainLink = document.getElementById("ana-haber-link");
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   const galleryTrack = document.getElementById("gallery-track");
   const galleryWrapper = document.querySelector(".gallery-wrapper");
   const galleryPrevBtn = document.getElementById("gallery-prev-btn");
@@ -25,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (mainImage && mainTitle && galleryTrack && detayGorseller.length > 0) {
     let selectedImageIndex = 0;
     let autoSlideInterval;
-<<<<<<< HEAD
     let currentDetailUrl = "";
 
     // Linkin href="" olması sayfayı yenileyebilir; defaultu ezip her zaman detaya git
@@ -37,8 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentDetailUrl) window.location.href = currentDetailUrl;
       });
     }
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 
     // Küçük resimleri DOM'a sadece BİR kere ekliyoruz
     galleryTrack.innerHTML = ""; 
@@ -55,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateGallery(newIndex) {
       selectedImageIndex = newIndex;
       const selectedItem = detayGorseller[selectedImageIndex];
-<<<<<<< HEAD
 
       // Detay linki: tıklayınca etkinlikd.php?id=...
       const selectedId = selectedItem ? parseInt(selectedItem.id, 10) : 0;
@@ -64,8 +54,6 @@ document.addEventListener("DOMContentLoaded", function () {
         mainLink.href = currentDetailUrl || "#";
       }
 
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
       mainImage.style.opacity = "0";
       mainTitle.style.opacity = "0";
       setTimeout(() => {
@@ -94,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
     galleryTrack.addEventListener("click", (e) => {
       const thumbnail = e.target.closest(".gallery-thumbnail");
       if (thumbnail) {
-<<<<<<< HEAD
         const clickedIndex = parseInt(thumbnail.dataset.index);
 
         // Aktif olana tekrar tıklanırsa: detay sayfasına git
@@ -105,10 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         clearInterval(autoSlideInterval);
         updateGallery(clickedIndex);
-=======
-        clearInterval(autoSlideInterval);
-        updateGallery(parseInt(thumbnail.dataset.index));
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
         startAutoSlide();
       }
     });
@@ -142,7 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateGallery(0);
     startAutoSlide();
-<<<<<<< HEAD
 
     // Ana görsele tıklanınca da detaya git
     if (mainImage) {
@@ -164,16 +146,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (currentDetailUrl) window.location.href = currentDetailUrl;
       });
     }
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
 
 // Eski el yazısı diziyi sildik, yerine veritabanından gelen duyuruları bağlıyoruz:
   const tumDuyurular = (typeof veritabanindanGelenDuyurular !== 'undefined') ? veritabanindanGelenDuyurular.map(duyuru => ({
-<<<<<<< HEAD
       id: duyuru.id,
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
       resim: duyuru.resim,
       baslik: duyuru.baslik,
       aciklama: duyuru.aciklama
@@ -189,7 +166,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const duyuruSayisiSayfaBasi = 4;
     const toplamSayfa = Math.ceil(tumDuyurular.length / duyuruSayisiSayfaBasi);
 
-<<<<<<< HEAD
     function escapeHtml(value) {
       return String(value ?? "")
         .replace(/&/g, "&amp;")
@@ -199,21 +175,15 @@ document.addEventListener("DOMContentLoaded", function () {
         .replace(/'/g, "&#39;");
     }
 
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
     function renderDuyurular() {
       duyurularListesi.innerHTML = "";
       const baslangic = (gecerliSayfa - 1) * duyuruSayisiSayfaBasi;
       const bitis = baslangic + duyuruSayisiSayfaBasi;
       const gosterilecekDuyurular = tumDuyurular.slice(baslangic, bitis);
       gosterilecekDuyurular.forEach((duyuru) => {
-<<<<<<< HEAD
         const duyuruId = Number(duyuru.id) || 0;
         const detayUrl = duyuruId > 0 ? `duyurud.php?id=${encodeURIComponent(duyuruId)}` : "duyuru.php";
         const duyuruElementi = `<a href="${detayUrl}" class="duyuru-item"><img src="${escapeHtml(duyuru.resim)}" alt="${escapeHtml(duyuru.baslik)}" class="duyuru-resim"><div class="duyuru-icerik"><h3 class="duyuru-baslik">${escapeHtml(duyuru.baslik)}</h3><p class="duyuru-aciklama">${escapeHtml(duyuru.aciklama)}</p></div></a>`;
-=======
-        const duyuruElementi = `<a href="#" class="duyuru-item"><img src="${duyuru.resim}" alt="${duyuru.baslik}" class="duyuru-resim"><div class="duyuru-icerik"><h3 class="duyuru-baslik">${duyuru.baslik}</h3><p class="duyuru-aciklama">${duyuru.aciklama}</p></div></a>`;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
         duyurularListesi.innerHTML += duyuruElementi;
       });
       sayfaBilgisi.textContent = `Sayfa ${gecerliSayfa} / ${toplamSayfa}`;

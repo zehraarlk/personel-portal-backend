@@ -2,15 +2,12 @@
 session_start();
 include("baglan.php");
 
-<<<<<<< HEAD
 // Zaten girişliyse veya cookie ile otomatik giriş olabiliyorsa anasayfaya git
 if (!empty($_SESSION["personel_id"]) || authTryAutoLogin($db)) {
     header("Location: ana_sayfa.php");
     exit;
 }
 
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 $mesaj = "";
 $status = "";
 

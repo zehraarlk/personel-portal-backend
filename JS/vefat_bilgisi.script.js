@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 // Vefat verileri - fallback (eğer PHP verisi gelmezse)
 const __fallbackVefatData = [
-=======
-// Vefat verileri - Toplamda 36 kişi (3 sayfa x 12 kart)
-const vefatData = [
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   // Sayfa 1 (1-12)
   {
     name: "Sedat TÜRKKAN",
@@ -229,7 +224,6 @@ const vefatData = [
   },
 ];
 
-<<<<<<< HEAD
 // Asıl veri kaynağı: PHP'den gelen window.vefatData
 const vefatData = Array.isArray(window.vefatData) && window.vefatData.length
   ? window.vefatData
@@ -237,10 +231,6 @@ const vefatData = Array.isArray(window.vefatData) && window.vefatData.length
 
 // Sayfa başına gösterilecek kart sayısı
 const CARDS_PER_PAGE = 9;
-=======
-// Sayfa başına gösterilecek kart sayısı
-const CARDS_PER_PAGE = 12;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 let currentPage = 1;
 const totalPages = Math.ceil(vefatData.length / CARDS_PER_PAGE);
 
@@ -256,12 +246,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Kart hover efektleri
   initCardEffects();
-<<<<<<< HEAD
-=======
-
-  // Lazy loading fotoğraflar için
-  initLazyLoading();
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 });
 
 // Belirli bir sayfadaki verileri yükle
@@ -328,7 +312,6 @@ function createVefatCard(person, index) {
   card.innerHTML = `
         <div class="card-header">
             <div class="memorial-icon">
-<<<<<<< HEAD
                 <i class="fas fa-ribbon"></i>
             </div>
         </div>
@@ -343,25 +326,6 @@ function createVefatCard(person, index) {
             </div>
             <div class="memorial-message">
                 <p>"${person.message ?? ""}"</p>
-=======
-                <i class="fas fa-ribbon header-icon"></i>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="person-photo">
-                <!-- Fotoğraf placeholder - gerçek uygulamada person.photo kullanılabilir -->
-            </div>
-            <h3 class="person-name">${person.name}</h3>
-            <p class="person-position">${person.position}</p>
-            <div class="person-dates">
-                <div class="date-info">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span> ${person.deathDate}</span>
-                </div>
-            </div>
-            <div class="memorial-message">
-                <p>"${person.message}"</p>
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
             </div>
         </div>
     `;
@@ -515,46 +479,6 @@ function initCardEffects() {
   });
 }
 
-<<<<<<< HEAD
-=======
-// Lazy loading fotoğraflar için
-function initLazyLoading() {
-  if ("IntersectionObserver" in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const photoDiv = entry.target;
-          photoDiv.style.opacity = "0";
-          photoDiv.style.transition = "opacity 0.5s ease";
-
-          setTimeout(() => {
-            photoDiv.style.opacity = "1";
-          }, 100);
-
-          imageObserver.unobserve(photoDiv);
-        }
-      });
-    });
-
-    // Observer'ı yeni yüklenen kartlara uygula
-    const observer = new MutationObserver(() => {
-      const photos = document.querySelectorAll(".person-photo");
-      photos.forEach((photo) => {
-        if (!photo.hasAttribute("data-observed")) {
-          imageObserver.observe(photo);
-          photo.setAttribute("data-observed", "true");
-        }
-      });
-    });
-
-    observer.observe(document.getElementById("vefatGrid"), {
-      childList: true,
-      subtree: true,
-    });
-  }
-}
-
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 // Detay modal fonksiyonu (isteğe bağlı)
 function showPersonDetail(person) {
   // Modal HTML'i oluştur ve göster
@@ -569,25 +493,11 @@ function showPersonDetail(person) {
                     </div>
                     <div class="modal-body">
                         <div class="row">
-<<<<<<< HEAD
                             <div class="col-12 text-center mb-3">
                                 <h4>${person.name}</h4>
                                 <p class="text-muted">${person.position}</p>
                             </div>
                             <div class="col-12">
-=======
-                            <div class="col-md-4 text-center">
-                                <div class="person-photo mb-3">
-                                    <!-- Fotoğraf placeholder -->
-                                    <div style="width: 150px; height: 150px; background: #f8f9fa; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                                        <i class="fas fa-user" style="font-size: 60px; color: #dee2e6;"></i>
-                                    </div>
-                                </div>
-                                <h4>${person.name}</h4>
-                                <p class="text-muted">${person.position}</p>
-                            </div>
-                            <div class="col-md-8">
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
                                 <h6>Yaşam Bilgileri</h6>
                                 <p><strong>Doğum Tarihi:</strong> ${person.birthDate}</p>
                                 <p><strong>Vefat Tarihi:</strong> ${person.deathDate}</p>
@@ -1022,8 +932,4 @@ document.addEventListener("DOMContentLoaded", () => {
   dropdowns.forEach((item) => {
     item.addEventListener("mouseenter", () => alignMenuToCenter(item));
   });
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533

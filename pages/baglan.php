@@ -18,7 +18,6 @@ try {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
 
-<<<<<<< HEAD
 // Anasayfa linkleri tablosu: yoksa oluştur + ilk kurulumda doldur
 dbEnsureAnasayfaLinkler($db);
 // Kalıcı oturum (remember-me) alanları: yoksa ekle
@@ -28,8 +27,6 @@ dbEnsureOturumKayitlari($db);
 // İlişkisel yapı + unique/index/fk sağlamlaştırma
 dbEnsureRelationalConstraints($db);
 
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
     $stmt = $db->prepare($sql);
@@ -181,7 +178,6 @@ function dbEnsureYardimciLinkLogos(PDO $db): void
     }
 }
 
-<<<<<<< HEAD
 function dbEnsureAnasayfaLinkler(PDO $db): void
 {
     static $done = false;
@@ -471,8 +467,6 @@ function authTryAutoLogin(PDO $db): bool
     }
 }
 
-=======
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 function jsonData(mixed $data): string
 {
     return json_encode($data, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);

@@ -7,7 +7,6 @@ body {
   margin: 0;
   padding: 0;
 }
-<<<<<<< HEAD
 .main-content.container {
   width: 90%;
   margin: 0 auto;
@@ -23,12 +22,6 @@ body {
   padding-right: 0;
   margin-left: 0;
   margin-right: 0;
-=======
-.container {
-  width: 90%;
-  margin: 0 auto;
-  max-width: 1600px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .card {
   border-radius: 1rem !important;
@@ -121,7 +114,6 @@ body {
 }
 .vefat-grid {
   display: grid;
-<<<<<<< HEAD
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-bottom: 3rem;
@@ -130,15 +122,6 @@ body {
   margin-left: 0;
   margin-right: 0;
   align-items: stretch;
-=======
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2.5rem;
-  margin-bottom: 3rem;
-  padding: 0 1rem;
-  max-width: 1800px;
-  margin-left: auto;
-  margin-right: auto;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .vefat-card {
   background: white;
@@ -147,12 +130,8 @@ body {
   overflow: hidden;
   transition: all 0.3s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
-<<<<<<< HEAD
   min-height: 0;
   height: 100%;
-=======
-  min-height: 450px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   display: flex;
   flex-direction: column;
 }
@@ -162,11 +141,7 @@ body {
 }
 .card-header {
   background: linear-gradient(135deg, #022842 0%, #344e75 100%);
-<<<<<<< HEAD
   padding: 1.35rem 1.5rem;
-=======
-  padding: 2rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   text-align: center;
   position: relative;
 }
@@ -184,21 +159,15 @@ body {
   font-size: 1.8rem;
   color: white;
 }
-<<<<<<< HEAD
 .vefat-card .memorial-icon i {
   color: #fff !important;
 }
 .card-body {
   padding: 1.75rem 1.5rem 1.5rem;
-=======
-.card-body {
-  padding: 2.5rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   text-align: center;
   flex: 1;
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   justify-content: flex-start;
   gap: 0;
   min-height: 0;
@@ -207,28 +176,10 @@ body {
 }
 .person-name {
   font-size: 1.35rem;
-=======
-  justify-content: space-between;
-}
-.person-photo {
-  margin-bottom: 1.5rem;
-}
-.person-photo img {
-  width: 130px;
-  height: 130px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid #f8f9fa;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-.person-name {
-  font-size: 1.6rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   font-weight: 700;
   color: #022842;
   margin: 0 0 0.5rem 0;
   line-height: 1.3;
-<<<<<<< HEAD
   word-break: break-word;
   min-height: 2.6rem; /* 2 satır: tarihler satırda hizalı kalsın */
   display: flex;
@@ -254,17 +205,6 @@ body {
   max-width: 100%;
   flex-shrink: 0;
   box-sizing: border-box;
-=======
-}
-.person-position {
-  font-size: 1.1rem;
-  color: #6c757d;
-  margin: 0 0 1.5rem 0;
-  font-weight: 500;
-}
-.person-dates {
-  margin-bottom: 1.5rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .date-info {
   display: flex;
@@ -274,7 +214,6 @@ body {
   color: #495057;
   font-size: 1rem;
   background: #f8f9fa;
-<<<<<<< HEAD
   padding: 0.85rem 1.15rem;
   border-radius: 10px;
   border-left: 4px solid #022842;
@@ -283,17 +222,10 @@ body {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-=======
-  padding: 1rem 1.2rem;
-  border-radius: 10px;
-  border-left: 4px solid #022842;
-  font-weight: 500;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .date-info i {
   color: #022842;
   font-size: 1.1rem;
-<<<<<<< HEAD
   flex-shrink: 0;
   line-height: 1;
 }
@@ -311,31 +243,17 @@ body {
   max-width: 100%;
   flex: 0 0 auto;
   box-sizing: border-box; /* padding/border sağdan taşmasın */
-=======
-}
-.memorial-message {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 1.8rem;
-  border-radius: 14px;
-  border-left: 4px solid #ffc107;
-  margin-top: auto;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .memorial-message p {
   margin: 0;
   font-style: italic;
   color: #495057;
   line-height: 1.6;
-<<<<<<< HEAD
   font-size: 0.98rem;
   font-weight: 400;
   text-align: center;
   word-break: break-word;
   overflow-wrap: anywhere;
-=======
-  font-size: 1rem;
-  font-weight: 400;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 }
 .pagination-container {
   display: flex;
@@ -409,32 +327,14 @@ body {
 }
 @media (min-width: 1400px) {
   .vefat-grid {
-<<<<<<< HEAD
     grid-template-columns: repeat(3, 1fr);
     gap: 2.25rem;
-=======
-    grid-template-columns: repeat(4, 1fr);
-    gap: 3rem;
-    max-width: 1900px;
-  }
-  .vefat-card {
-    min-height: 480px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
 }
 @media (max-width: 1399px) and (min-width: 1200px) {
   .vefat-grid {
-<<<<<<< HEAD
     grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-=======
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2.5rem;
-    max-width: 1600px;
-  }
-  .vefat-card {
-    min-height: 460px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
 }
 @media (max-width: 1199px) and (min-width: 992px) {
@@ -443,15 +343,7 @@ body {
   }
   .vefat-grid {
     grid-template-columns: repeat(3, 1fr);
-<<<<<<< HEAD
     gap: 1.75rem;
-=======
-    gap: 2.5rem;
-    max-width: 1400px;
-  }
-  .vefat-card {
-    min-height: 440px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
 }
 @media (max-width: 991px) and (min-width: 768px) {
@@ -461,16 +353,8 @@ body {
   }
   .vefat-grid {
     grid-template-columns: repeat(2, 1fr);
-<<<<<<< HEAD
     gap: 1.5rem;
     padding: 0;
-=======
-    gap: 2rem;
-    padding: 0 0.5rem;
-  }
-  .vefat-card {
-    min-height: 420px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
   .main-content {
     padding: 1.5rem 0;
@@ -483,7 +367,6 @@ body {
 @media (max-width: 767px) {
   .vefat-grid {
     grid-template-columns: 1fr;
-<<<<<<< HEAD
     gap: 1.5rem;
     padding: 0;
     max-width: 100%;
@@ -496,21 +379,6 @@ body {
   .vefat-card {
     margin: 0 auto;
     max-width: 520px;
-=======
-    gap: 2rem;
-    padding: 0 0.5rem;
-    max-width: 100%;
-  }
-  .container {
-    width: 98%;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  .vefat-card {
-    min-height: 400px;
-    margin: 0 auto;
-    max-width: 400px;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
   .page-header {
     text-align: center;
@@ -524,7 +392,6 @@ body {
     font-size: 1.5rem;
   }
   .card-body {
-<<<<<<< HEAD
     padding: 1.5rem 1.25rem;
   }
   .person-name {
@@ -535,18 +402,6 @@ body {
   }
   .memorial-message {
     padding: 1.1rem;
-=======
-    padding: 2rem 1.5rem;
-  }
-  .person-name {
-    font-size: 1.4rem;
-  }
-  .person-position {
-    font-size: 1rem;
-  }
-  .memorial-message {
-    padding: 1.5rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
   .memorial-message p {
     font-size: 0.95rem;
@@ -558,7 +413,6 @@ body {
   }
   .vefat-grid {
     grid-template-columns: 1fr;
-<<<<<<< HEAD
     gap: 1.25rem;
     padding: 0;
   }
@@ -570,24 +424,6 @@ body {
   }
   .person-name {
     font-size: 1.2rem;
-=======
-    gap: 1.5rem;
-    padding: 0 0.3rem;
-  }
-  .vefat-card {
-    min-height: 380px;
-    max-width: 350px;
-  }
-  .card-body {
-    padding: 1.5rem 1rem;
-  }
-  .person-photo img {
-    width: 110px;
-    height: 110px;
-  }
-  .person-name {
-    font-size: 1.3rem;
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
   }
   .pagination {
     gap: 0.3rem;
@@ -1267,8 +1103,4 @@ body {
   left: 25px !important;
   right: auto !important;
   transform: translateX(-50%) !important;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533

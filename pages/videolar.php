@@ -1,24 +1,7 @@
 <?php
 include("baglan.php");
-<<<<<<< HEAD
 $vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE id = 1");
 $tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
-=======
-$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE vitrin = 1 ORDER BY id DESC LIMIT 1");
-// Eğer hiç vitrin videosu işaretlenmemişse, listedeki en güncel videoyu yedek olarak göster
-if (empty($vitrinVideo)) {
-    $vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar ORDER BY id DESC LIMIT 1");
-}
-$tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
-
-// Vitrin için özel başlık/açıklama girilmemişse, videonun kendi başlık/açıklamasını kullan
-$vitrinBaslik = "Gebze'de Offroad Heyecanı";
-$vitrinAciklama = "Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...";
-if (!empty($vitrinVideo)) {
-    $vitrinBaslik = !empty($vitrinVideo['vitrin_baslik']) ? $vitrinVideo['vitrin_baslik'] : $vitrinVideo['baslik'];
-    $vitrinAciklama = !empty($vitrinVideo['vitrin_aciklama']) ? $vitrinVideo['vitrin_aciklama'] : $vitrinVideo['aciklama'];
-}
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
 ?>
 <!doctype html>
 <html lang="tr">
@@ -39,11 +22,7 @@ if (!empty($vitrinVideo)) {
   <body>
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Videolar"; include "includes/breadcrumb.php"; ?>
-<<<<<<< HEAD
 <main class="container py-5">
-=======
-<main class="container py-2">
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
       <section class="row align-items-center mb-5 gx-5 featured-video-section">
   <div class="col-lg-7 mb-4 mb-lg-0">
     <div
@@ -64,17 +43,10 @@ if (!empty($vitrinVideo)) {
   
   <div class="col-lg-5">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-<<<<<<< HEAD
       Haftanın Videosu: <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['baslik'], ENT_QUOTES, 'UTF-8') : "Gebze'de Offroad Heyecanı"; ?>
     </h1>
     <p class="lead">
       <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['aciklama'], ENT_QUOTES, 'UTF-8') : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
-=======
-      Haftanın Videosu: <?php echo htmlspecialchars($vitrinBaslik, ENT_QUOTES, 'UTF-8'); ?>
-    </h1>
-    <p class="lead">
-      <?php echo htmlspecialchars($vitrinAciklama, ENT_QUOTES, 'UTF-8'); ?>
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
     </p>
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">

@@ -112,17 +112,10 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
                     <?php foreach ($digerEtkinlikSayfalari as $sayfa): ?>
                   <div class="department-item">
                       <?php foreach ($sayfa as $item): ?>
-<<<<<<< HEAD
                     <a href="etkinlikd.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item">
                       <img
                         src="<?php echo htmlspecialchars(imgUrl($item['resim'] ?? '')); ?>"
                         class="other-news-img"
-=======
-                    <a href="etkinlikd.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item d-flex mb-3 text-decoration-none text-reset">
-                      <img
-                        src="<?php echo htmlspecialchars(imgUrl($item['resim'] ?? '')); ?>"
-                        class="other-news-img me-3"
->>>>>>> 112b37f5f7eedd448db79abf5191316023500533
                         alt="<?php echo htmlspecialchars($item['baslik']); ?>"
                       />
                       <div class="other-news-content">
