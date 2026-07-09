@@ -1,6 +1,6 @@
 <?php
 include("baglan.php");
-$kayitlar = dbFetchAll($db, "SELECT * FROM anketler ORDER BY id");
+$kayitlar = dbFetchAnketler($db);
 
 $badgeMap = [
     "active"    => ["Aktif", "status-active", "fa-play-circle"],

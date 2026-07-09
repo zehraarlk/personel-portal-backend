@@ -50,6 +50,10 @@ dbEnsureVideolarKategori($db);
 dbEnsureKaynaklarKategori($db);
 // Duyurular kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
 dbEnsureDuyurularKategori($db);
+// Anketler kategori (durum) tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
+dbEnsureAnketlerKategori($db);
+// Yardımcı Linkler kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
+dbEnsureYardimciLinklerKategori($db);
 
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
@@ -1299,6 +1303,405 @@ function dbDuyurularKategoriler(PDO $db): array
     } catch (PDOException $e) {
         return [];
     }
+}
+
+/**
+ * Bilinen anket "kategori" (aslında durum) değerleri için Türkçe görünen ad
+ * ve rozet eşlemesi. anketler.php içindeki $badgeMap ile aynı sırayı takip eder.
+ */
+function dbAnketlerKategoriAdiEslemesi(): array
+{
+    return [
+        "active"    => "Aktif",
+        "pending"   => "Beklemede",
+        "completed" => "Tamamlandı",
+        "expired"   => "Süresi Doldu",
+    ];
+}
+
+/**
+ * "Anketler" sayfasının kategorilerini (durum: active/pending/completed/expired)
+ * ayrı bir tabloya taşır: "anketler_kategori".
+ *
+ * "anketler" tablosu başka hiçbir sayfayla paylaşılmadığı için (Sizden Gelenler
+ * ile aynı durum), tüm satırlar başarıyla eşleştiyse eski "kategori" metin
+ * kolonu silinir.
+ */
+function dbEnsureAnketlerKategori(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $table = "anketler";
+
+    try {
+        $db->query("SELECT 1 FROM `{$table}` LIMIT 1");
+    } catch (PDOException $e) {
+        return; // anketler tablosu henüz yoksa atla
+    }
+
+    if (!dbColumnExists($db, $table, "kategori")) {
+        return; // beklenen kolon yoksa taşınacak bir şey yok
+    }
+
+    // 1) Kategori tablosunu oluştur
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `anketler_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_anketler_kategori_slug` (`slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    // Bilinen 4 durum her zaman bulunsun (veri henüz olmasa bile dropdown dolu olsun)
+    try {
+        $stmt = $db->prepare(
+            "INSERT INTO anketler_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        foreach (dbAnketlerKategoriAdiEslemesi() as $slug => $ad) {
+            $stmt->execute([$slug, $ad]);
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 2) Veride varsa bilinmeyen/ekstra durumları da taşı
+    try {
+        $mevcut = dbFetchAll(
+            $db,
+            "SELECT DISTINCT kategori FROM `{$table}` WHERE kategori IS NOT NULL AND kategori <> ''"
+        );
+        if (!empty($mevcut)) {
+            $eslesme = dbAnketlerKategoriAdiEslemesi();
+            $stmt = $db->prepare(
+                "INSERT INTO anketler_kategori (slug, ad) VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+            );
+            foreach ($mevcut as $k) {
+                $slug = $k["kategori"];
+                $ad   = $eslesme[$slug] ?? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8");
+                $stmt->execute([$slug, $ad]);
+            }
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 3) Tabloya kategori_id kolonu ekle
+    dbEnsureColumn($db, $table, "kategori_id", "INT(11) DEFAULT NULL");
+
+    // 4) Mevcut kategori metnine göre kategori_id'yi doldur
+    try {
+        $db->exec(
+            "UPDATE `{$table}` t
+             JOIN anketler_kategori k ON k.slug = t.kategori
+             SET t.kategori_id = k.id
+             WHERE t.kategori_id IS NULL"
+        );
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 5) Index + Foreign Key
+    dbEnsureIndex($db, $table, "idx_anketler_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        $table,
+        "fk_anketler_kategori",
+        ["kategori_id"],
+        "anketler_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // 6) Tüm satırlar başarıyla eşleştiyse eski redundant kolonu kaldır
+    try {
+        $eksik = dbFetchOne($db, "SELECT COUNT(*) AS c FROM `{$table}` WHERE kategori_id IS NULL");
+        if ((int)($eksik["c"] ?? 1) === 0) {
+            $db->exec("ALTER TABLE `{$table}` DROP COLUMN kategori");
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+}
+
+/**
+ * Verilen slug'a (durum) karşılık gelen kategori id'sini döndürür.
+ * Tabloda yoksa otomatik oluşturur.
+ */
+function dbAnketlerKategoriId(PDO $db, string $slug, ?string $ad = null): ?int
+{
+    $slug = trim($slug);
+    if ($slug === "") {
+        return null;
+    }
+
+    try {
+        $row = dbFetchOne($db, "SELECT id FROM anketler_kategori WHERE slug = ?", [$slug]);
+        if ($row) {
+            return (int)$row["id"];
+        }
+
+        $eslesme = dbAnketlerKategoriAdiEslemesi();
+        $adDeger = $ad !== null && $ad !== ""
+            ? $ad
+            : ($eslesme[$slug] ?? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8"));
+        $stmt = $db->prepare(
+            "INSERT INTO anketler_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        $stmt->execute([$slug, $adDeger]);
+
+        $row = dbFetchOne($db, "SELECT id FROM anketler_kategori WHERE slug = ?", [$slug]);
+        return $row ? (int)$row["id"] : null;
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+/**
+ * Admin panelinde dropdown doldurmak için kategori (durum) listesi.
+ */
+function dbAnketlerKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM anketler_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * anketler.php'nin ihtiyaç duyduğu satırları getirir. "kategori" kolonu
+ * dbEnsureAnketlerKategori() tarafından silinmiş olsa bile, kategori_id
+ * üzerinden JOIN ile aynı isimle ("kategori") geri kazandırılır; böylece
+ * anketler.php'deki $badgeMap[$k["kategori"]] araması değişmeden çalışır.
+ */
+function dbFetchAnketler(PDO $db): array
+{
+    if (dbColumnExists($db, "anketler", "kategori")) {
+        return dbFetchAll($db, "SELECT * FROM anketler ORDER BY id");
+    }
+    return dbFetchAll(
+        $db,
+        "SELECT t.*, k.slug AS kategori
+         FROM anketler t
+         LEFT JOIN anketler_kategori k ON k.id = t.kategori_id
+         ORDER BY t.id"
+    );
+}
+
+/**
+ * Bilinen yardımcı link kategori slug'ları için Türkçe görünen ad eşlemesi.
+ * (yardimci_linkler.php içindeki sortSelect dropdown'ıyla aynı sırayı takip eder.)
+ */
+function dbYardimciLinklerKategoriAdiEslemesi(): array
+{
+    return [
+        "kurum-ici" => "Kurum İçi Linkler",
+        "website"   => "Website Linkler",
+        "bilgi"     => "Bilgi Portalları",
+        "faydalı"   => "Faydalı Linkler",
+    ];
+}
+
+/**
+ * "Yardımcı Linkler" sayfasının kategorilerini ayrı bir tabloya taşır:
+ * "yardimci_linkler_kategori".
+ *
+ * "yardimci_linkler" tablosu başka hiçbir sayfayla paylaşılmadığı için
+ * (Sizden Gelenler/Anketler'deki gibi), tüm satırlar başarıyla eşleştiyse
+ * eski "kategori" metin kolonu silinir.
+ *
+ * NOT: dbEnsureAnasayfaLinkler() bu fonksiyondan ÖNCE çalışır ve ilk kurulumda
+ * "yardimci_linkler" tablosundaki kategori = 'kurum-ici' satırlarını
+ * "anasayfa_linkler" tablosuna bir kerelik taşır; bu yüzden kategori kolonu
+ * o adım tamamlanmadan silinmez.
+ */
+function dbEnsureYardimciLinklerKategori(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $table = "yardimci_linkler";
+
+    try {
+        $db->query("SELECT 1 FROM `{$table}` LIMIT 1");
+    } catch (PDOException $e) {
+        return; // tablo henüz yoksa atla
+    }
+
+    if (!dbColumnExists($db, $table, "kategori")) {
+        return; // beklenen kolon yoksa taşınacak bir şey yok
+    }
+
+    // 1) Kategori tablosunu oluştur
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `yardimci_linkler_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_yardimci_linkler_kategori_slug` (`slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    // Bilinen 4 kategori her zaman bulunsun (veri henüz olmasa bile dropdown dolu olsun)
+    try {
+        $stmt = $db->prepare(
+            "INSERT INTO yardimci_linkler_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        foreach (dbYardimciLinklerKategoriAdiEslemesi() as $slug => $ad) {
+            $stmt->execute([$slug, $ad]);
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 2) Veride varsa bilinmeyen/ekstra kategorileri de taşı
+    try {
+        $mevcut = dbFetchAll(
+            $db,
+            "SELECT DISTINCT kategori FROM `{$table}` WHERE kategori IS NOT NULL AND kategori <> ''"
+        );
+        if (!empty($mevcut)) {
+            $eslesme = dbYardimciLinklerKategoriAdiEslemesi();
+            $stmt = $db->prepare(
+                "INSERT INTO yardimci_linkler_kategori (slug, ad) VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+            );
+            foreach ($mevcut as $k) {
+                $slug = $k["kategori"];
+                $ad   = $eslesme[$slug] ?? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8");
+                $stmt->execute([$slug, $ad]);
+            }
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 3) Tabloya kategori_id kolonu ekle
+    dbEnsureColumn($db, $table, "kategori_id", "INT(11) DEFAULT NULL");
+
+    // 4) Mevcut kategori metnine göre kategori_id'yi doldur
+    try {
+        $db->exec(
+            "UPDATE `{$table}` t
+             JOIN yardimci_linkler_kategori k ON k.slug = t.kategori
+             SET t.kategori_id = k.id
+             WHERE t.kategori_id IS NULL"
+        );
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 5) Index + Foreign Key
+    dbEnsureIndex($db, $table, "idx_yardimci_linkler_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        $table,
+        "fk_yardimci_linkler_kategori",
+        ["kategori_id"],
+        "yardimci_linkler_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // 6) Tüm satırlar başarıyla eşleştiyse eski redundant kolonu kaldır
+    try {
+        $eksik = dbFetchOne($db, "SELECT COUNT(*) AS c FROM `{$table}` WHERE kategori_id IS NULL");
+        if ((int)($eksik["c"] ?? 1) === 0) {
+            $db->exec("ALTER TABLE `{$table}` DROP COLUMN kategori");
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+}
+
+/**
+ * Verilen slug'a karşılık gelen kategori id'sini döndürür.
+ * Tabloda yoksa otomatik oluşturur.
+ */
+function dbYardimciLinklerKategoriId(PDO $db, string $slug, ?string $ad = null): ?int
+{
+    $slug = trim($slug);
+    if ($slug === "") {
+        return null;
+    }
+
+    try {
+        $row = dbFetchOne($db, "SELECT id FROM yardimci_linkler_kategori WHERE slug = ?", [$slug]);
+        if ($row) {
+            return (int)$row["id"];
+        }
+
+        $eslesme = dbYardimciLinklerKategoriAdiEslemesi();
+        $adDeger = $ad !== null && $ad !== ""
+            ? $ad
+            : ($eslesme[$slug] ?? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8"));
+        $stmt = $db->prepare(
+            "INSERT INTO yardimci_linkler_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        $stmt->execute([$slug, $adDeger]);
+
+        $row = dbFetchOne($db, "SELECT id FROM yardimci_linkler_kategori WHERE slug = ?", [$slug]);
+        return $row ? (int)$row["id"] : null;
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+/**
+ * Admin panelinde dropdown doldurmak için kategori listesi.
+ */
+function dbYardimciLinklerKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM yardimci_linkler_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * yardimci_linkler.php'nin ihtiyaç duyduğu satırları getirir. "kategori" kolonu
+ * dbEnsureYardimciLinklerKategori() tarafından silinmiş olsa bile, kategori_id
+ * üzerinden JOIN ile aynı isimle ("kategori") geri kazandırılır; böylece
+ * data-category="<?= $k['kategori'] ?>" ve sortSelect filtresi değişmeden çalışır.
+ */
+function dbFetchYardimciLinkler(PDO $db): array
+{
+    if (dbColumnExists($db, "yardimci_linkler", "kategori")) {
+        return dbFetchAll($db, "SELECT * FROM yardimci_linkler ORDER BY id");
+    }
+    return dbFetchAll(
+        $db,
+        "SELECT t.*, k.slug AS kategori
+         FROM yardimci_linkler t
+         LEFT JOIN yardimci_linkler_kategori k ON k.id = t.kategori_id
+         ORDER BY t.id"
+    );
 }
 
 function dbEnsureIndex(PDO $db, string $table, string $indexName, array $columns): void
