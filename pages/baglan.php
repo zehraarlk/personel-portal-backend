@@ -62,6 +62,284 @@ function dbFetchAll(PDO $db, string $sql, array $params = []): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function youtubeExtractVideoId(string $value): ?string
+{
+    $value = trim($value);
+    if ($value === "") {
+        return null;
+    }
+    // Already an ID?
+    if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $value)) {
+        return $value;
+    }
+    // Common URL shapes: youtube.com/watch?v=, youtu.be/, embed/
+    if (preg_match('~(?:youtube\.com/(?:watch\?.*v=|embed/|shorts/)|youtu\.be/)([a-zA-Z0-9_-]{11})~i', $value, $m)) {
+        return $m[1];
+    }
+    return null;
+}
+
+function youtubeFormatDuration(int $seconds): string
+{
+    $seconds = max(0, $seconds);
+    $h = intdiv($seconds, 3600);
+    $m = intdiv($seconds % 3600, 60);
+    $s = $seconds % 60;
+    if ($h > 0) {
+        return sprintf("%d:%02d:%02d", $h, $m, $s);
+    }
+    return sprintf("%02d:%02d", $m, $s);
+}
+
+function httpFetchText(string $url, int $timeoutSeconds = 8): ?string
+{
+    // Prefer cURL if available
+    if (function_exists("curl_init")) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 3,
+            CURLOPT_CONNECTTIMEOUT => $timeoutSeconds,
+            CURLOPT_TIMEOUT        => $timeoutSeconds,
+            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_HTTPHEADER     => [
+                "User-Agent: Mozilla/5.0",
+                "Accept-Language: tr-TR,tr;q=0.9,en;q=0.8",
+            ],
+        ]);
+        $body = curl_exec($ch);
+        $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if (!is_string($body) || $body === "" || $status < 200 || $status >= 300) {
+            return null;
+        }
+        return $body;
+    }
+
+    // Fallback: allow_url_fopen
+    $ctx = stream_context_create([
+        "http" => [
+            "method"  => "GET",
+            "timeout" => $timeoutSeconds,
+            "header"  => "User-Agent: Mozilla/5.0\r\nAccept-Language: tr-TR,tr;q=0.9,en;q=0.8\r\n",
+        ],
+    ]);
+    $body = @file_get_contents($url, false, $ctx);
+    if (!is_string($body) || $body === "") {
+        return null;
+    }
+    return $body;
+}
+
+function youtubeFetchWatchPageHtml(string $youtubeId): ?string
+{
+    $youtubeId = trim($youtubeId);
+    if (!preg_match('/^[a-zA-Z0-9_-]{11}$/', $youtubeId)) {
+        return null;
+    }
+
+    $html = httpFetchText("https://www.youtube.com/watch?v=" . rawurlencode($youtubeId));
+    return (is_string($html) && $html !== "") ? $html : null;
+}
+
+function youtubeParseVideoMetadata(string $html): array
+{
+    $meta = [
+        "title"            => null,
+        "description"      => null,
+        "duration_seconds" => null,
+    ];
+
+    if (preg_match('/<meta\s+property="og:title"\s+content="([^"]*)"/i', $html, $m)) {
+        $meta["title"] = trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, "UTF-8"));
+    } elseif (preg_match('/<meta\s+name="title"\s+content="([^"]*)"/i', $html, $m)) {
+        $meta["title"] = trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, "UTF-8"));
+    }
+
+    if (preg_match('/<meta\s+property="og:description"\s+content="([^"]*)"/i', $html, $m)) {
+        $meta["description"] = trim(html_entity_decode($m[1], ENT_QUOTES | ENT_HTML5, "UTF-8"));
+    } elseif (preg_match('/"shortDescription"\s*:\s*"((?:\\\\.|[^"\\\\])*)"/s', $html, $m)) {
+        $decoded = json_decode('"' . addcslashes(stripcslashes($m[1]), '"\\') . '"');
+        if (is_string($decoded)) {
+            $meta["description"] = trim($decoded);
+        }
+    }
+
+    if (preg_match('/"approxDurationMs"\s*:\s*"(\d+)"/', $html, $m)) {
+        $ms = (int)$m[1];
+        if ($ms > 0) {
+            $meta["duration_seconds"] = (int)round($ms / 1000);
+        }
+    } elseif (preg_match('/"lengthSeconds"\s*:\s*"(\d+)"/', $html, $m)) {
+        $sec = (int)$m[1];
+        if ($sec > 0) {
+            $meta["duration_seconds"] = $sec;
+        }
+    }
+
+    return $meta;
+}
+
+function youtubeFetchVideoMetadata(string $youtubeId): array
+{
+    static $cache = [];
+
+    $youtubeId = trim($youtubeId);
+    if (!preg_match('/^[a-zA-Z0-9_-]{11}$/', $youtubeId)) {
+        return [];
+    }
+    if (isset($cache[$youtubeId])) {
+        return $cache[$youtubeId];
+    }
+
+    $html = youtubeFetchWatchPageHtml($youtubeId);
+    if ($html === null) {
+        $cache[$youtubeId] = [];
+        return [];
+    }
+
+    $cache[$youtubeId] = youtubeParseVideoMetadata($html);
+    return $cache[$youtubeId];
+}
+
+function youtubeFetchDurationSeconds(string $youtubeId): ?int
+{
+    $meta = youtubeFetchVideoMetadata($youtubeId);
+    $seconds = $meta["duration_seconds"] ?? null;
+    return is_int($seconds) && $seconds > 0 ? $seconds : null;
+}
+
+function youtubeTruncateText(string $text, int $max = 500): string
+{
+    $text = trim(preg_replace('/\s+/u', ' ', $text));
+    if ($text === "") {
+        return "";
+    }
+    if (mb_strlen($text, "UTF-8") <= $max) {
+        return $text;
+    }
+    return mb_substr($text, 0, $max - 3, "UTF-8") . "...";
+}
+
+function youtubeGuessKategori(string $title, string $description): string
+{
+    $text = mb_strtolower($title . " " . $description, "UTF-8");
+    if (preg_match('/\b(eğitim|egitim|seminer|kurs|kvkk|iş sağlığı|isg|eğitimi)\b/u', $text)) {
+        return "egitimler";
+    }
+    if (preg_match('/\b(etkinlik|festival|turnuva|piknik|ziyaret|kampanya|tatbikat|offroad)\b/u', $text)) {
+        return "etkinlikler";
+    }
+    return "duyurular";
+}
+
+function dbVideoFieldIsEmpty(?string $value): bool
+{
+    return trim((string)$value) === "";
+}
+
+function dbFillVideoFromYoutube(PDO $db, array $video): array
+{
+    $youtubeId = youtubeExtractVideoId((string)($video["youtube_id"] ?? ""));
+    if (!$youtubeId) {
+        return $video;
+    }
+
+    $video["youtube_id"] = $youtubeId;
+
+    $needsBaslik   = dbVideoFieldIsEmpty($video["baslik"] ?? null);
+    $needsAciklama = dbVideoFieldIsEmpty($video["aciklama"] ?? null);
+    $needsSure     = dbVideoFieldIsEmpty($video["sure"] ?? null);
+    $needsKategori = dbVideoFieldIsEmpty($video["kategori"] ?? null);
+
+    if (!$needsBaslik && !$needsAciklama && !$needsSure && !$needsKategori) {
+        return $video;
+    }
+
+    $meta = youtubeFetchVideoMetadata($youtubeId);
+    $title = trim((string)($meta["title"] ?? ""));
+    $description = youtubeTruncateText((string)($meta["description"] ?? ""));
+
+    if ($needsBaslik) {
+        $video["baslik"] = $title !== "" ? mb_substr($title, 0, 255, "UTF-8") : $youtubeId;
+    }
+    if ($needsAciklama) {
+        $video["aciklama"] = $description !== ""
+            ? $description
+            : youtubeTruncateText((string)($video["baslik"] ?? $youtubeId), 500);
+    }
+    if ($needsSure) {
+        $seconds = $meta["duration_seconds"] ?? null;
+        $video["sure"] = (is_int($seconds) && $seconds > 0)
+            ? youtubeFormatDuration($seconds)
+            : "00:00";
+    }
+    if ($needsKategori) {
+        $video["kategori"] = youtubeGuessKategori(
+            (string)($video["baslik"] ?? $title),
+            (string)($video["aciklama"] ?? $description)
+        );
+    }
+
+    if (dbColumnExists($db, "videolar", "kategori_id") && !empty($video["kategori"])) {
+        $kategoriId = dbVideolarKategoriId($db, (string)$video["kategori"]);
+        if ($kategoriId) {
+            $video["kategori_id"] = $kategoriId;
+        }
+    }
+
+    return $video;
+}
+
+function dbEnsureVideoMetadata(PDO $db, array &$videos): void
+{
+    $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
+
+    foreach ($videos as $i => $row) {
+        $filled = dbFillVideoFromYoutube($db, $row);
+        $changed = false;
+
+        $setParts = [];
+        $params = [];
+
+        foreach (["baslik", "aciklama", "sure", "kategori"] as $field) {
+            $oldValue = trim((string)($row[$field] ?? ""));
+            $newValue = trim((string)($filled[$field] ?? ""));
+            if ($oldValue === "" && $newValue !== "" && $newValue !== ($row[$field] ?? "")) {
+                $setParts[] = "{$field} = ?";
+                $params[] = $filled[$field];
+                $videos[$i][$field] = $filled[$field];
+                $changed = true;
+            }
+        }
+
+        if (
+            $hasKategoriId
+            && !empty($filled["kategori_id"])
+            && empty($row["kategori_id"])
+        ) {
+            $setParts[] = "kategori_id = ?";
+            $params[] = (int)$filled["kategori_id"];
+            $videos[$i]["kategori_id"] = (int)$filled["kategori_id"];
+            $changed = true;
+        }
+
+        if (!$changed || empty($setParts)) {
+            continue;
+        }
+
+        $params[] = (int)$row["id"];
+        $sql = "UPDATE videolar SET " . implode(", ", $setParts) . " WHERE id = ?";
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+        } catch (Throwable $e) {
+            // Sessizce geç
+        }
+    }
+}
+
 function imgUrl(?string $path, string $fallback = "../images/logo(2).png"): string
 {
     $path = trim((string)$path);
@@ -2288,13 +2566,15 @@ function dbEnsureVideoOrder(PDO $db): void
 
 function dbInsertVideo(PDO $db, array $video): int
 {
+    $video = dbFillVideoFromYoutube($db, $video);
+
     $rows = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
     array_unshift($rows, [
         "youtube_id" => $video["youtube_id"],
-        "baslik"     => $video["baslik"],
-        "aciklama"   => $video["aciklama"],
-        "kategori"   => $video["kategori"],
-        "sure"       => $video["sure"],
+        "baslik"     => $video["baslik"] ?? "",
+        "aciklama"   => $video["aciklama"] ?? "",
+        "kategori"   => $video["kategori"] ?? "duyurular",
+        "sure"       => $video["sure"] ?? "00:00",
     ]);
 
     dbReorderVideolarRows($db, $rows);

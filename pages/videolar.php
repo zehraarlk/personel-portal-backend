@@ -2,6 +2,7 @@
 include("baglan.php");
 $vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE id = 1");
 $tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
+dbEnsureVideoMetadata($db, $tumVideolar);
 ?>
 <!doctype html>
 <html lang="tr">
