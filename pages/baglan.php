@@ -28,20 +28,22 @@ try {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
 // Anasayfa linkleri tablosu: yoksa oluştur + ilk kurulumda doldur
 dbEnsureAnasayfaLinkler($db);
 // Kalıcı oturum (remember-me) alanları: yoksa ekle
 dbEnsurePersonellerRememberMe($db);
 // Oturum kayıtları tablosu: yoksa oluştur
 dbEnsureOturumKayitlari($db);
-// İçerik izlenme takibi (hesap/ziyaretçi başına 1)
-dbEnsureIcerikIzlemeleri($db);
 // İlişkisel yapı + unique/index/fk sağlamlaştırma
 dbEnsureRelationalConstraints($db);
+// Sizden Gelenler kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
+dbEnsureSizdenGelenlerKategori($db);
+// Videolar kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
+dbEnsureVideolarKategori($db);
+// Kaynaklar (Protokoller/Dökümanlar/Mevzuatlar/Eğitimler) kategori tabloları
+dbEnsureKaynaklarKategori($db);
+// Duyurular kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
+dbEnsureDuyurularKategori($db);
 
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
@@ -336,111 +338,45 @@ function dbEnsureOturumKayitlari(PDO $db): void
                 `personel_id` int(11) NOT NULL,
                 `giris_zamani` datetime NOT NULL,
                 `cikis_zamani` datetime DEFAULT NULL,
-                `ip_adresi` varchar(45) DEFAULT NULL,
-                `user_agent` varchar(255) DEFAULT NULL,
-                `kapanis_tipi` varchar(20) DEFAULT NULL,
-                `son_aktivite` datetime DEFAULT NULL,
-                PRIMARY KEY (`id`),
-                KEY `idx_oturum_personel_id` (`personel_id`),
-                KEY `idx_oturum_acik` (`personel_id`, `cikis_zamani`)
+                PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
         );
     } catch (PDOException $e) {
         // Sessizce geç
     }
+}
 
-    dbEnsureColumn($db, "oturum_kayitlari", "ip_adresi", "VARCHAR(45) DEFAULT NULL");
-    dbEnsureColumn($db, "oturum_kayitlari", "user_agent", "VARCHAR(255) DEFAULT NULL");
-    dbEnsureColumn($db, "oturum_kayitlari", "kapanis_tipi", "VARCHAR(20) DEFAULT NULL");
-    dbEnsureColumn($db, "oturum_kayitlari", "son_aktivite", "DATETIME DEFAULT NULL");
+function dbColumnExists(PDO $db, string $table, string $column): bool
+{
     try {
-        dbEnsureIndex($db, "oturum_kayitlari", "idx_oturum_acik", ["personel_id", "cikis_zamani"]);
-    } catch (Throwable $e) {
-        // Sessizce geç
+        $stmt = $db->prepare(
+            "SELECT COUNT(*) AS c
+             FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME = ?
+               AND COLUMN_NAME = ?"
+        );
+        $stmt->execute([$table, $column]);
+        return (int)($stmt->fetch(PDO::FETCH_ASSOC)["c"] ?? 0) > 0;
+    } catch (PDOException $e) {
+        return false;
     }
 }
 
 /**
- * Açık oturumu kapatır. tip: manuel | sekme | otomatik | eski
+ * "Sizden Gelenler" sayfasının kategorilerini ayrı bir tabloya taşır.
+ * Tablo adı bilinçli olarak "sizdengelenler_kategori" (sayfaya özel) seçildi;
+ * ileride diğer sayfalar için de aynı desenle (ör. "haberler_kategori",
+ * "etkinlikler_kategori") ayrı kategori tabloları açılabilir.
+ *
+ * - Tablo yoksa oluşturur.
+ * - sizden_gelenler tablosunda hâlâ eski kategori_slug/kategori_adi kolonları
+ *   varsa, buradaki benzersiz kategorileri yeni tabloya aktarır.
+ * - sizden_gelenler tablosuna kategori_id kolonu ekler ve eşleştirir.
+ * - Foreign key ekler.
+ * - Tüm kayıtlar başarıyla eşleştiyse eski redundant kolonları siler.
  */
-function oturumClose(PDO $db, int $oturumId, string $tip = "manuel"): bool
-{
-    if ($oturumId <= 0) {
-        return false;
-    }
-    $tip = in_array($tip, ["manuel", "sekme", "otomatik", "eski"], true) ? $tip : "manuel";
-    try {
-        $stmt = $db->prepare(
-            "UPDATE oturum_kayitlari
-             SET cikis_zamani = COALESCE(cikis_zamani, NOW()),
-                 kapanis_tipi = COALESCE(kapanis_tipi, ?),
-                 son_aktivite = COALESCE(son_aktivite, NOW())
-             WHERE id = ? AND cikis_zamani IS NULL"
-        );
-        $stmt->execute([$tip, $oturumId]);
-        return $stmt->rowCount() > 0;
-    } catch (Throwable $e) {
-        return false;
-    }
-}
-
-/** Personelin diğer açık oturumlarını kapatır (yeni giriş öncesi). */
-function oturumCloseOtherOpen(PDO $db, int $personelId, ?int $exceptOturumId = null, string $tip = "otomatik"): void
-{
-    if ($personelId <= 0) {
-        return;
-    }
-    try {
-        if ($exceptOturumId) {
-            $stmt = $db->prepare(
-                "UPDATE oturum_kayitlari
-                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
-                 WHERE personel_id = ? AND cikis_zamani IS NULL AND id != ?"
-            );
-            $stmt->execute([$tip, $personelId, $exceptOturumId]);
-        } else {
-            $stmt = $db->prepare(
-                "UPDATE oturum_kayitlari
-                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
-                 WHERE personel_id = ? AND cikis_zamani IS NULL"
-            );
-            $stmt->execute([$tip, $personelId]);
-        }
-    } catch (Throwable $e) {
-        // Sessizce geç
-    }
-}
-
-/** Yeni oturum satırı oluşturur. */
-function oturumStart(PDO $db, int $personelId): int
-{
-    oturumCloseOtherOpen($db, $personelId, null, "otomatik");
-    $ip = substr((string)($_SERVER["REMOTE_ADDR"] ?? ""), 0, 45);
-    $ua = substr((string)($_SERVER["HTTP_USER_AGENT"] ?? ""), 0, 255);
-    $stmt = $db->prepare(
-        "INSERT INTO oturum_kayitlari (personel_id, giris_zamani, ip_adresi, user_agent, son_aktivite)
-         VALUES (?, NOW(), ?, ?, NOW())"
-    );
-    $stmt->execute([$personelId, $ip !== "" ? $ip : null, $ua !== "" ? $ua : null]);
-    return (int)$db->lastInsertId();
-}
-
-/** Aktif oturumun son aktivite zamanını günceller. */
-function oturumTouch(PDO $db, ?int $oturumId): void
-{
-    if (!$oturumId) {
-        return;
-    }
-    try {
-        $db->prepare(
-            "UPDATE oturum_kayitlari SET son_aktivite = NOW() WHERE id = ? AND cikis_zamani IS NULL"
-        )->execute([$oturumId]);
-    } catch (Throwable $e) {
-        // Sessizce geç
-    }
-}
-
-function dbEnsureIcerikIzlemeleri(PDO $db): void
+function dbEnsureSizdenGelenlerKategori(PDO $db): void
 {
     static $done = false;
     if ($done) {
@@ -449,114 +385,711 @@ function dbEnsureIcerikIzlemeleri(PDO $db): void
     $done = true;
 
     try {
+        $db->query("SELECT 1 FROM sizden_gelenler LIMIT 1");
+    } catch (PDOException $e) {
+        return; // sizden_gelenler tablosu henüz yoksa atla
+    }
+
+    // 1) Kategori tablosunu oluştur
+    try {
         $db->exec(
-            "CREATE TABLE IF NOT EXISTS `icerik_izlemeleri` (
+            "CREATE TABLE IF NOT EXISTS `sizdengelenler_kategori` (
                 `id` int(11) NOT NULL AUTO_INCREMENT,
-                `tablo` varchar(64) NOT NULL,
-                `kayit_id` int(11) NOT NULL,
-                `izleyici` varchar(96) NOT NULL,
-                `olusturma_tarihi` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
                 PRIMARY KEY (`id`),
-                UNIQUE KEY `uq_icerik_izleme` (`tablo`, `kayit_id`, `izleyici`)
+                UNIQUE KEY `uq_sizdengelenler_kategori_slug` (`slug`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return; // oluşturulamadıysa devam etmenin anlamı yok
+    }
+
+    $hasOldSlugColumn = dbColumnExists($db, "sizden_gelenler", "kategori_slug");
+    $hasOldAdColumn   = dbColumnExists($db, "sizden_gelenler", "kategori_adi");
+
+    // 2) Eski yapıdaki (serbest metin) kategorileri yeni tabloya aktar
+    if ($hasOldSlugColumn && $hasOldAdColumn) {
+        try {
+            $eskiKategoriler = dbFetchAll(
+                $db,
+                "SELECT DISTINCT kategori_slug, kategori_adi
+                 FROM sizden_gelenler
+                 WHERE kategori_slug IS NOT NULL AND kategori_slug <> ''"
+            );
+            if (!empty($eskiKategoriler)) {
+                $stmt = $db->prepare(
+                    "INSERT INTO sizdengelenler_kategori (slug, ad) VALUES (?, ?)
+                     ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+                );
+                foreach ($eskiKategoriler as $k) {
+                    $stmt->execute([$k["kategori_slug"], $k["kategori_adi"]]);
+                }
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+
+    // 3) sizden_gelenler tablosuna kategori_id kolonu ekle
+    dbEnsureColumn($db, "sizden_gelenler", "kategori_id", "INT(11) DEFAULT NULL");
+
+    // 4) Eski slug verisinden kategori_id'yi doldur (henüz boş olan satırlar için)
+    if ($hasOldSlugColumn) {
+        try {
+            $db->exec(
+                "UPDATE sizden_gelenler sg
+                 JOIN sizdengelenler_kategori k ON k.slug = sg.kategori_slug
+                 SET sg.kategori_id = k.id
+                 WHERE sg.kategori_id IS NULL"
+            );
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+
+    // 5) Index + Foreign Key
+    dbEnsureIndex($db, "sizden_gelenler", "idx_sizden_gelenler_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        "sizden_gelenler",
+        "fk_sizden_gelenler_kategori",
+        ["kategori_id"],
+        "sizdengelenler_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // 6) Tüm satırlar başarıyla eşleştiyse eski redundant kolonları kaldır
+    if ($hasOldSlugColumn && $hasOldAdColumn) {
+        try {
+            $eksik = dbFetchOne($db, "SELECT COUNT(*) AS c FROM sizden_gelenler WHERE kategori_id IS NULL");
+            if ((int)($eksik["c"] ?? 1) === 0) {
+                $db->exec("ALTER TABLE sizden_gelenler DROP COLUMN kategori_slug, DROP COLUMN kategori_adi");
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+}
+
+/**
+ * Admin panelinde dropdown doldurmak için kategori listesi.
+ */
+function dbSizdenGelenlerKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM sizdengelenler_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Bilinen kategori slug'ları için Türkçe görünen ad eşlemesi.
+ * Eşlemede olmayan slug'lar için ilk harfi büyütülerek kullanılır.
+ */
+function dbVideolarKategoriAdiEslemesi(): array
+{
+    return [
+        "etkinlikler" => "Etkinlikler",
+        "egitimler"   => "Eğitimler",
+        "duyurular"   => "Duyurular",
+    ];
+}
+
+function dbVideolarKategoriAdi(string $slug): string
+{
+    $slug = trim($slug);
+    $eslesme = dbVideolarKategoriAdiEslemesi();
+    if (isset($eslesme[$slug])) {
+        return $eslesme[$slug];
+    }
+    return $slug !== "" ? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8") : $slug;
+}
+
+/**
+ * "Videolar" sayfasının kategorilerini ayrı bir tabloya taşır (videolar_kategori).
+ *
+ * NOT: sizden_gelenler'den farklı olarak buradaki eski "kategori" metin kolonu
+ * KALDIRILMIYOR; çünkü dbReorderVideolarRows/dbInsertVideo gibi fonksiyonlar bu
+ * kolonu doğrudan kullanıyor (video ekleme/silme/sıralama admin tarafında hâlâ
+ * "kategori" metnini gönderiyor). Bu yüzden "kategori" metin kolonu ile yeni
+ * "kategori_id" foreign key kolonu birlikte, senkron şekilde tutulur.
+ */
+function dbEnsureVideolarKategori(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    try {
+        $db->query("SELECT 1 FROM videolar LIMIT 1");
+    } catch (PDOException $e) {
+        return; // videolar tablosu henüz yoksa atla
+    }
+
+    // 1) Kategori tablosunu oluştur
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `videolar_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_videolar_kategori_slug` (`slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    // 2) Mevcut "kategori" metin değerlerini yeni tabloya aktar
+    if (dbColumnExists($db, "videolar", "kategori")) {
+        try {
+            $mevcutKategoriler = dbFetchAll(
+                $db,
+                "SELECT DISTINCT kategori FROM videolar WHERE kategori IS NOT NULL AND kategori <> ''"
+            );
+            if (!empty($mevcutKategoriler)) {
+                $stmt = $db->prepare(
+                    "INSERT INTO videolar_kategori (slug, ad) VALUES (?, ?)
+                     ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+                );
+                foreach ($mevcutKategoriler as $k) {
+                    $slug = $k["kategori"];
+                    $stmt->execute([$slug, dbVideolarKategoriAdi($slug)]);
+                }
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+
+    // 3) videolar tablosuna kategori_id kolonu ekle
+    dbEnsureColumn($db, "videolar", "kategori_id", "INT(11) DEFAULT NULL");
+
+    // 4) Mevcut kategori metnine göre kategori_id'yi doldur
+    try {
+        $db->exec(
+            "UPDATE videolar v
+             JOIN videolar_kategori k ON k.slug = v.kategori
+             SET v.kategori_id = k.id
+             WHERE v.kategori_id IS NULL"
         );
     } catch (PDOException $e) {
         // Sessizce geç
     }
+
+    // 5) Index + Foreign Key
+    dbEnsureIndex($db, "videolar", "idx_videolar_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        "videolar",
+        "fk_videolar_kategori",
+        ["kategori_id"],
+        "videolar_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // Not: "kategori" metin kolonu bilinçli olarak silinmiyor (yukarıdaki not).
 }
 
 /**
- * İzleyici kimliği: girişli hesap veya kalıcı misafir çerezi.
+ * Verilen kategori metnine (slug) karşılık gelen id'yi döndürür.
+ * Tabloda yoksa otomatik olarak oluşturur (admin panelinden yeni bir
+ * kategori adıyla video eklendiğinde koleksiyonun kopmaması için).
  */
-function viewViewerKey(): string
+function dbVideolarKategoriId(PDO $db, string $slug): ?int
 {
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+    $slug = trim($slug);
+    if ($slug === "") {
+        return null;
     }
-
-    if (!empty($_SESSION["personel_id"])) {
-        return "personel:" . (int)$_SESSION["personel_id"];
-    }
-
-    $cookieName = "pp_viewer";
-    $token = $_COOKIE[$cookieName] ?? "";
-    if (!is_string($token) || !preg_match('/^[a-f0-9]{32}$/', $token)) {
-        $token = bin2hex(random_bytes(16));
-        setcookie($cookieName, $token, [
-            "expires"  => time() + 60 * 60 * 24 * 365,
-            "path"     => "/",
-            "httponly" => true,
-            "samesite" => "Lax",
-        ]);
-        $_COOKIE[$cookieName] = $token;
-    }
-
-    return "guest:" . $token;
-}
-
-/**
- * Aynı hesap/ziyaretçi için içeriği yalnızca 1 kez sayar.
- * @return array{count:int,increased:bool}
- */
-function dbBumpUniqueView(PDO $db, string $table, int $id, string $column = "view"): array
-{
-    $allowed = [
-        "etkinlikler"          => "view",
-        "anasayfa_duyurular"   => "view",
-        "duyurular"            => "view",
-        "sizden_gelenler"      => "goruntulenme",
-        "haberler"             => "view",
-    ];
-
-    if (!isset($allowed[$table]) || $id <= 0) {
-        return ["count" => 0, "increased" => false];
-    }
-
-    $column = $allowed[$table];
-    dbEnsureColumn($db, $table, $column, "INT(11) NOT NULL DEFAULT 0");
-    dbEnsureIcerikIzlemeleri($db);
-
-    $viewer = viewViewerKey();
-    $increased = false;
 
     try {
-        $ins = $db->prepare(
-            "INSERT IGNORE INTO icerik_izlemeleri (tablo, kayit_id, izleyici) VALUES (?, ?, ?)"
+        $row = dbFetchOne($db, "SELECT id FROM videolar_kategori WHERE slug = ?", [$slug]);
+        if ($row) {
+            return (int)$row["id"];
+        }
+
+        $stmt = $db->prepare(
+            "INSERT INTO videolar_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
         );
-        $ins->execute([$table, $id, $viewer]);
-        if ($ins->rowCount() > 0) {
-            $db->prepare(
-                "UPDATE `{$table}` SET `{$column}` = COALESCE(`{$column}`, 0) + 1 WHERE id = ?"
-            )->execute([$id]);
-            $increased = true;
+        $stmt->execute([$slug, dbVideolarKategoriAdi($slug)]);
+
+        $row = dbFetchOne($db, "SELECT id FROM videolar_kategori WHERE slug = ?", [$slug]);
+        return $row ? (int)$row["id"] : null;
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+/**
+ * Admin panelinde dropdown doldurmak için kategori listesi.
+ */
+function dbVideolarKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM videolar_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Mevzuatlar sayfasındaki alt kategori slug -> görünen ad eşlemesi.
+ * (Daha önce mevzuat.php içindeki $altKategoriMap dizisiyle aynı.)
+ */
+function dbKaynaklarAltKategoriAdiEslemesi(): array
+{
+    return [
+        "genel"      => "Genel Mevzuatlar",
+        "memur"      => "Memur Mevzuatları",
+        "sozlesmeli" => "Sözleşmeli Memur Mevzuatları",
+        "isci"       => "İşçi Mevzuatları",
+    ];
+}
+
+/**
+ * "kaynaklar" tablosu Protokoller/Dökümanlar/Mevzuatlar/Eğitimler sayfalarının
+ * hepsi tarafından ortak kullanılıyor (kategori = 'Dökümanlar' gibi filtrelerle).
+ * Bu fonksiyon:
+ *  - kaynaklar_kategori tablosunu oluşturur (4 bilinen ana kategori her zaman
+ *    hazır bulunur: Protokoller, Dökümanlar, Mevzuatlar, Eğitimler)
+ *  - kaynaklar.kategori_id kolonunu ekler, mevcut "kategori" metnine göre doldurur, FK bağlar
+ *  - Mevzuatlar'a özel alt kategoriler için kaynaklar_alt_kategori tablosunu oluşturur
+ *    (genel/memur/sozlesmeli/isci, kaynaklar_kategori.id üzerinden Mevzuatlar'a bağlı)
+ *  - kaynaklar.alt_kategori_id kolonunu ekler, mevcut "alt_kategori" metnine göre doldurur, FK bağlar
+ *  - Tüm satırlar başarıyla eşleştiyse eski "kategori"/"alt_kategori" metin kolonlarını kaldırır
+ */
+function dbEnsureKaynaklarKategori(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    try {
+        $db->query("SELECT 1 FROM kaynaklar LIMIT 1");
+    } catch (PDOException $e) {
+        return; // kaynaklar tablosu henüz yoksa atla
+    }
+
+    // 1) Ana kategori tablosu
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `kaynaklar_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_kaynaklar_kategori_slug` (`slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    // Bilinen 4 ana kategori her zaman bulunsun (veri henüz olmasa bile dropdown dolu olsun)
+    try {
+        $stmt = $db->prepare(
+            "INSERT INTO kaynaklar_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        foreach (["Protokoller", "Dökümanlar", "Mevzuatlar", "Eğitimler"] as $ad) {
+            $stmt->execute([$ad, $ad]);
         }
-    } catch (Throwable $e) {
-        // Fallback: session (tablo yoksa / geçici hata)
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-        if (!isset($_SESSION["content_views"]) || !is_array($_SESSION["content_views"])) {
-            $_SESSION["content_views"] = [];
-        }
-        $key = $table . ":" . $id . ":" . $viewer;
-        if (empty($_SESSION["content_views"][$key])) {
-            try {
-                $db->prepare(
-                    "UPDATE `{$table}` SET `{$column}` = COALESCE(`{$column}`, 0) + 1 WHERE id = ?"
-                )->execute([$id]);
-                $_SESSION["content_views"][$key] = 1;
-                $increased = true;
-            } catch (Throwable $e2) {
-                // geç
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    $hasKategoriColumn = dbColumnExists($db, "kaynaklar", "kategori");
+
+    // Veride varsa bilinmeyen/ekstra kategorileri de taşı
+    if ($hasKategoriColumn) {
+        try {
+            $mevcut = dbFetchAll(
+                $db,
+                "SELECT DISTINCT kategori FROM kaynaklar WHERE kategori IS NOT NULL AND kategori <> ''"
+            );
+            if (!empty($mevcut)) {
+                $stmt = $db->prepare(
+                    "INSERT INTO kaynaklar_kategori (slug, ad) VALUES (?, ?)
+                     ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+                );
+                foreach ($mevcut as $k) {
+                    $stmt->execute([$k["kategori"], $k["kategori"]]);
+                }
             }
+        } catch (PDOException $e) {
+            // Sessizce geç
         }
     }
 
-    $row = dbFetchOne($db, "SELECT `{$column}` AS c FROM `{$table}` WHERE id = ?", [$id]);
-    return [
-        "count"     => (int)($row["c"] ?? 0),
-        "increased" => $increased,
-    ];
+    // 2) kaynaklar.kategori_id kolonu
+    dbEnsureColumn($db, "kaynaklar", "kategori_id", "INT(11) DEFAULT NULL");
+
+    if ($hasKategoriColumn) {
+        try {
+            $db->exec(
+                "UPDATE kaynaklar r
+                 JOIN kaynaklar_kategori k ON k.slug = r.kategori
+                 SET r.kategori_id = k.id
+                 WHERE r.kategori_id IS NULL"
+            );
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+
+    dbEnsureIndex($db, "kaynaklar", "idx_kaynaklar_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        "kaynaklar",
+        "fk_kaynaklar_kategori",
+        ["kategori_id"],
+        "kaynaklar_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // 3) Mevzuatlar'a özel alt kategori tablosu
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `kaynaklar_alt_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `kaynak_kategori_id` int(11) NOT NULL,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_kaynaklar_alt_kategori` (`kaynak_kategori_id`, `slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+        dbEnsureForeignKey(
+            $db,
+            "kaynaklar_alt_kategori",
+            "fk_kaynaklar_alt_kategori_ust",
+            ["kaynak_kategori_id"],
+            "kaynaklar_kategori",
+            ["id"],
+            "CASCADE",
+            "CASCADE"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    $mevzuatlarRow = dbFetchOne($db, "SELECT id FROM kaynaklar_kategori WHERE slug = ?", ["Mevzuatlar"]);
+    $mevzuatlarId = $mevzuatlarRow ? (int)$mevzuatlarRow["id"] : null;
+
+    if ($mevzuatlarId !== null) {
+        // Bilinen 4 alt kategori her zaman bulunsun
+        try {
+            $stmt = $db->prepare(
+                "INSERT INTO kaynaklar_alt_kategori (kaynak_kategori_id, slug, ad) VALUES (?, ?, ?)
+                 ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+            );
+            foreach (dbKaynaklarAltKategoriAdiEslemesi() as $slug => $ad) {
+                $stmt->execute([$mevzuatlarId, $slug, $ad]);
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+
+        $hasAltKategoriColumn = dbColumnExists($db, "kaynaklar", "alt_kategori");
+
+        if ($hasAltKategoriColumn) {
+            try {
+                $mevcutAlt = dbFetchAll(
+                    $db,
+                    "SELECT DISTINCT alt_kategori FROM kaynaklar
+                     WHERE alt_kategori IS NOT NULL AND alt_kategori <> ''"
+                );
+                if (!empty($mevcutAlt)) {
+                    $eslesme = dbKaynaklarAltKategoriAdiEslemesi();
+                    $stmt = $db->prepare(
+                        "INSERT INTO kaynaklar_alt_kategori (kaynak_kategori_id, slug, ad) VALUES (?, ?, ?)
+                         ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+                    );
+                    foreach ($mevcutAlt as $a) {
+                        $slug = $a["alt_kategori"];
+                        $ad = $eslesme[$slug] ?? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8");
+                        $stmt->execute([$mevzuatlarId, $slug, $ad]);
+                    }
+                }
+            } catch (PDOException $e) {
+                // Sessizce geç
+            }
+        }
+
+        // 4) kaynaklar.alt_kategori_id kolonu
+        dbEnsureColumn($db, "kaynaklar", "alt_kategori_id", "INT(11) DEFAULT NULL");
+
+        if ($hasAltKategoriColumn) {
+            try {
+                $stmt = $db->prepare(
+                    "UPDATE kaynaklar r
+                     JOIN kaynaklar_alt_kategori ak
+                       ON ak.slug = r.alt_kategori AND ak.kaynak_kategori_id = ?
+                     SET r.alt_kategori_id = ak.id
+                     WHERE r.alt_kategori_id IS NULL AND r.kategori_id = ?"
+                );
+                $stmt->execute([$mevzuatlarId, $mevzuatlarId]);
+            } catch (PDOException $e) {
+                // Sessizce geç
+            }
+        }
+
+        dbEnsureIndex($db, "kaynaklar", "idx_kaynaklar_alt_kategori_id", ["alt_kategori_id"]);
+        dbEnsureForeignKey(
+            $db,
+            "kaynaklar",
+            "fk_kaynaklar_alt_kategori",
+            ["alt_kategori_id"],
+            "kaynaklar_alt_kategori",
+            ["id"],
+            "RESTRICT",
+            "CASCADE"
+        );
+    }
+
+    // 5) Tüm satırlar başarıyla eşleştiyse eski redundant kolonları kaldır
+    if ($hasKategoriColumn) {
+        try {
+            $eksikKategoriRow = dbFetchOne($db, "SELECT COUNT(*) AS c FROM kaynaklar WHERE kategori_id IS NULL");
+            $eksikKategori = (int)($eksikKategoriRow["c"] ?? 1);
+
+            $eksikAlt = 0;
+            $hasAltKategoriColumn = dbColumnExists($db, "kaynaklar", "alt_kategori");
+            if ($hasAltKategoriColumn) {
+                $eksikAltRow = dbFetchOne(
+                    $db,
+                    "SELECT COUNT(*) AS c FROM kaynaklar
+                     WHERE alt_kategori IS NOT NULL AND alt_kategori <> '' AND alt_kategori_id IS NULL"
+                );
+                $eksikAlt = (int)($eksikAltRow["c"] ?? 1);
+            }
+
+            if ($eksikKategori === 0 && $eksikAlt === 0) {
+                if ($hasAltKategoriColumn) {
+                    $db->exec("ALTER TABLE kaynaklar DROP COLUMN kategori, DROP COLUMN alt_kategori");
+                } else {
+                    $db->exec("ALTER TABLE kaynaklar DROP COLUMN kategori");
+                }
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+}
+
+/**
+ * Admin panelinde ana kategori dropdown'ı için liste.
+ */
+function dbKaynaklarKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM kaynaklar_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Admin panelinde alt kategori dropdown'ı için liste (ör. Mevzuatlar seçilince).
+ */
+function dbKaynaklarAltKategoriler(PDO $db, int $kategoriId): array
+{
+    try {
+        return dbFetchAll(
+            $db,
+            "SELECT * FROM kaynaklar_alt_kategori WHERE kaynak_kategori_id = ? ORDER BY ad ASC",
+            [$kategoriId]
+        );
+    } catch (PDOException $e) {
+        return [];
+    }
+}
+
+/**
+ * Duyurular sayfasının (etkinlikler_duyurular / eski dokumanlar tablosu)
+ * kategorilerini ayrı bir tabloya taşır: "duyurular_kategori".
+ *
+ * Diğer sayfalardan (Sizden Gelenler) farkı: kaynak tablo "dokumanlar" ise
+ * birden fazla sayfa tipi (duyuru, protokol, döküman, mevzuat, eğitim) aynı
+ * tabloyu paylaşıyor olabilir. Bu yüzden:
+ *  - Eski "alt_tip" (insan/bilgi gibi filtre değeri) ve "kategori_adi" (görünen ad)
+ *    metin kolonları KALDIRILMIYOR; sadece yeni "kategori_id" foreign key kolonu
+ *    eklenip senkron tutuluyor (Videolar sayfasındaki yaklaşımın aynısı).
+ *  - Taşıma/eşleştirme sorguları, tablo "dokumanlar" ise sadece
+ *    sayfa_tipi = 'duyuru' olan satırlarla sınırlandırılıyor; böylece diğer
+ *    sayfa tiplerinin verisi etkilenmiyor.
+ */
+function dbEnsureDuyurularKategori(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    $table = dbEtkinliklerDuyurularTable($db);
+
+    try {
+        $db->query("SELECT 1 FROM `{$table}` LIMIT 1");
+    } catch (PDOException $e) {
+        return; // tablo henüz yoksa atla
+    }
+
+    $hasAltTip      = dbColumnExists($db, $table, "alt_tip");
+    $hasKategoriAdi = dbColumnExists($db, $table, "kategori_adi");
+    if (!$hasAltTip || !$hasKategoriAdi) {
+        return; // beklenen kolonlar yoksa taşınacak bir şey yok
+    }
+
+    $isDokumanlar = ($table === "dokumanlar");
+    $hasSayfaTipi = $isDokumanlar && dbColumnExists($db, $table, "sayfa_tipi");
+
+    // 1) Kategori tablosunu oluştur
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `duyurular_kategori` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `slug` varchar(100) NOT NULL,
+                `ad` varchar(150) NOT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_duyurular_kategori_slug` (`slug`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+    } catch (PDOException $e) {
+        return;
+    }
+
+    // 2) Mevcut alt_tip/kategori_adi değerlerini yeni tabloya aktar
+    try {
+        $sql = "SELECT DISTINCT alt_tip, kategori_adi FROM `{$table}`
+                WHERE alt_tip IS NOT NULL AND alt_tip <> ''";
+        $params = [];
+        if ($hasSayfaTipi) {
+            $sql .= " AND sayfa_tipi = ?";
+            $params[] = "duyuru";
+        }
+        $mevcutKategoriler = dbFetchAll($db, $sql, $params);
+        if (!empty($mevcutKategoriler)) {
+            $stmt = $db->prepare(
+                "INSERT INTO duyurular_kategori (slug, ad) VALUES (?, ?)
+                 ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+            );
+            foreach ($mevcutKategoriler as $k) {
+                $slug = $k["alt_tip"];
+                $ad   = ($k["kategori_adi"] ?? "") !== ""
+                    ? $k["kategori_adi"]
+                    : mb_convert_case($slug, MB_CASE_TITLE, "UTF-8");
+                $stmt->execute([$slug, $ad]);
+            }
+        }
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 3) Tabloya kategori_id kolonu ekle
+    dbEnsureColumn($db, $table, "kategori_id", "INT(11) DEFAULT NULL");
+
+    // 4) Mevcut alt_tip değerine göre kategori_id'yi doldur
+    try {
+        $sql = "UPDATE `{$table}` t
+                JOIN duyurular_kategori k ON k.slug = t.alt_tip
+                SET t.kategori_id = k.id
+                WHERE t.kategori_id IS NULL";
+        if ($hasSayfaTipi) {
+            $sql .= " AND t.sayfa_tipi = 'duyuru'";
+        }
+        $db->exec($sql);
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+
+    // 5) Index + Foreign Key
+    dbEnsureIndex($db, $table, "idx_{$table}_kategori_id", ["kategori_id"]);
+    dbEnsureForeignKey(
+        $db,
+        $table,
+        "fk_{$table}_duyurular_kategori",
+        ["kategori_id"],
+        "duyurular_kategori",
+        ["id"],
+        "RESTRICT",
+        "CASCADE"
+    );
+
+    // 6) Sadece "etkinlikler_duyurular" tablosunda: bu tablo yalnızca duyurulara
+    //    özel olduğu için (dokumanlar gibi başka sayfa tipleriyle paylaşılmıyor),
+    //    tüm satırlar başarıyla eşleştiyse eski redundant kolonları kaldır.
+    //    "dokumanlar" tablosuna bilinçli olarak dokunulmuyor; o tablo Protokoller/
+    //    Dökümanlar/Mevzuatlar/Eğitimler sayfalarıyla da paylaşımlı olabilir.
+    if ($table === "etkinlikler_duyurular") {
+        try {
+            $eksik = dbFetchOne($db, "SELECT COUNT(*) AS c FROM `{$table}` WHERE kategori_id IS NULL");
+            if ((int)($eksik["c"] ?? 1) === 0) {
+                $db->exec("ALTER TABLE `{$table}` DROP COLUMN alt_tip, DROP COLUMN kategori_adi");
+            }
+        } catch (PDOException $e) {
+            // Sessizce geç
+        }
+    }
+}
+
+/**
+ * Verilen slug'a (alt_tip) karşılık gelen kategori id'sini döndürür.
+ * Tabloda yoksa otomatik oluşturur (admin panelinden yeni bir kategoriyle
+ * duyuru eklendiğinde koleksiyonun kopmaması için).
+ */
+function dbDuyurularKategoriId(PDO $db, string $slug, ?string $ad = null): ?int
+{
+    $slug = trim($slug);
+    if ($slug === "") {
+        return null;
+    }
+
+    try {
+        $row = dbFetchOne($db, "SELECT id FROM duyurular_kategori WHERE slug = ?", [$slug]);
+        if ($row) {
+            return (int)$row["id"];
+        }
+
+        $adDeger = $ad !== null && $ad !== "" ? $ad : mb_convert_case($slug, MB_CASE_TITLE, "UTF-8");
+        $stmt = $db->prepare(
+            "INSERT INTO duyurular_kategori (slug, ad) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE ad = VALUES(ad)"
+        );
+        $stmt->execute([$slug, $adDeger]);
+
+        $row = dbFetchOne($db, "SELECT id FROM duyurular_kategori WHERE slug = ?", [$slug]);
+        return $row ? (int)$row["id"] : null;
+    } catch (PDOException $e) {
+        return null;
+    }
+}
+
+/**
+ * Admin panelinde dropdown doldurmak için kategori listesi.
+ */
+function dbDuyurularKategoriler(PDO $db): array
+{
+    try {
+        return dbFetchAll($db, "SELECT * FROM duyurular_kategori ORDER BY ad ASC");
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 function dbEnsureIndex(PDO $db, string $table, string $indexName, array $columns): void
@@ -691,9 +1224,6 @@ function authTryAutoLogin(PDO $db): bool
         $_SESSION['fotograf']     = !empty($personel['foto_url']) ? $personel['foto_url'] : '../images/login/login.jpg';
         $_SESSION['ad']           = $personel['ad'];
         $_SESSION['soyad']        = $personel['soyad'];
-        if (empty($_SESSION['oturum_id'])) {
-            $_SESSION['oturum_id'] = oturumStart($db, (int)$personel['id']);
-        }
 
         return true;
     } catch (Throwable $e) {
@@ -786,118 +1316,6 @@ function dbAnasayfaDuyurularTable(PDO $db): string
     return dbHasAnyTable($db, ["anasayfa_duyurular"]) ? "anasayfa_duyurular" : "duyurular";
 }
 
-function normalizeLookupTitle(string $title): string
-{
-    $title = mb_strtolower(trim($title), "UTF-8");
-    $map = [
-        "ı" => "i", "İ" => "i", "ş" => "s", "Ş" => "s", "ğ" => "g", "Ğ" => "g",
-        "ü" => "u", "Ü" => "u", "ö" => "o", "Ö" => "o", "ç" => "c", "Ç" => "c",
-    ];
-    $title = strtr($title, $map);
-    // Sadece dekoratif / haber üslubu kelimelerini sil; konu kelimelerini koru
-    $title = preg_replace(
-        '/\b(tamamlandi|kutlandi|gerceklesti|buyuk|ilgi|gordu|unutulmadi|dedik|actik|bizimle|ile|icin|ve|nefes|kesti)\b/u',
-        " ",
-        $title
-    ) ?? $title;
-    $title = preg_replace('/[^a-z0-9\s]+/u', " ", $title) ?? $title;
-    $title = preg_replace('/\s+/u', " ", trim($title)) ?? trim($title);
-    return $title;
-}
-
-/**
- * Yalnızca aynı / çok benzer etkinlik varsa eşleştirir.
- * Zayıf benzerlikte null döner → duyuru kendi sayfasında açılır.
- */
-function dbResolveAnasayfaDuyuruEtkinlikId(PDO $db, array $duyuru): ?int
-{
-    static $cache = [];
-    $duyuruId = (int)($duyuru["id"] ?? 0);
-    if ($duyuruId > 0 && array_key_exists($duyuruId, $cache)) {
-        return $cache[$duyuruId];
-    }
-
-    $needle = normalizeLookupTitle((string)($duyuru["baslik"] ?? ""));
-    if ($needle === "") {
-        return $cache[$duyuruId] = null;
-    }
-
-    $needleTokens = array_values(array_filter(
-        explode(" ", $needle),
-        static fn($t) => mb_strlen($t, "UTF-8") >= 3
-    ));
-    if (count($needleTokens) < 2) {
-        return $cache[$duyuruId] = null;
-    }
-
-    $etkinlikler = dbFetchAll($db, "SELECT id, baslik FROM etkinlikler");
-    $bestId = null;
-    $bestScore = 0.0;
-
-    foreach ($etkinlikler as $e) {
-        $hay = normalizeLookupTitle((string)($e["baslik"] ?? ""));
-        if ($hay === "") {
-            continue;
-        }
-
-        $hayTokens = array_values(array_filter(
-            explode(" ", $hay),
-            static fn($t) => mb_strlen($t, "UTF-8") >= 3
-        ));
-        if (count($hayTokens) < 2) {
-            continue;
-        }
-
-        if ($needle === $hay) {
-            $score = 1.0;
-        } elseif (str_contains($hay, $needle) || str_contains($needle, $hay)) {
-            // Tam kapsama: kısa başlık diğerinin içinde
-            $score = 0.95;
-        } else {
-            $common = count(array_intersect($needleTokens, $hayTokens));
-            // En az 2 ortak anlamlı kelime zorunlu
-            if ($common < 2) {
-                continue;
-            }
-            $union = count(array_unique(array_merge($needleTokens, $hayTokens)));
-            $score = $union > 0 ? ($common / $union) : 0.0;
-            // Ortak kelimelerin needle'ın çoğunluğunu kapsaması
-            $coverage = $common / count($needleTokens);
-            $score = min($score, $coverage);
-        }
-
-        if ($score > $bestScore) {
-            $bestScore = $score;
-            $bestId = (int)$e["id"];
-        }
-    }
-
-    // Sadece gerçekten benzer / aynı haberleri kabul et
-    if ($bestScore < 0.72) {
-        $bestId = null;
-    }
-
-    return $cache[$duyuruId] = $bestId;
-}
-
-function mapAnasayfaDuyurular(PDO $db, array $rows): array
-{
-    return array_map(function ($r) use ($db) {
-        $etkinlikId = dbResolveAnasayfaDuyuruEtkinlikId($db, $r);
-        $r["etkinlik_id"] = $etkinlikId;
-        if ($etkinlikId) {
-            $etkinlik = dbFetchOne($db, "SELECT `view` FROM etkinlikler WHERE id = ?", [$etkinlikId]);
-            if ($etkinlik) {
-                $r["view"] = (int)($etkinlik["view"] ?? 0);
-            }
-        }
-        $r["detail_url"] = $etkinlikId
-            ? ("etkinlikd.php?id=" . $etkinlikId)
-            : ("duyurud.php?id=" . (int)($r["id"] ?? 0));
-        return $r;
-    }, $rows);
-}
-
 function dbEtkinliklerDuyurularTable(PDO $db): string
 {
     return dbHasAnyTable($db, ["etkinlikler_duyurular"]) ? "etkinlikler_duyurular" : "dokumanlar";
@@ -912,7 +1330,20 @@ function dbFetchAnasayfaDuyurular(PDO $db): array
 function dbFetchEtkinliklerDuyurular(PDO $db): array
 {
     if (dbEtkinliklerDuyurularTable($db) === "etkinlikler_duyurular") {
-        return dbFetchAll($db, "SELECT * FROM etkinlikler_duyurular ORDER BY id");
+        // dbEnsureDuyurularKategori() eski satırlar tamamen eşleştiyse
+        // "alt_tip"/"kategori_adi" kolonlarını silmiş olabilir. Bu durumda
+        // kategori_id üzerinden JOIN ile aynı isimlerle geri kazandırıyoruz,
+        // böylece duyuru.php gibi tüketici sayfalar değişiklik yapmadan çalışır.
+        if (dbColumnExists($db, "etkinlikler_duyurular", "alt_tip")) {
+            return dbFetchAll($db, "SELECT * FROM etkinlikler_duyurular ORDER BY id");
+        }
+        return dbFetchAll(
+            $db,
+            "SELECT t.*, k.slug AS alt_tip, k.ad AS kategori_adi
+             FROM etkinlikler_duyurular t
+             LEFT JOIN duyurular_kategori k ON k.id = t.kategori_id
+             ORDER BY t.id"
+        );
     }
     return dbFetchAll($db, "SELECT * FROM dokumanlar WHERE sayfa_tipi = ? ORDER BY id", ["duyuru"]);
 }
@@ -1000,17 +1431,28 @@ function dbReorderVideolarRows(PDO $db, array $rows): void
         $db->exec("DELETE FROM videolar");
         $db->exec("ALTER TABLE videolar AUTO_INCREMENT = 1");
 
-        $stmt = $db->prepare(
-            "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, sure) VALUES (?, ?, ?, ?, ?)"
-        );
+        $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
+
+        $stmt = $hasKategoriId
+            ? $db->prepare(
+                "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, kategori_id, sure) VALUES (?, ?, ?, ?, ?, ?)"
+              )
+            : $db->prepare(
+                "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, sure) VALUES (?, ?, ?, ?, ?)"
+              );
+
         foreach ($rows as $row) {
-            $stmt->execute([
+            $params = [
                 $row["youtube_id"],
                 $row["baslik"],
                 $row["aciklama"],
                 $row["kategori"],
-                $row["sure"],
-            ]);
+            ];
+            if ($hasKategoriId) {
+                $params[] = dbVideolarKategoriId($db, $row["kategori"] ?? "");
+            }
+            $params[] = $row["sure"];
+            $stmt->execute($params);
         }
 
         $db->commit();

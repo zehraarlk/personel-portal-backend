@@ -1,6 +1,11 @@
 <?php
 include("baglan.php");
-$sizdenGelenler = dbFetchAll($db, "SELECT * FROM sizden_gelenler ORDER BY tarih DESC");
+$sizdenGelenler = dbFetchAll($db, "
+    SELECT sg.*, k.slug AS kategori_slug, k.ad AS kategori_adi
+    FROM sizden_gelenler sg
+    LEFT JOIN sizdengelenler_kategori k ON sg.kategori_id = k.id
+    ORDER BY sg.tarih DESC
+");
 $toplamKayit = count($sizdenGelenler);
 ?>
 <!doctype html>
@@ -100,4 +105,3 @@ $toplamKayit = count($sizdenGelenler);
       <script src="../JS/navbar.js"></script>
   </body>
 </html>
-

@@ -2,7 +2,11 @@
 include("baglan.php");
 $protokoller = dbFetchAll(
     $db,
-    "SELECT id, baslik, aciklama, kategori, ikon, dosya_yolu, boyut, tarih FROM kaynaklar WHERE kategori = ? ORDER BY tarih DESC",
+    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.ikon, r.dosya_yolu, r.boyut, r.tarih
+     FROM kaynaklar r
+     JOIN kaynaklar_kategori k ON r.kategori_id = k.id
+     WHERE k.slug = ?
+     ORDER BY r.tarih DESC",
     ["Protokoller"]
 );
 ?>

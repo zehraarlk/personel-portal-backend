@@ -2,7 +2,13 @@
 include("baglan.php");
 $mevzuatlar = dbFetchAll(
     $db,
-    "SELECT id, baslik, aciklama, kategori, alt_kategori, ikon, dosya_yolu, resmi_sayfa, boyut, tarih FROM kaynaklar WHERE kategori = ? ORDER BY tarih DESC",
+    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, ak.slug AS alt_kategori,
+            r.ikon, r.dosya_yolu, r.resmi_sayfa, r.boyut, r.tarih
+     FROM kaynaklar r
+     JOIN kaynaklar_kategori k ON r.kategori_id = k.id
+     LEFT JOIN kaynaklar_alt_kategori ak ON r.alt_kategori_id = ak.id
+     WHERE k.slug = ?
+     ORDER BY r.tarih DESC",
     ["Mevzuatlar"]
 );
 $altKategoriMap = [
