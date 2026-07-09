@@ -1,8 +1,19 @@
 <?php
 include("baglan.php");
-$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE id = 1");
+$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE vitrin = 1 ORDER BY id DESC LIMIT 1");
+// Eğer hiç vitrin videosu işaretlenmemişse, listedeki en güncel videoyu yedek olarak göster
+if (empty($vitrinVideo)) {
+    $vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar ORDER BY id DESC LIMIT 1");
+}
 $tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
-dbEnsureVideoMetadata($db, $tumVideolar);
+
+// Vitrin için özel başlık/açıklama girilmemişse, videonun kendi başlık/açıklamasını kullan
+$vitrinBaslik = "Gebze'de Offroad Heyecanı";
+$vitrinAciklama = "Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...";
+if (!empty($vitrinVideo)) {
+    $vitrinBaslik = !empty($vitrinVideo['vitrin_baslik']) ? $vitrinVideo['vitrin_baslik'] : $vitrinVideo['baslik'];
+    $vitrinAciklama = !empty($vitrinVideo['vitrin_aciklama']) ? $vitrinVideo['vitrin_aciklama'] : $vitrinVideo['aciklama'];
+}
 ?>
 <!doctype html>
 <html lang="tr">
@@ -44,10 +55,10 @@ dbEnsureVideoMetadata($db, $tumVideolar);
   
   <div class="col-lg-5">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-      Haftanın Videosu: <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['baslik'], ENT_QUOTES, 'UTF-8') : "Gebze'de Offroad Heyecanı"; ?>
+      Haftanın Videosu: <?php echo htmlspecialchars($vitrinBaslik, ENT_QUOTES, 'UTF-8'); ?>
     </h1>
     <p class="lead">
-      <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['aciklama'], ENT_QUOTES, 'UTF-8') : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
+      <?php echo htmlspecialchars($vitrinAciklama, ENT_QUOTES, 'UTF-8'); ?>
     </p>
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
