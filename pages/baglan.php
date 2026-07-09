@@ -28,12 +28,18 @@ try {
     die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Anasayfa linkleri tablosu: yoksa oluştur + ilk kurulumda doldur
 dbEnsureAnasayfaLinkler($db);
 // Kalıcı oturum (remember-me) alanları: yoksa ekle
 dbEnsurePersonellerRememberMe($db);
 // Oturum kayıtları tablosu: yoksa oluştur
 dbEnsureOturumKayitlari($db);
+// İçerik izlenme takibi (hesap/ziyaretçi başına 1)
+dbEnsureIcerikIzlemeleri($db);
 // İlişkisel yapı + unique/index/fk sağlamlaştırma
 dbEnsureRelationalConstraints($db);
 // Sizden Gelenler kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
@@ -338,12 +344,215 @@ function dbEnsureOturumKayitlari(PDO $db): void
                 `personel_id` int(11) NOT NULL,
                 `giris_zamani` datetime NOT NULL,
                 `cikis_zamani` datetime DEFAULT NULL,
+                `ip_adresi` varchar(45) DEFAULT NULL,
+                `user_agent` varchar(255) DEFAULT NULL,
+                `kapanis_tipi` varchar(20) DEFAULT NULL,
+                `son_aktivite` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
+        );
+        dbEnsureColumn($db, "oturum_kayitlari", "ip_adresi", "varchar(45) DEFAULT NULL");
+        dbEnsureColumn($db, "oturum_kayitlari", "user_agent", "varchar(255) DEFAULT NULL");
+        dbEnsureColumn($db, "oturum_kayitlari", "kapanis_tipi", "varchar(20) DEFAULT NULL");
+        dbEnsureColumn($db, "oturum_kayitlari", "son_aktivite", "datetime DEFAULT NULL");
+    } catch (PDOException $e) {
+        // Sessizce geç
+    }
+}
+
+function oturumClose(PDO $db, int $oturumId, string $tip = "manuel"): bool
+{
+    if ($oturumId <= 0) {
+        return false;
+    }
+    $tip = in_array($tip, ["manuel", "sekme", "otomatik", "eski"], true) ? $tip : "manuel";
+    try {
+        $stmt = $db->prepare(
+            "UPDATE oturum_kayitlari
+             SET cikis_zamani = COALESCE(cikis_zamani, NOW()),
+                 kapanis_tipi = COALESCE(kapanis_tipi, ?),
+                 son_aktivite = COALESCE(son_aktivite, NOW())
+             WHERE id = ? AND cikis_zamani IS NULL"
+        );
+        $stmt->execute([$tip, $oturumId]);
+        return $stmt->rowCount() > 0;
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
+/** Personelin diğer açık oturumlarını kapatır (yeni giriş öncesi). */
+function oturumCloseOtherOpen(PDO $db, int $personelId, ?int $exceptOturumId = null, string $tip = "otomatik"): void
+{
+    if ($personelId <= 0) {
+        return;
+    }
+    try {
+        if ($exceptOturumId) {
+            $stmt = $db->prepare(
+                "UPDATE oturum_kayitlari
+                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
+                 WHERE personel_id = ? AND cikis_zamani IS NULL AND id != ?"
+            );
+            $stmt->execute([$tip, $personelId, $exceptOturumId]);
+        } else {
+            $stmt = $db->prepare(
+                "UPDATE oturum_kayitlari
+                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
+                 WHERE personel_id = ? AND cikis_zamani IS NULL"
+            );
+            $stmt->execute([$tip, $personelId]);
+        }
+    } catch (Throwable $e) {
+        // Sessizce geç
+    }
+}
+
+/** Yeni oturum satırı oluşturur. */
+function oturumStart(PDO $db, int $personelId): int
+{
+    oturumCloseOtherOpen($db, $personelId, null, "otomatik");
+    $ip = substr((string)($_SERVER["REMOTE_ADDR"] ?? ""), 0, 45);
+    $ua = substr((string)($_SERVER["HTTP_USER_AGENT"] ?? ""), 0, 255);
+    $stmt = $db->prepare(
+        "INSERT INTO oturum_kayitlari (personel_id, giris_zamani, ip_adresi, user_agent, son_aktivite)
+         VALUES (?, NOW(), ?, ?, NOW())"
+    );
+    $stmt->execute([$personelId, $ip !== "" ? $ip : null, $ua !== "" ? $ua : null]);
+    return (int)$db->lastInsertId();
+}
+
+/** Aktif oturumun son aktivite zamanını günceller. */
+function oturumTouch(PDO $db, ?int $oturumId): void
+{
+    if (!$oturumId) {
+        return;
+    }
+    try {
+        $db->prepare(
+            "UPDATE oturum_kayitlari SET son_aktivite = NOW() WHERE id = ? AND cikis_zamani IS NULL"
+        )->execute([$oturumId]);
+    } catch (Throwable $e) {
+        // Sessizce geç
+    }
+}
+
+function dbEnsureIcerikIzlemeleri(PDO $db): void
+{
+    static $done = false;
+    if ($done) {
+        return;
+    }
+    $done = true;
+
+    try {
+        $db->exec(
+            "CREATE TABLE IF NOT EXISTS `icerik_izlemeleri` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `tablo` varchar(64) NOT NULL,
+                `kayit_id` int(11) NOT NULL,
+                `izleyici` varchar(96) NOT NULL,
+                `olusturma_tarihi` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `uq_icerik_izleme` (`tablo`, `kayit_id`, `izleyici`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci"
         );
     } catch (PDOException $e) {
         // Sessizce geç
     }
+}
+
+/**
+ * İzleyici kimliği: girişli hesap veya kalıcı misafir çerezi.
+ */
+function viewViewerKey(): string
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (!empty($_SESSION["personel_id"])) {
+        return "personel:" . (int)$_SESSION["personel_id"];
+    }
+
+    $cookieName = "pp_viewer";
+    $token = $_COOKIE[$cookieName] ?? "";
+    if (!is_string($token) || !preg_match('/^[a-f0-9]{32}$/', $token)) {
+        $token = bin2hex(random_bytes(16));
+        setcookie($cookieName, $token, [
+            "expires"  => time() + 60 * 60 * 24 * 365,
+            "path"     => "/",
+            "httponly" => true,
+            "samesite" => "Lax",
+        ]);
+        $_COOKIE[$cookieName] = $token;
+    }
+
+    return "guest:" . $token;
+}
+
+/**
+ * Aynı hesap/ziyaretçi için içeriği yalnızca 1 kez sayar.
+ * @return array{count:int,increased:bool}
+ */
+function dbBumpUniqueView(PDO $db, string $table, int $id, string $column = "view"): array
+{
+    $allowed = [
+        "etkinlikler"          => "view",
+        "anasayfa_duyurular"   => "view",
+        "duyurular"            => "view",
+        "sizden_gelenler"      => "goruntulenme",
+        "haberler"             => "view",
+    ];
+
+    if (!isset($allowed[$table]) || $id <= 0) {
+        return ["count" => 0, "increased" => false];
+    }
+
+    $column = $allowed[$table];
+    dbEnsureColumn($db, $table, $column, "INT(11) NOT NULL DEFAULT 0");
+    dbEnsureIcerikIzlemeleri($db);
+
+    $viewer = viewViewerKey();
+    $increased = false;
+
+    try {
+        $ins = $db->prepare(
+            "INSERT IGNORE INTO icerik_izlemeleri (tablo, kayit_id, izleyici) VALUES (?, ?, ?)"
+        );
+        $ins->execute([$table, $id, $viewer]);
+        if ($ins->rowCount() > 0) {
+            $db->prepare(
+                "UPDATE `{$table}` SET `{$column}` = COALESCE(`{$column}`, 0) + 1 WHERE id = ?"
+            )->execute([$id]);
+            $increased = true;
+        }
+    } catch (Throwable $e) {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (!isset($_SESSION["content_views"]) || !is_array($_SESSION["content_views"])) {
+            $_SESSION["content_views"] = [];
+        }
+        $key = $table . ":" . $id . ":" . $viewer;
+        if (empty($_SESSION["content_views"][$key])) {
+            try {
+                $db->prepare(
+                    "UPDATE `{$table}` SET `{$column}` = COALESCE(`{$column}`, 0) + 1 WHERE id = ?"
+                )->execute([$id]);
+                $_SESSION["content_views"][$key] = 1;
+                $increased = true;
+            } catch (Throwable $e2) {
+                // geç
+            }
+        }
+    }
+
+    $row = dbFetchOne($db, "SELECT `{$column}` AS c FROM `{$table}` WHERE id = ?", [$id]);
+    return [
+        "count"     => (int)($row["c"] ?? 0),
+        "increased" => $increased,
+    ];
 }
 
 function dbColumnExists(PDO $db, string $table, string $column): bool
@@ -1224,6 +1433,9 @@ function authTryAutoLogin(PDO $db): bool
         $_SESSION['fotograf']     = !empty($personel['foto_url']) ? $personel['foto_url'] : '../images/login/login.jpg';
         $_SESSION['ad']           = $personel['ad'];
         $_SESSION['soyad']        = $personel['soyad'];
+        if (empty($_SESSION['oturum_id'])) {
+            $_SESSION['oturum_id'] = oturumStart($db, (int)$personel['id']);
+        }
 
         return true;
     } catch (Throwable $e) {
@@ -1314,6 +1526,113 @@ function dbHasAnyTable(PDO $db, array $names): bool
 function dbAnasayfaDuyurularTable(PDO $db): string
 {
     return dbHasAnyTable($db, ["anasayfa_duyurular"]) ? "anasayfa_duyurular" : "duyurular";
+}
+
+function normalizeLookupTitle(string $title): string
+{
+    $title = mb_strtolower(trim($title), "UTF-8");
+    $map = [
+        "ı" => "i", "İ" => "i", "ş" => "s", "Ş" => "s", "ğ" => "g", "Ğ" => "g",
+        "ü" => "u", "Ü" => "u", "ö" => "o", "Ö" => "o", "ç" => "c", "Ç" => "c",
+    ];
+    $title = strtr($title, $map);
+    $title = preg_replace(
+        '/\b(tamamlandi|kutlandi|gerceklesti|buyuk|ilgi|gordu|unutulmadi|dedik|actik|bizimle|ile|icin|ve|nefes|kesti)\b/u',
+        " ",
+        $title
+    ) ?? $title;
+    $title = preg_replace('/[^a-z0-9\s]+/u', " ", $title) ?? $title;
+    $title = preg_replace('/\s+/u', " ", trim($title)) ?? trim($title);
+    return $title;
+}
+
+/**
+ * Yalnızca aynı / çok benzer etkinlik varsa eşleştirir.
+ * Zayıf benzerlikte null döner → duyuru kendi sayfasında açılır.
+ */
+function dbResolveAnasayfaDuyuruEtkinlikId(PDO $db, array $duyuru): ?int
+{
+    static $cache = [];
+    $duyuruId = (int)($duyuru["id"] ?? 0);
+    if ($duyuruId > 0 && array_key_exists($duyuruId, $cache)) {
+        return $cache[$duyuruId];
+    }
+
+    $needle = normalizeLookupTitle((string)($duyuru["baslik"] ?? ""));
+    if ($needle === "") {
+        return $cache[$duyuruId] = null;
+    }
+
+    $needleTokens = array_values(array_filter(
+        explode(" ", $needle),
+        static fn($t) => mb_strlen($t, "UTF-8") >= 3
+    ));
+    if (count($needleTokens) < 2) {
+        return $cache[$duyuruId] = null;
+    }
+
+    $etkinlikler = dbFetchAll($db, "SELECT id, baslik FROM etkinlikler");
+    $bestId = null;
+    $bestScore = 0.0;
+
+    foreach ($etkinlikler as $e) {
+        $hay = normalizeLookupTitle((string)($e["baslik"] ?? ""));
+        if ($hay === "") {
+            continue;
+        }
+
+        $hayTokens = array_values(array_filter(
+            explode(" ", $hay),
+            static fn($t) => mb_strlen($t, "UTF-8") >= 3
+        ));
+        if (count($hayTokens) < 2) {
+            continue;
+        }
+
+        if ($needle === $hay) {
+            $score = 1.0;
+        } elseif (str_contains($hay, $needle) || str_contains($needle, $hay)) {
+            $score = 0.95;
+        } else {
+            $common = count(array_intersect($needleTokens, $hayTokens));
+            if ($common < 2) {
+                continue;
+            }
+            $union = count(array_unique(array_merge($needleTokens, $hayTokens)));
+            $score = $union > 0 ? ($common / $union) : 0.0;
+            $coverage = $common / count($needleTokens);
+            $score = min($score, $coverage);
+        }
+
+        if ($score > $bestScore) {
+            $bestScore = $score;
+            $bestId = (int)$e["id"];
+        }
+    }
+
+    if ($bestScore < 0.72) {
+        $bestId = null;
+    }
+
+    return $cache[$duyuruId] = $bestId;
+}
+
+function mapAnasayfaDuyurular(PDO $db, array $rows): array
+{
+    return array_map(function ($r) use ($db) {
+        $etkinlikId = dbResolveAnasayfaDuyuruEtkinlikId($db, $r);
+        $r["etkinlik_id"] = $etkinlikId;
+        if ($etkinlikId) {
+            $etkinlik = dbFetchOne($db, "SELECT `view` FROM etkinlikler WHERE id = ?", [$etkinlikId]);
+            if ($etkinlik) {
+                $r["view"] = (int)($etkinlik["view"] ?? 0);
+            }
+        }
+        $r["detail_url"] = $etkinlikId
+            ? ("etkinlikd.php?id=" . $etkinlikId)
+            : ("duyurud.php?id=" . (int)($r["id"] ?? 0));
+        return $r;
+    }, $rows);
 }
 
 function dbEtkinliklerDuyurularTable(PDO $db): string

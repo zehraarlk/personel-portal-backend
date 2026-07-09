@@ -1,5 +1,4 @@
 <?php
-session_start();
 include("baglan.php");
 
 if (!isset($_SESSION['personel_id'])) {
@@ -45,40 +44,21 @@ if (isset($_SESSION['profil_mesaj'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Şifre Değiştir - Gebze Belediyesi Personel Portalı</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <?php include "includes/site-styles.php"; ?>
-    <style>
-      html, body { overflow-x: hidden; max-width: 100%; }
-      .content-area { min-height: 60vh; }
-      .profil-card {
-        border: none;
-        border-radius: 14px;
-        box-shadow: 0 4px 18px rgba(2, 40, 66, 0.08);
-      }
-      .profil-card .card-header {
-        background-color: #022842;
-        color: #fff;
-        border-radius: 14px 14px 0 0 !important;
-        padding: 1.1rem 1.5rem;
-        font-weight: 600;
-      }
-      .profil-card .card-header i { color: #ffa500; margin-right: 8px; }
-      .btn-navy {
-        background-color: #022842;
-        color: #fff;
-        font-weight: 600;
-        border: none;
-      }
-      .btn-navy:hover { background-color: #033a5e; color: #fff; }
-    </style>
+<?php $pageCss = "profil.style.css"; include "includes/site-styles.php"; ?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
     <?php $pageTitle = "Şifre Değiştir"; include "includes/breadcrumb.php"; ?>
 
     <div class="content-area">
-      <div class="container py-4" style="max-width: 650px;">
+      <div class="container profil-form-narrow">
         <?php echo $mesaj; ?>
 
         <div class="card profil-card">
