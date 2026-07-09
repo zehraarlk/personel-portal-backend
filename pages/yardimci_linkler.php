@@ -1,6 +1,6 @@
 <?php
 include("baglan.php");
-$kayitlar = dbFetchAll($db, "SELECT * FROM yardimci_linkler ORDER BY id");
+$kayitlar = dbFetchYardimciLinkler($db);
 ?>
 <!doctype html>
 <html lang="tr">
