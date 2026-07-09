@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     profileMenu.querySelectorAll(".profile-menu-item:not(.logout)").forEach((item) => {
       item.addEventListener("click", () => {
         try {
-          sessionStorage.setItem("pp_internal_nav", "1");
+          sessionStorage.setItem("pp_internal_nav", String(Date.now()));
         } catch (err) {}
         closeNavMenus();
       });
@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         if (confirm("Çıkış yapmak istediğinizden emin misiniz?")) {
           try {
-            sessionStorage.setItem("pp_internal_nav", "1");
+            sessionStorage.setItem("pp_internal_nav", String(Date.now()));
           } catch (err) {}
           window.location.href = "cikis.php";
         }

@@ -11,6 +11,12 @@ $session_email = isset($_SESSION['email']) ? $_SESSION['email'] : 'personel@gebz
 $session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../images/login/login.jpg';
 $session_oturum_aktif = !empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id']);
 
+// Oturum kaydı yanlışlıkla kapanmışsa (hızlı yenileme vb.) yeniden aç
+if (!empty($_SESSION['personel_id']) && empty($_SESSION['oturum_id']) && isset($db) && $db instanceof PDO) {
+    $_SESSION['oturum_id'] = oturumStart($db, (int)$_SESSION['personel_id']);
+    $session_oturum_aktif = true;
+}
+
 // Aktif oturumun son aktivite zamanını yenile
 if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
     oturumTouch($db, (int)$_SESSION['oturum_id']);
@@ -24,18 +30,39 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
 
   var endpoint = "oturum_kapat.php";
   var NAV_KEY = "pp_internal_nav";
+  var NAV_TTL_MS = 8000;
   var sent = false;
 
-  // Önceki sayfadan kalan bayrağı temizle
-  try { sessionStorage.removeItem(NAV_KEY); } catch (e0) {}
-
   function markInternalNav() {
-    try { sessionStorage.setItem(NAV_KEY, "1"); } catch (e1) {}
+    try { sessionStorage.setItem(NAV_KEY, String(Date.now())); } catch (e1) {}
   }
 
   function isInternalNav() {
-    try { return sessionStorage.getItem(NAV_KEY) === "1"; } catch (e2) { return false; }
+    try {
+      var raw = sessionStorage.getItem(NAV_KEY);
+      if (!raw) return false;
+      var ts = parseInt(raw, 10);
+      if (!ts || isNaN(ts)) return raw === "1";
+      return (Date.now() - ts) < NAV_TTL_MS;
+    } catch (e2) {
+      return false;
+    }
   }
+
+  function markReloadIfNeeded() {
+    try {
+      var nav = performance.getEntriesByType("navigation")[0];
+      if (nav && nav.type === "reload") {
+        markInternalNav();
+      }
+    } catch (e3) {}
+  }
+
+  markReloadIfNeeded();
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) markInternalNav();
+    markReloadIfNeeded();
+  });
 
   function sameOriginHref(href) {
     if (!href || href.charAt(0) === "#" || href.indexOf("javascript:") === 0) return false;
@@ -81,9 +108,9 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
     } catch (e5) {}
   }
 
-  // Sadece gerçek sekme/tarayıcı kapanışında kapat (site içi gezinmede değil)
+  // Sadece gerçek sekme/tarayıcı kapanışında kapat (yenileme ve site içi gezinmede değil)
   window.addEventListener("pagehide", function (e) {
-    if (e.persisted) return;
+    if (e.persisted || isInternalNav()) return;
     closeSession();
   });
 })();
@@ -295,6 +322,6 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
        <li><a href="email_degistir.php"><i class="fas fa-envelope"></i> Email Değiştir</a></li>
 <li><a href="sifre_degistir.php"><i class="fas fa-key"></i> Şifre Değiştir</a></li>
 <li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
-        <li><a href="cikis.php" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav','1')}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+        <li><a href="cikis.php" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav',String(Date.now()))}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
       </ul>
     </div>

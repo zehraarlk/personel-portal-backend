@@ -65,7 +65,88 @@ document.addEventListener("DOMContentLoaded", () => {
   // olay bağla
   sortSelect?.addEventListener("change", applyFilters);
   searchInput?.addEventListener("input", applyFilters);
+
+  /* ========= DUYURU DETAY MODAL ========= */
+  const detailModal = document.getElementById("duyuruDetailModal");
+  if (detailModal) {
+    const modalImage = document.getElementById("duyuruModalImage");
+    const modalCategory = document.getElementById("duyuruModalCategory");
+    const modalTitle = document.getElementById("duyuruModalTitle");
+    const modalDate = document.getElementById("duyuruModalDate");
+    const modalDateText = modalDate?.querySelector("span");
+    const modalDescription = document.getElementById("duyuruModalDescription");
+    const modalActions = document.getElementById("duyuruModalActions");
+    const modalLabel = document.getElementById("duyuruDetailModalLabel");
+
+    detailModal.addEventListener("show.bs.modal", (event) => {
+      const trigger = event.relatedTarget;
+      const card = trigger?.closest(".document-card");
+      if (!card) return;
+
+      const baslik = card.dataset.baslik || "";
+      const aciklama = card.dataset.aciklama || "";
+      const kategori = card.dataset.kategori || "";
+      const tarih = card.dataset.tarih || "";
+      const resim = card.dataset.resim || "";
+      const dosya = card.dataset.dosya || "";
+      const video = card.dataset.video || "";
+
+      if (modalLabel) modalLabel.textContent = baslik || "Duyuru Detayı";
+      if (modalImage) {
+        modalImage.src = resim;
+        modalImage.alt = baslik;
+      }
+      if (modalTitle) modalTitle.textContent = baslik;
+      if (modalDescription) modalDescription.textContent = aciklama;
+
+      if (modalCategory) {
+        modalCategory.textContent = kategori;
+        modalCategory.classList.toggle("d-none", !kategori);
+      }
+
+      if (modalDate && modalDateText) {
+        modalDateText.textContent = tarih;
+        modalDate.classList.toggle("d-none", !tarih);
+      }
+
+      if (modalActions) {
+        modalActions.innerHTML = "";
+        const links = [];
+
+        if (dosya) {
+          links.push(
+            `<a class="preview-btn" href="${escapeHtmlAttr(dosya)}" target="_blank" rel="noopener">
+              <i class="fas fa-file-alt"></i> Ek Dosyayı Görüntüle
+            </a>`
+          );
+        }
+        if (video) {
+          links.push(
+            `<a class="preview-btn preview-btn-secondary" href="${escapeHtmlAttr(video)}" target="_blank" rel="noopener">
+              <i class="fas fa-play"></i> Videoyu İzle
+            </a>`
+          );
+        }
+
+        if (links.length) {
+          modalActions.innerHTML = links.join("");
+          modalActions.classList.remove("d-none");
+        } else {
+          modalActions.classList.add("d-none");
+        }
+      }
+    });
+  }
 });
+
+function escapeHtmlAttr(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
 
 /* ========= (İSTEĞE BAĞLI) DOSYA ÖNİZLEME / İNDİRME =========
    Preview/Download butonları kullanacaksan, aşağıdaki yardımcıları

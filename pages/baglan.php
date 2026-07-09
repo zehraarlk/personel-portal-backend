@@ -885,6 +885,12 @@ function mapAnasayfaDuyurular(PDO $db, array $rows): array
     return array_map(function ($r) use ($db) {
         $etkinlikId = dbResolveAnasayfaDuyuruEtkinlikId($db, $r);
         $r["etkinlik_id"] = $etkinlikId;
+        if ($etkinlikId) {
+            $etkinlik = dbFetchOne($db, "SELECT `view` FROM etkinlikler WHERE id = ?", [$etkinlikId]);
+            if ($etkinlik) {
+                $r["view"] = (int)($etkinlik["view"] ?? 0);
+            }
+        }
         $r["detail_url"] = $etkinlikId
             ? ("etkinlikd.php?id=" . $etkinlikId)
             : ("duyurud.php?id=" . (int)($r["id"] ?? 0));
