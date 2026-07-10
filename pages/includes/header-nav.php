@@ -4,17 +4,29 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-// Oturum açmış personelin verileri yoksa varsayılan değerler atıyoruz ki hata fırlatmasın
-$session_ad = isset($_SESSION["ad"]) ? $_SESSION["ad"] : "Kullanıcı";
-$session_soyad = isset($_SESSION["soyad"]) ? $_SESSION["soyad"] : "Adı";
-$session_email = isset($_SESSION["email"]) ? $_SESSION["email"] : "personel@gebze.bel.tr";
-$session_foto = !empty($_SESSION["fotograf"]) ? $_SESSION["fotograf"] : "../images/login/login.jpg";
-$session_oturum_aktif = !empty($_SESSION["personel_id"]) && !empty($_SESSION["oturum_id"]);
+if (!function_exists("portalResolveProfile")) {
+  require_once __DIR__ . "/../baglan.php";
+}
 
-// Oturum kaydı yanlışlıkla kapanmışsa (hızlı yenileme vb.) yeniden aç
+// Oturum açmış kullanıcının profil bilgileri (yönetici veya personel)
+$portalProfil = portalResolveProfile();
+$session_ad = $portalProfil["ad"];
+$session_soyad = "";
+$session_email = $portalProfil["email"];
+$session_rol = $portalProfil["rol"];
+$session_tip = $portalProfil["tip"];
+$session_cikis_url = $portalProfil["cikis_url"];
+$session_foto = $portalProfil["foto"];
+$session_oturum_aktif =
+  $portalProfil["tip"] === "personel" &&
+  !empty($_SESSION["personel_id"]) &&
+  !empty($_SESSION["oturum_id"]);
+
+// Oturum kaydı yanlışlıkla kapanmışsa (hızlı yenileme vb.) yeniden aç — sadece personel
 if (
   !empty($_SESSION["personel_id"]) &&
   empty($_SESSION["oturum_id"]) &&
+  empty($_SESSION["yonetici_id"]) &&
   isset($db) &&
   $db instanceof PDO
 ) {
@@ -22,7 +34,7 @@ if (
   $session_oturum_aktif = true;
 }
 
-// Aktif oturumun son aktivite zamanını yenile
+// Aktif personel oturumunun son aktivite zamanını yenile
 if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
   oturumTouch($db, (int) $_SESSION["oturum_id"]);
 }
@@ -258,19 +270,32 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
         <div class="nav-right">
           <div class="profile-dropdown">
             <button class="profile-btn" id="profileBtn" type="button" aria-expanded="false" aria-haspopup="true">
-              <img src="<?php echo $session_foto; ?>" alt="Profil" class="profile-img" />
+              <img src="<?= htmlspecialchars($session_foto, ENT_QUOTES, "UTF-8") ?>" alt="Profil" class="profile-img" />
             </button>
             <div class="profile-menu" id="profileMenu">
               <div class="profile-info">
-                <img src="<?php echo $session_foto; ?>" alt="Profil" class="profile-menu-img" />
+                <img src="<?= htmlspecialchars($session_foto, ENT_QUOTES, "UTF-8") ?>" alt="Profil" class="profile-menu-img" />
                 <div class="profile-details">
-                  <span class="profile-name"><?php echo $session_ad .
-                    " " .
-                    $session_soyad; ?></span>
-                  <span class="profile-role">Personel</span>
+                  <span class="profile-name"><?php echo htmlspecialchars(
+                    $session_ad,
+                    ENT_QUOTES,
+                    "UTF-8",
+                  ); ?></span>
+                  <span class="profile-role"><?php echo htmlspecialchars(
+                    $session_rol,
+                    ENT_QUOTES,
+                    "UTF-8",
+                  ); ?></span>
                 </div>
               </div>
              <ul class="profile-menu-list" style="list-style: none; padding: 0; margin: 0;">
+<?php if ($session_tip === "yonetici"): ?>
+  <li>
+    <a href="admin/index.php" class="profile-menu-item">
+      <i class="fas fa-cog"></i><span>Yönetim Paneli</span>
+    </a>
+  </li>
+<?php else: ?>
   <li>
     <a href="email_degistir.php" class="profile-menu-item">
       <i class="fas fa-envelope"></i><span>Email Değiştir</span>
@@ -286,8 +311,13 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
       <i class="fas fa-history"></i><span>Oturum Bilgileri</span>
     </a>
   </li>
+<?php endif; ?>
   <li>
-    <a href="cikis.php" class="profile-menu-item logout">
+    <a href="<?php echo htmlspecialchars(
+      $session_cikis_url,
+      ENT_QUOTES,
+      "UTF-8",
+    ); ?>" class="profile-menu-item logout">
       <i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span>
     </a>
   </li>
@@ -303,12 +333,18 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
     <div class="side-menu" id="sideMenu">
       <div class="side-menu-header">
         <div class="side-menu-profile">
-          <img src="<?php echo $session_foto; ?>" alt="Profil" class="side-menu-profile-img" />
+          <img src="<?= htmlspecialchars($session_foto, ENT_QUOTES, "UTF-8") ?>" alt="Profil" class="side-menu-profile-img" />
           <div class="side-menu-profile-details">
-            <span class="side-menu-profile-name"><?php echo $session_ad .
-              " " .
-              $session_soyad; ?></span>
-            <span class="side-menu-profile-email"><?php echo $session_email; ?></span>
+            <span class="side-menu-profile-name"><?php echo htmlspecialchars(
+              $session_ad,
+              ENT_QUOTES,
+              "UTF-8",
+            ); ?></span>
+            <span class="side-menu-profile-email"><?php echo htmlspecialchars(
+              $session_rol . " · " . $session_email,
+              ENT_QUOTES,
+              "UTF-8",
+            ); ?></span>
           </div>
         </div>
         <button class="close-menu-btn" type="button" aria-label="Menüyü kapat">&times;</button>
@@ -328,9 +364,18 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
         <li><a href="vefat_bilgisi.php"><i class="fas fa-ribbon"></i> Vefat Eden Bilgisi</a></li>
         <li><a href="dogum.php"><i class="fas fa-birthday-cake"></i> Doğum Günü Bilgisi</a></li>
         <hr class="my-2 bg-secondary opacity-25">
+<?php if ($session_tip !== "yonetici"): ?>
        <li><a href="email_degistir.php"><i class="fas fa-envelope"></i> Email Değiştir</a></li>
 <li><a href="sifre_degistir.php"><i class="fas fa-key"></i> Şifre Değiştir</a></li>
 <li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
-        <li><a href="cikis.php" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav',String(Date.now()))}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+<?php endif; ?>
+<?php if ($session_tip === "yonetici"): ?>
+        <li><a href="admin/index.php"><i class="fas fa-cog"></i> Yönetim Paneli</a></li>
+<?php endif; ?>
+        <li><a href="<?php echo htmlspecialchars(
+          $session_cikis_url,
+          ENT_QUOTES,
+          "UTF-8",
+        ); ?>" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav',String(Date.now()))}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
       </ul>
     </div>

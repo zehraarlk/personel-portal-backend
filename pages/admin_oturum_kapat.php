@@ -8,7 +8,7 @@ include __DIR__ . "/baglan.php";
 header("Content-Type: application/json; charset=utf-8");
 header("Cache-Control: no-store");
 
-$oturumId = isset($_SESSION["yonetici_oturum_id"]) ? (int) $_SESSION["yonetici_oturum_id"] : 0;
+$oturumId = (int) ($_SESSION["yonetici_oturum_id"] ?? 0);
 
 if ($oturumId > 0) {
   yoneticiOturumClose($db, $oturumId, "sekme");

@@ -51,7 +51,7 @@ $stats = [
 
 $sonVideolar = dbFetchAll(
   $db,
-  "SELECT id, baslik, kategori, sure, youtube_id FROM videolar ORDER BY id DESC LIMIT 5",
+  "SELECT id, baslik, sure, youtube_id FROM videolar ORDER BY id DESC LIMIT 5",
 );
 
 if (isset($_GET["hata"]) && $_GET["hata"] === "yetkisiz") {

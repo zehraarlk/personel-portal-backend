@@ -34,12 +34,12 @@ $flash = adminFlashGet();
           </div>
           <div class="admin-user">
             <span><?= htmlspecialchars(
-              $adminUser["ad"] . " " . $adminUser["soyad"],
+              $adminUser["gorunen_ad"] !== "" ? $adminUser["gorunen_ad"] : "Yönetici",
               ENT_QUOTES,
               "UTF-8",
             ) ?></span>
             <span class="admin-user-badge"><?= htmlspecialchars(
-              $adminUser["yetki"],
+              $adminUser["rol_etiket"],
               ENT_QUOTES,
               "UTF-8",
             ) ?></span>

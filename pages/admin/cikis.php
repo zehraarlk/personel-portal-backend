@@ -1,30 +1,28 @@
 <?php
-require_once __DIR__ . "/../includes/auth.php";
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+require_once __DIR__ . "/../baglan.php";
 
-if (!empty($_SESSION["yonetici_id"])) {
-  $oturumId = (int) ($_SESSION["yonetici_oturum_id"] ?? 0);
-  if ($oturumId > 0) {
-    try {
-      $db
-        ->prepare(
-          "UPDATE yonetici_oturum_kayitlari SET cikis_zamani = NOW() WHERE id = ? AND cikis_zamani IS NULL",
-        )
-        ->execute([$oturumId]);
-    } catch (Throwable $e) {
-      // Sessizce geç
-    }
-  }
+$oturumId = (int) ($_SESSION["yonetici_oturum_id"] ?? 0);
+if ($oturumId > 0) {
+  yoneticiOturumClose($db, $oturumId, "manuel");
 }
 
-unset(
-  $_SESSION["yonetici_id"],
-  $_SESSION["yonetici_kullanici"],
-  $_SESSION["yonetici_ad"],
-  $_SESSION["yonetici_soyad"],
-  $_SESSION["yonetici_yetki"],
-  $_SESSION["yonetici_oturum_id"],
-  $_SESSION["admin_csrf"],
-);
+adminSessionClear();
 
-header("Location: ../yonetim_giris.php");
+if (ini_get("session.use_cookies")) {
+  $p = session_get_cookie_params();
+  setcookie(session_name(), "", [
+    "expires" => time() - 42000,
+    "path" => $p["path"],
+    "domain" => $p["domain"],
+    "secure" => $p["secure"],
+    "httponly" => $p["httponly"],
+    "samesite" => $p["samesite"] ?? "Lax",
+  ]);
+}
+session_destroy();
+
+header("Location: " . adminLoginUrl());
 exit();

@@ -2,11 +2,14 @@
 session_start();
 include "baglan.php";
 
-// Zaten giriş yapılmışsa panele yönlendir
+// Zaten aktif oturum varsa panele yönlendir
 if (adminIsLoggedIn()) {
   header("Location: admin/index.php");
   exit();
 }
+
+// Eski / kapanmış oturum kalıntılarını temizle
+adminSessionClear();
 
 if (
   $_SERVER["REQUEST_METHOD"] == "POST" &&
@@ -24,17 +27,26 @@ if (
     $yonetici = $sorgu->fetch(PDO::FETCH_ASSOC);
 
     if ($yonetici && adminVerifyPassword((string) $yonetici["sifre"], $sifre)) {
+      // Personel oturumu varsa temizle
+      if (isset($_SESSION["oturum_id"])) {
+        oturumClose($db, (int) $_SESSION["oturum_id"], "otomatik");
+      }
+      unset(
+        $_SESSION["personel_id"],
+        $_SESSION["oturum_id"],
+        $_SESSION["ad"],
+        $_SESSION["soyad"],
+        $_SESSION["email"],
+        $_SESSION["fotograf"],
+        $_SESSION["sicil_no"],
+      );
+
       $_SESSION["yonetici_id"] = $yonetici["id"];
       $_SESSION["yonetici_kullanici"] = $yonetici["kullanici_adi"];
       $_SESSION["yonetici_ad"] = $yonetici["ad"];
       $_SESSION["yonetici_soyad"] = $yonetici["soyad"];
       $_SESSION["yonetici_yetki"] = $yonetici["yetki"];
-
-      $giris_ekle = $db->prepare(
-        "INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani) VALUES (?, NOW())",
-      );
-      $giris_ekle->execute([$yonetici["id"]]);
-      $_SESSION["yonetici_oturum_id"] = (int) $db->lastInsertId();
+      $_SESSION["yonetici_oturum_id"] = yoneticiOturumStart($db, (int) $yonetici["id"]);
 
       // Eski MD5 şifreyi bcrypt'e yükselt
       if (strlen((string) $yonetici["sifre"]) === 32 && ctype_xdigit((string) $yonetici["sifre"])) {

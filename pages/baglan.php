@@ -822,10 +822,19 @@ function dbEnsureYoneticiler(PDO $db): void
                 `yonetici_id` int(11) NOT NULL,
                 `giris_zamani` datetime NOT NULL,
                 `cikis_zamani` datetime DEFAULT NULL,
+                `ip_adresi` varchar(45) DEFAULT NULL,
+                `user_agent` varchar(255) DEFAULT NULL,
+                `kapanis_tipi` varchar(20) DEFAULT NULL,
+                `son_aktivite` datetime DEFAULT NULL,
                 PRIMARY KEY (`id`),
                 KEY `idx_yonetici_oturum_yonetici_id` (`yonetici_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci",
     );
+
+    dbEnsureColumn($db, "yonetici_oturum_kayitlari", "ip_adresi", "varchar(45) DEFAULT NULL");
+    dbEnsureColumn($db, "yonetici_oturum_kayitlari", "user_agent", "varchar(255) DEFAULT NULL");
+    dbEnsureColumn($db, "yonetici_oturum_kayitlari", "kapanis_tipi", "varchar(20) DEFAULT NULL");
+    dbEnsureColumn($db, "yonetici_oturum_kayitlari", "son_aktivite", "datetime DEFAULT NULL");
 
     $count = (int) (dbFetchOne($db, "SELECT COUNT(*) AS c FROM yoneticiler")["c"] ?? 0);
     if ($count === 0) {
@@ -861,16 +870,155 @@ function adminVerifyPassword(string $storedHash, string $plain): bool
   return false;
 }
 
+function adminSessionClear(): void
+{
+  unset(
+    $_SESSION["yonetici_id"],
+    $_SESSION["yonetici_kullanici"],
+    $_SESSION["yonetici_ad"],
+    $_SESSION["yonetici_soyad"],
+    $_SESSION["yonetici_yetki"],
+    $_SESSION["yonetici_oturum_id"],
+    $_SESSION["admin_csrf"],
+  );
+}
+
+function adminLoginUrl(): string
+{
+  $self = $_SERVER["PHP_SELF"] ?? "";
+  if (preg_match("#/admin/[^/]+/#", $self)) {
+    return "../../yonetim_giris.php";
+  }
+  return "../yonetim_giris.php";
+}
+
+function yoneticiOturumClose(PDO $db, int $oturumId, string $tip = "manuel"): bool
+{
+  if ($oturumId <= 0) {
+    return false;
+  }
+  $tip = in_array($tip, ["manuel", "sekme", "otomatik", "eski"], true) ? $tip : "manuel";
+  try {
+    $stmt = $db->prepare(
+      "UPDATE yonetici_oturum_kayitlari
+             SET cikis_zamani = COALESCE(cikis_zamani, NOW()),
+                 kapanis_tipi = COALESCE(kapanis_tipi, ?),
+                 son_aktivite = COALESCE(son_aktivite, NOW())
+             WHERE id = ? AND cikis_zamani IS NULL",
+    );
+    $stmt->execute([$tip, $oturumId]);
+    return $stmt->rowCount() > 0;
+  } catch (Throwable $e) {
+    return false;
+  }
+}
+
+function yoneticiOturumCloseOtherOpen(
+  PDO $db,
+  int $yoneticiId,
+  ?int $exceptOturumId = null,
+  string $tip = "otomatik",
+): void {
+  if ($yoneticiId <= 0) {
+    return;
+  }
+  try {
+    if ($exceptOturumId) {
+      $stmt = $db->prepare(
+        "UPDATE yonetici_oturum_kayitlari
+                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
+                 WHERE yonetici_id = ? AND cikis_zamani IS NULL AND id != ?",
+      );
+      $stmt->execute([$tip, $yoneticiId, $exceptOturumId]);
+    } else {
+      $stmt = $db->prepare(
+        "UPDATE yonetici_oturum_kayitlari
+                 SET cikis_zamani = NOW(), kapanis_tipi = COALESCE(kapanis_tipi, ?)
+                 WHERE yonetici_id = ? AND cikis_zamani IS NULL",
+      );
+      $stmt->execute([$tip, $yoneticiId]);
+    }
+  } catch (Throwable $e) {
+    // Sessizce geç
+  }
+}
+
+function yoneticiOturumStart(PDO $db, int $yoneticiId): int
+{
+  yoneticiOturumCloseOtherOpen($db, $yoneticiId, null, "otomatik");
+  $ip = substr((string) ($_SERVER["REMOTE_ADDR"] ?? ""), 0, 45);
+  $ua = substr((string) ($_SERVER["HTTP_USER_AGENT"] ?? ""), 0, 255);
+  $stmt = $db->prepare(
+    "INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani, ip_adresi, user_agent, son_aktivite)
+         VALUES (?, NOW(), ?, ?, NOW())",
+  );
+  $stmt->execute([$yoneticiId, $ip !== "" ? $ip : null, $ua !== "" ? $ua : null]);
+  return (int) $db->lastInsertId();
+}
+
+function yoneticiOturumTouch(PDO $db, ?int $oturumId): void
+{
+  if (!$oturumId) {
+    return;
+  }
+  try {
+    $db
+      ->prepare(
+        "UPDATE yonetici_oturum_kayitlari SET son_aktivite = NOW() WHERE id = ? AND cikis_zamani IS NULL",
+      )
+      ->execute([$oturumId]);
+  } catch (Throwable $e) {
+    // Sessizce geç
+  }
+}
+
+function yoneticiOturumIsActive(PDO $db, int $oturumId, int $yoneticiId): bool
+{
+  if ($oturumId <= 0 || $yoneticiId <= 0) {
+    return false;
+  }
+  try {
+    $row = dbFetchOne(
+      $db,
+      "SELECT id FROM yonetici_oturum_kayitlari
+             WHERE id = ? AND yonetici_id = ? AND cikis_zamani IS NULL
+             LIMIT 1",
+      [$oturumId, $yoneticiId],
+    );
+    return (bool) $row;
+  } catch (Throwable $e) {
+    return false;
+  }
+}
+
 function adminIsLoggedIn(): bool
 {
-  return !empty($_SESSION["yonetici_id"]);
+  global $db;
+
+  $yoneticiId = (int) ($_SESSION["yonetici_id"] ?? 0);
+  $oturumId = (int) ($_SESSION["yonetici_oturum_id"] ?? 0);
+  if ($yoneticiId <= 0 || $oturumId <= 0) {
+    return false;
+  }
+  if (!isset($db) || !$db instanceof PDO) {
+    return false;
+  }
+
+  return yoneticiOturumIsActive($db, $oturumId, $yoneticiId);
 }
 
 function adminRequireLogin(): void
 {
+  global $db;
+
   if (!adminIsLoggedIn()) {
-    header("Location: ../yonetim_giris.php");
+    adminSessionClear();
+    header("Location: " . adminLoginUrl());
     exit();
+  }
+
+  if (isset($db) && $db instanceof PDO) {
+    yoneticiOturumTouch($db, (int) ($_SESSION["yonetici_oturum_id"] ?? 0));
   }
 }
 
@@ -881,6 +1029,80 @@ function adminRequireRole(string $role = "editor"): void
     header("Location: index.php?hata=yetkisiz");
     exit();
   }
+}
+
+/** Yönetici yetki kodunu Türkçe ünvana çevirir. */
+function adminYetkiLabel(string $yetki): string
+{
+  return match ($yetki) {
+    "super" => "Yönetici",
+    "editor" => "Editör",
+    default => "Yönetici",
+  };
+}
+
+/** Navbar profil küçük resmi — kurumsal Gebze logosu. */
+function portalProfileFotoUrl(): string
+{
+  $path = "../images/gebze-logo.png";
+  $root = realpath(__DIR__ . "/..") ?: "";
+  $file = $root . "/images/gebze-logo.png";
+  if ($root !== "" && is_file($file)) {
+    return $path . "?v=" . filemtime($file);
+  }
+  return $path;
+}
+
+/**
+ * Üst menü / profil alanı için oturum tipine göre görünen ad, rol ve çıkış bilgisi.
+ * Öncelik: yönetici oturumu > personel oturumu > misafir.
+ */
+function portalResolveProfile(): array
+{
+  if (adminIsLoggedIn()) {
+    $kullanici = trim((string) ($_SESSION["yonetici_kullanici"] ?? ""));
+    $adSoyad = trim(
+      trim((string) ($_SESSION["yonetici_ad"] ?? "")) .
+        " " .
+        trim((string) ($_SESSION["yonetici_soyad"] ?? "")),
+    );
+    return [
+      "tip" => "yonetici",
+      "ad" => $kullanici !== "" ? $kullanici : ($adSoyad !== "" ? $adSoyad : "Yönetici"),
+      "rol" => adminYetkiLabel((string) ($_SESSION["yonetici_yetki"] ?? "super")),
+      "email" => $kullanici !== "" ? $kullanici : "yonetici",
+      "foto" => portalProfileFotoUrl(),
+      "cikis_url" => "admin/cikis.php",
+      "oturum_aktif" => true,
+    ];
+  }
+
+  $personelAktif = !empty($_SESSION["personel_id"]) && !empty($_SESSION["oturum_id"]);
+  if ($personelAktif) {
+    return [
+      "tip" => "personel",
+      "ad" => trim(
+        trim((string) ($_SESSION["ad"] ?? "Kullanıcı")) .
+          " " .
+          trim((string) ($_SESSION["soyad"] ?? "")),
+      ),
+      "rol" => "Personel",
+      "email" => (string) ($_SESSION["email"] ?? "personel@gebze.bel.tr"),
+      "foto" => portalProfileFotoUrl(),
+      "cikis_url" => "cikis.php",
+      "oturum_aktif" => true,
+    ];
+  }
+
+  return [
+    "tip" => "misafir",
+    "ad" => "Kullanıcı",
+    "rol" => "Misafir",
+    "email" => "personel@gebze.bel.tr",
+    "foto" => portalProfileFotoUrl(),
+    "cikis_url" => "login.php",
+    "oturum_aktif" => false,
+  ];
 }
 
 function adminCsrfToken(): string
