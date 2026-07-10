@@ -58,6 +58,8 @@ dbEnsureDuyurularKategori($db);
 dbEnsureAnketlerKategori($db);
 // Yardımcı Linkler kategori tablosu: yoksa oluştur, eski veriyi taşı, FK bağla
 dbEnsureYardimciLinklerKategori($db);
+// Etkinlikler durum kolonu (aktif/pasif): yoksa ekle
+dbEnsureEtkinliklerDurum($db);
 // Yönetici tablosu ve varsayılan admin hesabı
 dbEnsureYoneticiler($db);
 
@@ -2919,6 +2921,7 @@ function mapEtkinlikler(array $rows): array
         : "",
       "views" => (int) ($r["view"] ?? 0),
       "status" => dbEtkinliklerResolveDurum($r),
+      "statusLabel" => dbEtkinliklerPublicDurumLabel(dbEtkinliklerResolveDurum($r)),
       "image" => imgUrl($r["resim"] ?? ""),
     ],
     $rows,
@@ -2927,21 +2930,36 @@ function mapEtkinlikler(array $rows): array
 
 function dbEtkinliklerHasDurumColumn(PDO $db): bool
 {
-  static $has = null;
-  if ($has === null) {
-    $has = dbColumnExists($db, "etkinlikler", "durum");
-  }
-  return $has;
+  return dbColumnExists($db, "etkinlikler", "durum");
 }
 
-/** durum kolonu yoksa bitiş tarihine göre aktif/pasif döndürür. */
-function dbEtkinliklerResolveDurum(array $row): string
+/**
+ * etkinlikler.durum kolonu yoksa ekler; boş/geçersiz kayıtları bitiş tarihine göre doldurur.
+ */
+function dbEnsureEtkinliklerDurum(PDO $db): void
 {
-  $durum = trim((string) ($row["durum"] ?? ""));
-  if ($durum !== "" && in_array($durum, ["aktif", "pasif"], true)) {
-    return $durum;
+  if (!dbHasAnyTable($db, ["etkinlikler"])) {
+    return;
   }
 
+  dbEnsureColumn($db, "etkinlikler", "durum", "VARCHAR(20) NOT NULL DEFAULT 'aktif'");
+
+  $rows = dbFetchAll($db, "SELECT id, tarih, bitis_tarihi, durum FROM etkinlikler");
+  foreach ($rows as $row) {
+    $durum = trim((string) ($row["durum"] ?? ""));
+    if (in_array($durum, ["aktif", "pasif"], true)) {
+      continue;
+    }
+    $db->prepare("UPDATE etkinlikler SET durum = ? WHERE id = ?")->execute([
+      dbEtkinliklerResolveDurumFromDates($row),
+      (int) $row["id"],
+    ]);
+  }
+}
+
+/** Yalnızca tarih alanlarına bakarak aktif/pasif türetir (durum kolonu yedek). */
+function dbEtkinliklerResolveDurumFromDates(array $row): string
+{
   $bitis = $row["bitis_tarihi"] ?? $row["tarih"] ?? null;
   if (empty($bitis)) {
     return "aktif";
@@ -2955,9 +2973,25 @@ function dbEtkinliklerResolveDurum(array $row): string
   return $ts >= strtotime("today") ? "aktif" : "pasif";
 }
 
+/** durum kolonu yoksa bitiş tarihine göre aktif/pasif döndürür. */
+function dbEtkinliklerResolveDurum(array $row): string
+{
+  $durum = trim((string) ($row["durum"] ?? ""));
+  if ($durum !== "" && in_array($durum, ["aktif", "pasif"], true)) {
+    return $durum;
+  }
+
+  return dbEtkinliklerResolveDurumFromDates($row);
+}
+
 function dbEtkinliklerDurumLabel(string $durum): string
 {
   return $durum === "aktif" ? "Aktif" : "Pasif";
+}
+
+function dbEtkinliklerPublicDurumLabel(string $durum): string
+{
+  return $durum === "aktif" ? "Aktif" : "SÜRESİ DOLDU";
 }
 
 function mapSizdenGelenler(array $rows): array

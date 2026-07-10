@@ -22,19 +22,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       if ($resim === null && !empty($_FILES["resim"]["name"])) {
         $hata = "Görsel yüklenemedi.";
       } else {
-        if (dbEtkinliklerHasDurumColumn($db)) {
-          $db
-            ->prepare(
-              "INSERT INTO etkinlikler (baslik, aciklama, tarih, bitis_tarihi, durum, resim, view) VALUES (?, ?, ?, ?, ?, ?, 0)",
-            )
-            ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim]);
-        } else {
-          $db
-            ->prepare(
-              "INSERT INTO etkinlikler (baslik, aciklama, tarih, bitis_tarihi, resim, view) VALUES (?, ?, ?, ?, ?, 0)",
-            )
-            ->execute([$baslik, $aciklama, $tarih, $bitis, $resim]);
-        }
+        $db
+          ->prepare(
+            "INSERT INTO etkinlikler (baslik, aciklama, tarih, bitis_tarihi, durum, resim, view) VALUES (?, ?, ?, ?, ?, ?, 0)",
+          )
+          ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim]);
         adminFlashSet("success", "Etkinlik eklendi.");
         header("Location: index.php");
         exit();

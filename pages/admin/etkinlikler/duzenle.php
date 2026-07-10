@@ -29,19 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif ($baslik === "" || $tarih === "") {
       $hata = "Başlık ve tarih zorunludur.";
     } else {
-      if (dbEtkinliklerHasDurumColumn($db)) {
-        $db
-          ->prepare(
-            "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, durum=?, resim=? WHERE id=?",
-          )
-          ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim, $id]);
-      } else {
-        $db
-          ->prepare(
-            "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, resim=? WHERE id=?",
-          )
-          ->execute([$baslik, $aciklama, $tarih, $bitis, $resim, $id]);
-      }
+      $db
+        ->prepare(
+          "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, durum=?, resim=? WHERE id=?",
+        )
+        ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim, $id]);
       adminFlashSet("success", "Etkinlik güncellendi.");
       header("Location: index.php");
       exit();

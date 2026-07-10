@@ -16,16 +16,23 @@ const loadingSpinner = document.getElementById("loadingSpinner");
 const noResults = document.getElementById("noResults");
 const pagination = document.getElementById("pagination");
 
-// Etkinlik durumunu kontrol eden fonksiyon
-function getEventStatus(endDate) {
-  const today = new Date();
-  const eventEndDate = new Date(endDate.split(".").reverse().join("-"));
-
-  if (eventEndDate >= today) {
-    return { status: "active", text: "Aktif", class: "aktif" };
-  } else {
-    return { status: "expired", text: "Süresi Doldu", class: "pasif" };
+// Admin panelindeki aktif/pasif durumunu kullanır (mapEtkinlikler → item.status)
+function getEventStatus(status, statusLabel) {
+  if (status === "aktif") {
+    return { status: "aktif", text: statusLabel || "Aktif", class: "aktif" };
   }
+  return { status: "pasif", text: statusLabel || "SÜRESİ DOLDU", class: "pasif" };
+}
+
+function getBaseFilteredData() {
+  const sortType = sortSelect ? sortSelect.value : "all";
+  if (sortType === "active") {
+    return newsData.filter((item) => item.status === "aktif");
+  }
+  if (sortType === "completed") {
+    return newsData.filter((item) => item.status === "pasif");
+  }
+  return [...newsData];
 }
 
 // Initialize
@@ -139,10 +146,11 @@ function setupEventListeners() {
 // Search function
 function handleSearch() {
   const query = searchInput.value.toLowerCase().trim();
+  const base = getBaseFilteredData();
   if (query === "") {
-    filteredData = [...newsData];
+    filteredData = base;
   } else {
-    filteredData = newsData.filter(
+    filteredData = base.filter(
       (item) =>
         item.title.toLowerCase().includes(query) || item.excerpt.toLowerCase().includes(query)
     );
@@ -151,16 +159,9 @@ function handleSearch() {
   renderNews();
 }
 
-// Filter function - Sort dropdown'a gÃ¶re filtreleme
+// Filter function - Sort dropdown'a göre filtreleme
 function handleFilter() {
-  const sortType = sortSelect.value;
-  if (sortType === "active") {
-    filteredData = newsData.filter((item) => getEventStatus(item.endDate).status === "active");
-  } else if (sortType === "completed") {
-    filteredData = newsData.filter((item) => getEventStatus(item.endDate).status === "expired");
-  } else {
-    filteredData = [...newsData];
-  }
+  filteredData = getBaseFilteredData();
   currentPage = 1;
   renderNews();
 }
@@ -210,7 +211,7 @@ function showNewsGrid(items) {
 
     newsGrid.innerHTML = items
       .map((item) => {
-        const eventStatus = getEventStatus(item.endDate);
+        const eventStatus = getEventStatus(item.status, item.statusLabel);
         return `
                 <div class="news-card" onclick="openNewsDetail(${item.id})">
                     <img src="${item.image}" alt="${item.title}" class="news-image" loading="lazy">

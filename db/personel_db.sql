@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 09 Tem 2026, 13:39:19
+-- Üretim Zamanı: 10 Tem 2026, 15:02:05
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -203,31 +203,52 @@ CREATE TABLE `etkinlikler` (
   `tarih` date NOT NULL,
   `bitis_tarihi` date DEFAULT NULL,
   `view` int(11) DEFAULT 0,
-  `durum` varchar(20) DEFAULT 'aktif',
-  `resim` varchar(255) DEFAULT NULL
+  `resim` varchar(255) DEFAULT NULL,
+  `durum_id` int(11) DEFAULT NULL,
+  `durum` varchar(20) NOT NULL DEFAULT 'aktif'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `etkinlikler`
 --
 
-INSERT INTO `etkinlikler` (`id`, `baslik`, `aciklama`, `tarih`, `bitis_tarihi`, `view`, `durum`, `resim`) VALUES
-(1, 'Stajyer Oryantasyon Eğitimi', '6734 ve 6735 Sayılı Kanun Eğitimi - Biyomedikal Eğitimi - Üniversite Eğitimi - Oryantasyon Eğitimi - Fen Programlama Eğitimi - Mevzuat Eğitimi - Teknoloji Çalışma Eğitimi...', '2025-08-06', '2025-12-31', 95, 'aktif', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'),
-(2, 'Stajyer Dönem Sonu Etkinliği', 'Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...', '2025-05-22', '2025-06-30', 153, 'aktif', '../images/stajyer-donem-sonu-etk-nl_6028.jpg'),
-(3, 'Personel İftar Programı', 'Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...', '2024-03-15', '2024-04-15', 80, 'pasif', '../images/pesonel-ftar-programi_3732.jpg'),
-(4, '8 Mart Dünya Kadınlar Günü Programı', '4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...', '2024-03-08', '2024-03-08', 236, 'pasif', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'),
-(5, 'Ön Ödeme Kredi ve Avans Eğitimi', 'Bağışlanmış günlük programı göbildirinde park ve yeşil alanlarımızda...', '2025-02-27', '2025-03-31', 159, 'pasif', '../images/on-odeme-kred-ve-avans-e-t-m_2065.jpeg'),
-(6, 'Marmara Kariyer Yer Fuarı', 'Personel gelişimi için düzenlenen eğitim seminerimiz tamamlandı. Katılımcılarımız başarı sertifikalarını aldı...', '2024-02-26', '2024-02-28', 198, 'pasif', '../images/marmara-kar-yer-fuari-kocael-2024_9790.jpg'),
-(7, 'Ofis Programları Eğitimi', 'Şehrimizin çeşitli bölgelerinde gerçekleştirilen yol bakım ve onarım çalışmaları devam ediyor...', '2025-02-19', '2025-08-31', 271, 'aktif', '../images/of-s-programlari-e-t-m_2683.jpeg'),
-(8, 'İlkyardım Eğitimi', 'Doğal yaşam alanlarının korunması için başlatılan temizlik kampanyası büyük ilgi gördü...', '2024-02-12', '2025-12-31', 200, 'aktif', '../images/lkyardim-e-t-m_1307.jpeg'),
-(9, 'Stajyer Film-Okuma Programı', 'Doğal yaşam alanlarının korunması için başlatılan temizlik kampanyası büyük ilgi gördü...', '2024-02-07', '2024-03-15', 201, 'pasif', '../images/etkinlikler/stajyer-f-lm-okuma-programi_3604_930e1667.jpg'),
-(10, '3 Aralık Dünya Engelliler Günü Personel Etkinliği', 'Personelimize yönelik dijital dönüşüm ve teknoloji kullanımı eğitimi başarıyla tamamlandı...', '2023-12-03', '2023-12-03', 314, 'pasif', '../images/3-aralik-dunya-engell-ler-gunu-personel-yeme_9554.jpg'),
-(11, 'Stajyer Öğrenci Oryantasyonu', 'Şehir merkezindeki altyapı geliştirme ve modernizasyon çalışmaları hızla devam ediyor...', '2025-11-29', '2025-12-15', 433, 'pasif', '../images/stajyer-o-renci-oryantasyonu_2177.jpg'),
-(12, '24 Kasım Öğretmenler Günü Etkinliği', 'Sokak hayvanlarının sağlık kontrolü ve bakım programı kapsamında çalışmalar sürdürülüyor...', '2023-11-24', '2023-11-24', 186, 'pasif', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'),
-(13, 'Müdürlükler Arası Spor Turnuvası', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-08-21', '2023-09-30', 279, 'pasif', '../images/futbol-turnuvasi_9646.jpg'),
-(14, 'Personel Piknik Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-07-22', '2023-07-22', 279, 'pasif', '../images/personel-p-kn-k-programi_9118.jpg'),
-(15, 'Personel Bayramlaşma Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-06-23', '2023-06-25', 280, 'pasif', '../images/personel-bayramla-ma-programi_5965.jpg'),
-(16, 'Personel İftar Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-04-10', '2023-05-15', 280, 'pasif', '../images/personel-ftar-program_109.jpg');
+INSERT INTO `etkinlikler` (`id`, `baslik`, `aciklama`, `tarih`, `bitis_tarihi`, `view`, `resim`, `durum_id`, `durum`) VALUES
+(1, 'Stajyer Oryantasyon Eğitimi', '6734 ve 6735 Sayılı Kanun Eğitimi - Biyomedikal Eğitimi - Üniversite Eğitimi - Oryantasyon Eğitimi - Fen Programlama Eğitimi - Mevzuat Eğitimi - Teknoloji Çalışma Eğitimi...', '2025-08-06', '2025-12-31', 96, '../images/stajyer-oryantasyon-e-t-m_8697.jpg', 1, 'aktif'),
+(2, 'Stajyer Dönem Sonu Etkinliği', 'Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...', '2025-05-22', '2025-06-30', 153, '../images/stajyer-donem-sonu-etk-nl_6028.jpg', 1, 'pasif'),
+(3, 'Personel İftar Programı', 'Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...', '2024-03-15', '2024-04-15', 80, '../images/pesonel-ftar-programi_3732.jpg', 2, 'pasif'),
+(4, '8 Mart Dünya Kadınlar Günü Programı', '4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...', '2024-03-08', '2024-03-08', 236, '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg', 2, 'pasif'),
+(5, 'Ön Ödeme Kredi ve Avans Eğitimi', 'Bağışlanmış günlük programı göbildirinde park ve yeşil alanlarımızda...', '2025-02-27', '2025-03-31', 159, '../images/on-odeme-kred-ve-avans-e-t-m_2065.jpeg', 2, 'pasif'),
+(6, 'Marmara Kariyer Yer Fuarı', 'Personel gelişimi için düzenlenen eğitim seminerimiz tamamlandı. Katılımcılarımız başarı sertifikalarını aldı...', '2024-02-26', '2024-02-28', 198, '../images/marmara-kar-yer-fuari-kocael-2024_9790.jpg', 2, 'pasif'),
+(7, 'Ofis Programları Eğitimi', 'Şehrimizin çeşitli bölgelerinde gerçekleştirilen yol bakım ve onarım çalışmaları devam ediyor...', '2025-02-19', '2025-08-31', 271, '../images/of-s-programlari-e-t-m_2683.jpeg', 1, 'pasif'),
+(8, 'İlkyardım Eğitimi', 'Doğal yaşam alanlarının korunması için başlatılan temizlik kampanyası büyük ilgi gördü...', '2024-02-12', '2025-12-31', 200, '../images/lkyardim-e-t-m_1307.jpeg', 1, 'pasif'),
+(9, 'Stajyer Film-Okuma Programı', 'Doğal yaşam alanlarının korunması için başlatılan temizlik kampanyası büyük ilgi gördü...', '2024-02-07', '2024-03-15', 201, '../images/etkinlikler/stajyer-f-lm-okuma-programi_3604_930e1667.jpg', 2, 'pasif'),
+(10, '3 Aralık Dünya Engelliler Günü Personel Etkinliği', 'Personelimize yönelik dijital dönüşüm ve teknoloji kullanımı eğitimi başarıyla tamamlandı...', '2023-12-03', '2023-12-03', 314, '../images/3-aralik-dunya-engell-ler-gunu-personel-yeme_9554.jpg', 2, 'pasif'),
+(11, 'Stajyer Öğrenci Oryantasyonu', 'Şehir merkezindeki altyapı geliştirme ve modernizasyon çalışmaları hızla devam ediyor...', '2025-11-29', '2025-12-15', 433, '../images/stajyer-o-renci-oryantasyonu_2177.jpg', 2, 'aktif'),
+(12, '24 Kasım Öğretmenler Günü Etkinliği', 'Sokak hayvanlarının sağlık kontrolü ve bakım programı kapsamında çalışmalar sürdürülüyor...', '2023-11-24', '2023-11-24', 186, '../images/24-kas-m-o-retmenler-gunu_2947.jpg', 2, 'pasif'),
+(13, 'Müdürlükler Arası Spor Turnuvası', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-08-21', '2023-09-30', 280, '../images/futbol-turnuvasi_9646.jpg', 2, 'pasif'),
+(14, 'Personel Piknik Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-07-22', '2023-07-22', 279, '../images/personel-p-kn-k-programi_9118.jpg', 2, 'pasif'),
+(15, 'Personel Bayramlaşma Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-06-23', '2023-06-25', 280, '../images/personel-bayramla-ma-programi_5965.jpg', 2, 'pasif'),
+(16, 'Personel İftar Programı', 'Kent genelindeki park ve yeşil alanların bakım ve düzenleme çalışmaları tamamlandı...', '2023-04-10', '2023-05-15', 280, '../images/personel-ftar-program_109.jpg', 2, 'pasif');
+
+-- --------------------------------------------------------
+
+--
+-- Tablo için tablo yapısı `etkinlikler_durum`
+--
+
+CREATE TABLE `etkinlikler_durum` (
+  `id` int(11) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `ad` varchar(150) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Tablo döküm verisi `etkinlikler_durum`
+--
+
+INSERT INTO `etkinlikler_durum` (`id`, `slug`, `ad`) VALUES
+(1, 'aktif', 'Aktif'),
+(2, 'pasif', 'Pasif');
 
 -- --------------------------------------------------------
 
@@ -241,8 +262,6 @@ CREATE TABLE `etkinlikler_duyurular` (
   `baslik` varchar(255) NOT NULL,
   `aciklama` text DEFAULT NULL,
   `resim_url` varchar(255) DEFAULT NULL,
-  `dosya_url` varchar(500) DEFAULT NULL,
-  `video_url` varchar(500) DEFAULT NULL,
   `tarih` date DEFAULT NULL,
   `kategori_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -251,13 +270,13 @@ CREATE TABLE `etkinlikler_duyurular` (
 -- Tablo döküm verisi `etkinlikler_duyurular`
 --
 
-INSERT INTO `etkinlikler_duyurular` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `resim_url`, `dosya_url`, `video_url`, `tarih`, `kategori_id`) VALUES
-(1, 'duyuru', 'DİL EĞİTİM MODELLERİNDE GEÇERLİ %50 İNDİRİM!', 'KURUMUMUZ PERSONELİ VE 1. DERECE YAKINLARINA ÖZEL AMERICAN VIP DİL OKULLARINDA GEÇERLİ %50 İNİDİRİM ANLAŞMASI İMZALANDI.', '../images/d-l-e-t-m-modeller-nde-gecerl-50-nd-r-m_4469.jpg', NULL, NULL, '2023-10-04', 1),
-(2, 'duyuru', 'Gebze\'de Zabıta Haftası Kutlandı', 'Gebze Belediye Başkanı Zinnur Büyükgöz, her yıl 1-7 Eylül tarihleri arasında kutlanan Zabıta Haftası münasebetiyle zabıta personelleriyle bir araya geldi.', '../images/gebze-de-zab-ta-haftas-kutland_5157 (1).jpg', NULL, NULL, '2023-10-04', 1),
-(3, 'duyuru', 'GEBZE\'DE EK ZAM PROTOKOLÜ İMZALANDI', 'Gebze Belediyesi, bünyesinde görev yapan tüm işçilerin maaşlarına %20 zam müjdesini verdi. Ek zam protokolü Gebze Belediye Başkanı Zinnur BÜYÜKGÖZ ve Hizmet-İş ve Özgüven-Sen Sendikası yetkilileri arasında imzalandı.', '../images/gebze-de-ek-zam-protokolu-mzalandi_4681.jpg', NULL, NULL, '2023-10-04', 1),
-(4, 'duyuru', 'Gebze\'nin Filosu Büyüyor;', 'Gebze\'nin mahallelerine daha kaliteli hizmet verebilmek adına makine ve araç filosuna yeni takviyeler yapılmasını sağlayan Gebze Belediye Başkanı Zinnur Büyükgöz, belediyenin öz kaynaklarıyla satın alınan 100 yeni aracı filoya kazandırdı.', '../images/gebze-nin-filosu-buyuyor_2355.jpg', NULL, NULL, '2023-10-04', 1),
-(5, 'duyuru', 'Daha Sağlıklı Personel İçin', 'Gebze Belediyesi bünyesinde görev yapan tüm personellerimiz ve 1. derece yakınları (anne, baba, eş ve çocuk ) anlaşmalı sağlık kurumlarında indirimli fiyatlardan faydalanabilme olanağına sahip olacaklardır.', '../images/daha-saazlikli-ba-r-personel-a-a-a-n_7523.jpg', NULL, NULL, '2023-10-04', 1),
-(6, 'duyuru', 'Parola Güvenlik Politika Geçişi', 'T.C. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi Başkanlığı koordinasyonunda başlatılan \"Bilgi ve İletişim Güvenliği Rehberi\" uyum süreci doğrultusunda gerçekleştireceğimiz \"Güvenli Parola Politikası\" geçişi kapsamında, bilgisayar oturumu açma parolaları değişecektir.', '../images/parola-guvenlik-politikasi-duyurusu_2090.jpg', NULL, NULL, '2023-10-04', 2);
+INSERT INTO `etkinlikler_duyurular` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `resim_url`, `tarih`, `kategori_id`) VALUES
+(1, 'duyuru', 'DİL EĞİTİM MODELLERİNDE GEÇERLİ %50 İNDİRİM!', 'KURUMUMUZ PERSONELİ VE 1. DERECE YAKINLARINA ÖZEL AMERICAN VIP DİL OKULLARINDA GEÇERLİ %50 İNİDİRİM ANLAŞMASI İMZALANDI.', '../images/d-l-e-t-m-modeller-nde-gecerl-50-nd-r-m_4469.jpg', '2023-10-04', 1),
+(2, 'duyuru', 'Gebze\'de Zabıta Haftası Kutlandı', 'Gebze Belediye Başkanı Zinnur Büyükgöz, her yıl 1-7 Eylül tarihleri arasında kutlanan Zabıta Haftası münasebetiyle zabıta personelleriyle bir araya geldi.', '../images/gebze-de-zab-ta-haftas-kutland_5157 (1).jpg', '2023-10-04', 1),
+(3, 'duyuru', 'GEBZE\'DE EK ZAM PROTOKOLÜ İMZALANDI', 'Gebze Belediyesi, bünyesinde görev yapan tüm işçilerin maaşlarına %20 zam müjdesini verdi. Ek zam protokolü Gebze Belediye Başkanı Zinnur BÜYÜKGÖZ ve Hizmet-İş ve Özgüven-Sen Sendikası yetkilileri arasında imzalandı.', '../images/gebze-de-ek-zam-protokolu-mzalandi_4681.jpg', '2023-10-04', 1),
+(4, 'duyuru', 'Gebze\'nin Filosu Büyüyor;', 'Gebze\'nin mahallelerine daha kaliteli hizmet verebilmek adına makine ve araç filosuna yeni takviyeler yapılmasını sağlayan Gebze Belediye Başkanı Zinnur Büyükgöz, belediyenin öz kaynaklarıyla satın alınan 100 yeni aracı filoya kazandırdı.', '../images/gebze-nin-filosu-buyuyor_2355.jpg', '2023-10-04', 1),
+(5, 'duyuru', 'Daha Sağlıklı Personel İçin', 'Gebze Belediyesi bünyesinde görev yapan tüm personellerimiz ve 1. derece yakınları (anne, baba, eş ve çocuk ) anlaşmalı sağlık kurumlarında indirimli fiyatlardan faydalanabilme olanağına sahip olacaklardır.', '../images/daha-saazlikli-ba-r-personel-a-a-a-n_7523.jpg', '2023-10-04', 1),
+(6, 'duyuru', 'Parola Güvenlik Politika Geçişi', 'T.C. Cumhurbaşkanlığı Dijital Dönüşüm Ofisi Başkanlığı koordinasyonunda başlatılan \"Bilgi ve İletişim Güvenliği Rehberi\" uyum süreci doğrultusunda gerçekleştireceğimiz \"Güvenli Parola Politikası\" geçişi kapsamında, bilgisayar oturumu açma parolaları değişecektir.', '../images/parola-guvenlik-politikasi-duyurusu_2090.jpg', '2023-10-04', 2);
 
 -- --------------------------------------------------------
 
@@ -268,7 +287,6 @@ INSERT INTO `etkinlikler_duyurular` (`id`, `sayfa_tipi`, `baslik`, `aciklama`, `
 CREATE TABLE `haberler` (
   `id` int(11) NOT NULL,
   `baslik` varchar(255) NOT NULL,
-  `aciklama` text NOT NULL,
   `resim` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -276,19 +294,19 @@ CREATE TABLE `haberler` (
 -- Tablo döküm verisi `haberler`
 --
 
-INSERT INTO `haberler` (`id`, `baslik`, `aciklama`, `resim`) VALUES
-(1, '8 Mart Dünya Kadınlar Günü Programı', 'Kadın personelimizin özel günü kutlandı.', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'),
-(2, '24 Kasım Öğretmenler Günü Ziyareti', 'Öğretmenlerimizi bu özel günlerinde yalnız bırakmadık.', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'),
-(3, 'Personel Bayramlaşma Programı', 'Personelle bayramlaştık.', '../images/personel-bayramla-ma-programi_5965.jpg'),
-(4, 'Personel İftar Programı', '', '../images/personel-ftar-program_109.jpg'),
-(5, 'Personel Piknik Programı', '', '../images/personel-p-kn-k-programi_9118.jpg'),
-(6, 'Ağız ve Diş Sağlığı Taraması', '', '../images/personellerimizin-a-z-ve-di-sa-l-n-onemsiyoruz_7091.jpg'),
-(7, 'İkinci İftar Buluşması', '', '../images/pesonel-ftar-programi_3732.jpg'),
-(8, 'Stajyer Dönem Sonu Etkinliği', '', '../images/stajyer-donem-sonu-etk-nl_6028.jpg'),
-(9, 'Stajyer Film Okuma Programı', '', '../images/stajyer-f-lm-okuma-programi_3604.jpg'),
-(10, 'Stajyer Öğrenci Oryantasyonu', '', '../images/stajyer-o-renci-oryantasyonu_2177.jpg'),
-(11, 'Stajyer Oryantasyon Eğitimi', '', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'),
-(12, 'Ulusal Dağ Bisikleti Kupası', '', '../images/ulusal-da-bisikleti-kupas-yar-lar_128.jpg');
+INSERT INTO `haberler` (`id`, `baslik`, `resim`) VALUES
+(1, '8 Mart Dünya Kadınlar Günü Programı', '../images/8-mart-dunya-kadinlar-gunu-programi_8383.jpg'),
+(2, '24 Kasım Öğretmenler Günü Ziyareti', '../images/24-kas-m-o-retmenler-gunu_2947.jpg'),
+(3, 'Personel Bayramlaşma Programı', '../images/personel-bayramla-ma-programi_5965.jpg'),
+(4, 'Personel İftar Programı', '../images/personel-ftar-program_109.jpg'),
+(5, 'Personel Piknik Programı', '../images/personel-p-kn-k-programi_9118.jpg'),
+(6, 'Ağız ve Diş Sağlığı Taraması', '../images/personellerimizin-a-z-ve-di-sa-l-n-onemsiyoruz_7091.jpg'),
+(7, 'İkinci İftar Buluşması', '../images/pesonel-ftar-programi_3732.jpg'),
+(8, 'Stajyer Dönem Sonu Etkinliği', '../images/stajyer-donem-sonu-etk-nl_6028.jpg'),
+(9, 'Stajyer Film Okuma Programı', '../images/stajyer-f-lm-okuma-programi_3604.jpg'),
+(10, 'Stajyer Öğrenci Oryantasyonu', '../images/stajyer-o-renci-oryantasyonu_2177.jpg'),
+(11, 'Stajyer Oryantasyon Eğitimi', '../images/stajyer-oryantasyon-e-t-m_8697.jpg'),
+(12, 'Ulusal Dağ Bisikleti Kupası', '../images/ulusal-da-bisikleti-kupas-yar-lar_128.jpg');
 
 -- --------------------------------------------------------
 
@@ -338,40 +356,42 @@ CREATE TABLE `icerik_izlemeleri` (
 
 INSERT INTO `icerik_izlemeleri` (`id`, `tablo`, `kayit_id`, `izleyici`, `olusturma_tarihi`) VALUES
 (1, 'etkinlikler', 1, 'personel:1', '2026-07-08 15:18:38'),
-(3, 'sizden_gelenler', 1, 'personel:1', '2026-07-08 15:19:20'),
-(8, 'sizden_gelenler', 2, 'personel:1', '2026-07-08 15:19:38'),
-(19, 'sizden_gelenler', 3, 'personel:1', '2026-07-08 15:20:14'),
-(31, 'etkinlikler', 2, 'personel:1', '2026-07-08 15:20:40'),
-(32, 'etkinlikler', 8, 'personel:1', '2026-07-08 15:20:44'),
-(35, 'sizden_gelenler', 6, 'personel:1', '2026-07-08 15:20:52'),
-(40, 'sizden_gelenler', 7, 'personel:1', '2026-07-08 15:52:57'),
-(43, 'sizden_gelenler', 8, 'personel:1', '2026-07-08 15:53:07'),
-(45, 'sizden_gelenler', 5, 'personel:1', '2026-07-08 15:53:15'),
-(46, 'anasayfa_duyurular', 11, 'personel:1', '2026-07-08 15:55:22'),
-(49, 'etkinlikler', 11, 'personel:1', '2026-07-08 15:56:57'),
-(51, 'anasayfa_duyurular', 15, 'personel:1', '2026-07-08 15:58:43'),
-(52, 'etkinlikler', 4, 'personel:1', '2026-07-08 15:58:54'),
-(53, 'etkinlikler', 16, 'personel:1', '2026-07-08 16:01:04'),
-(54, 'etkinlikler', 15, 'personel:1', '2026-07-08 16:01:08'),
-(57, 'etkinlikler', 9, 'personel:1', '2026-07-08 16:01:28'),
-(60, 'anasayfa_duyurular', 10, 'personel:1', '2026-07-08 16:05:28'),
-(70, 'etkinlikler', 14, 'personel:1', '2026-07-08 16:36:13'),
-(75, 'etkinlikler', 3, 'personel:1', '2026-07-08 16:36:34'),
-(94, 'etkinlikler', 7, 'personel:1', '2026-07-08 16:39:26'),
-(96, 'etkinlikler', 6, 'personel:1', '2026-07-08 16:39:41'),
-(103, 'anasayfa_duyurular', 13, 'personel:1', '2026-07-08 16:40:07'),
-(104, 'anasayfa_duyurular', 14, 'personel:1', '2026-07-08 16:40:16'),
-(130, 'etkinlikler', 5, 'personel:1', '2026-07-08 16:55:53'),
-(137, 'sizden_gelenler', 4, 'personel:1', '2026-07-08 16:56:30'),
-(139, 'etkinlikler', 10, 'personel:1', '2026-07-08 16:57:46'),
-(150, 'anasayfa_duyurular', 2, 'personel:1', '2026-07-08 17:08:18'),
-(153, 'sizden_gelenler', 8, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:40'),
-(154, 'sizden_gelenler', 11, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:45'),
-(156, 'sizden_gelenler', 12, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:58'),
-(157, 'anasayfa_duyurular', 12, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:12:31'),
-(158, 'etkinlikler', 6, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:12:55'),
-(170, 'sizden_gelenler', 9, 'personel:1', '2026-07-09 14:33:34'),
-(176, 'anasayfa_duyurular', 12, 'personel:1', '2026-07-09 14:37:38');
+(2, 'sizden_gelenler', 1, 'personel:1', '2026-07-08 15:19:20'),
+(3, 'sizden_gelenler', 2, 'personel:1', '2026-07-08 15:19:38'),
+(4, 'sizden_gelenler', 3, 'personel:1', '2026-07-08 15:20:14'),
+(5, 'etkinlikler', 2, 'personel:1', '2026-07-08 15:20:40'),
+(6, 'etkinlikler', 8, 'personel:1', '2026-07-08 15:20:44'),
+(7, 'sizden_gelenler', 6, 'personel:1', '2026-07-08 15:20:52'),
+(8, 'sizden_gelenler', 7, 'personel:1', '2026-07-08 15:52:57'),
+(9, 'sizden_gelenler', 8, 'personel:1', '2026-07-08 15:53:07'),
+(10, 'sizden_gelenler', 5, 'personel:1', '2026-07-08 15:53:15'),
+(11, 'anasayfa_duyurular', 11, 'personel:1', '2026-07-08 15:55:22'),
+(12, 'etkinlikler', 11, 'personel:1', '2026-07-08 15:56:57'),
+(13, 'anasayfa_duyurular', 15, 'personel:1', '2026-07-08 15:58:43'),
+(14, 'etkinlikler', 4, 'personel:1', '2026-07-08 15:58:54'),
+(15, 'etkinlikler', 16, 'personel:1', '2026-07-08 16:01:04'),
+(16, 'etkinlikler', 15, 'personel:1', '2026-07-08 16:01:08'),
+(17, 'etkinlikler', 9, 'personel:1', '2026-07-08 16:01:28'),
+(18, 'anasayfa_duyurular', 10, 'personel:1', '2026-07-08 16:05:28'),
+(19, 'etkinlikler', 14, 'personel:1', '2026-07-08 16:36:13'),
+(20, 'etkinlikler', 3, 'personel:1', '2026-07-08 16:36:34'),
+(21, 'etkinlikler', 7, 'personel:1', '2026-07-08 16:39:26'),
+(22, 'etkinlikler', 6, 'personel:1', '2026-07-08 16:39:41'),
+(23, 'anasayfa_duyurular', 13, 'personel:1', '2026-07-08 16:40:07'),
+(24, 'anasayfa_duyurular', 14, 'personel:1', '2026-07-08 16:40:16'),
+(25, 'etkinlikler', 5, 'personel:1', '2026-07-08 16:55:53'),
+(26, 'sizden_gelenler', 4, 'personel:1', '2026-07-08 16:56:30'),
+(27, 'etkinlikler', 10, 'personel:1', '2026-07-08 16:57:46'),
+(28, 'anasayfa_duyurular', 2, 'personel:1', '2026-07-08 17:08:18'),
+(29, 'sizden_gelenler', 8, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:40'),
+(30, 'sizden_gelenler', 11, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:45'),
+(31, 'sizden_gelenler', 12, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:08:58'),
+(32, 'anasayfa_duyurular', 12, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:12:31'),
+(33, 'etkinlikler', 6, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-08 17:12:55'),
+(34, 'sizden_gelenler', 9, 'personel:1', '2026-07-09 14:33:34'),
+(35, 'anasayfa_duyurular', 12, 'personel:1', '2026-07-09 14:37:38'),
+(41, 'etkinlikler', 13, 'personel:1', '2026-07-10 14:36:39'),
+(43, 'etkinlikler', 1, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-10 15:38:55');
 
 -- --------------------------------------------------------
 
@@ -543,7 +563,23 @@ INSERT INTO `oturum_kayitlari` (`id`, `personel_id`, `giris_zamani`, `cikis_zama
 (43, 1, '2026-07-09 14:18:23', '2026-07-09 14:19:07', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-09 14:19:07'),
 (44, 1, '2026-07-09 14:21:00', '2026-07-09 14:33:24', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-09 14:33:24'),
 (45, 1, '2026-07-09 14:33:27', '2026-07-09 14:34:45', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-09 14:34:45'),
-(46, 1, '2026-07-09 14:34:47', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-09 14:38:32');
+(46, 1, '2026-07-09 14:34:47', '2026-07-10 10:14:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-09 14:38:32'),
+(47, 1, '2026-07-10 10:14:55', '2026-07-10 11:12:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-10 10:16:43'),
+(48, 1, '2026-07-10 11:12:25', '2026-07-10 11:27:26', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:13:49'),
+(49, 1, '2026-07-10 11:27:34', '2026-07-10 11:28:07', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:27:35'),
+(50, 1, '2026-07-10 11:32:50', '2026-07-10 11:42:17', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:42:01'),
+(51, 1, '2026-07-10 11:42:33', '2026-07-10 11:47:01', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:42:33'),
+(52, 1, '2026-07-10 11:49:51', '2026-07-10 11:52:05', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:50:05'),
+(53, 1, '2026-07-10 12:02:06', '2026-07-10 12:06:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-10 12:02:31'),
+(54, 1, '2026-07-10 12:06:06', '2026-07-10 12:18:23', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 12:06:24'),
+(55, 1, '2026-07-10 12:19:43', '2026-07-10 12:19:54', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 12:19:48'),
+(56, 1, '2026-07-10 14:12:11', '2026-07-10 14:15:35', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:12:11'),
+(57, 1, '2026-07-10 14:16:35', '2026-07-10 14:19:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:16:36'),
+(58, 1, '2026-07-10 14:20:49', '2026-07-10 14:28:37', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-10 14:27:04'),
+(59, 1, '2026-07-10 14:28:37', '2026-07-10 14:30:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:30:11'),
+(60, 1, '2026-07-10 14:31:29', '2026-07-10 14:37:14', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:37:12'),
+(61, 1, '2026-07-10 14:47:31', '2026-07-10 14:48:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-10 14:47:31'),
+(62, 1, '2026-07-10 14:48:28', '2026-07-10 15:33:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 15:33:25');
 
 -- --------------------------------------------------------
 
@@ -693,42 +729,41 @@ CREATE TABLE `videolar` (
   `youtube_id` varchar(50) NOT NULL,
   `baslik` varchar(255) NOT NULL,
   `aciklama` text NOT NULL,
-  `kategori` varchar(100) NOT NULL,
   `sure` varchar(20) NOT NULL,
   `kategori_id` int(11) DEFAULT NULL,
+  `vitrin` tinyint(1) NOT NULL DEFAULT 0,
   `vitrin_baslik` varchar(255) DEFAULT NULL,
-  `vitrin_aciklama` text DEFAULT NULL,
-  `vitrin` tinyint(1) NOT NULL DEFAULT 0
+  `vitrin_aciklama` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `videolar`
 --
 
-INSERT INTO `videolar` (`id`, `youtube_id`, `baslik`, `aciklama`, `kategori`, `sure`, `kategori_id`, `vitrin_baslik`, `vitrin_aciklama`, `vitrin`) VALUES
-(1, 'qLqYPQgUPEc', 'Gebze Offroad Heyecanı', 'Nefes kesen anlar ve çamurlu yollar... Offroad tutkunları bu etkinlikte buluştu.', 'etkinlikler', '00:30', 3, NULL, NULL, 0),
-(2, 'aUQ3uIAfL-k', 'Türkiye\'nin Sıfır Atık Kenti Bilgilendiriyor', 'Sıfır Atık Projesi Kapsamında atıkları kaynağından ayrıştıran Mobil Atık Getirme Merkezlerini Gebze\'mizde yaygınlaştırıyoruz.\r\n', 'etkinlikler', '00:33', 3, NULL, NULL, 0),
-(3, 'RhVDYrAb0xQ', 'Gebze #shorts', 'Gebzemiz', 'etkinlikler', '00:07', 3, NULL, NULL, 0),
-(4, 'c0vbYSFwMzU', 'Gebze Belediyesi MBB Altın Karınca Yarışması Dijital Kapı Projesi', 'Altın Karınca Yarışması', 'duyurular', '02:46', 1, NULL, NULL, 0),
-(5, '-0Wxna6PjqQ', 'Vatandaşlarımızın Hayatını Kolaylaştırıyoruz...', 'İnteraktif Belediyecilik Vatandaşlarımızın Hayatını Kolaylaştırıyoruz.\r\n', 'etkinlikler', '00:56', 3, NULL, NULL, 0),
-(6, 'e65zC48s8Wc', 'Çocuklarımızı Da Elbette Unutmadık', 'Çocuklarımızı da elbette unutmadık.', 'etkinlikler', '00:46', 3, NULL, NULL, 0),
-(7, 'YXat3fIWc7w', 'İnteraktif Belediyecilikle Gebze\'de artık her şey çok kolay...', 'İnteraktif Belediyecilikle Gebze\'de artık her şey çok kolay.', 'duyurular', '00:59', 1, NULL, NULL, 0),
-(8, 'QRizu8RhGnU', 'Dijital Belediye İnteraktif Yaklaşım', 'Dijital Belediye İnteraktif Yaklaşım', 'duyurular', '05:12', 1, NULL, NULL, 0),
-(9, 'Z2dH2UIXb8Y', 'Zeki Bey\'in \'interaktif\' macerası başlıyor...', 'Zeki Bey\'in \'interaktif\' macerası başlıyor.', 'duyurular', '00:55', 1, NULL, NULL, 0),
-(10, 'G2KNC3OAnjE', 'Türkiye Aşkına', 'Türkiye Aşkına', 'etkinlikler', '00:42', 3, NULL, NULL, 0),
-(11, 'RhD1ArYsuKo', 'Türkiye\'nin 7/24 hizmet veren ilk ve tek bebek & çocuk bakımevini Gebze\'mizde hizmete açtık\r\n', 'Türkiye\'nin 7/24 hizmet veren ilk ve tek bebek & çocuk bakımevini Gebze\'mizde hizmete açtık\r\n', 'etkinlikler', '00:48', 1, NULL, NULL, 0),
-(12, 'IEc5W0JyADU', 'Gesmek Sergimiz ', '#shorts', 'etkinlikler', '00:07', 3, NULL, NULL, 0),
-(13, '3ePuzpC2S0Q', 'Eskihisarda Müzik Rüzgarı', 'Eskihisar\'da müzik rüzgarı', 'etkinlikler', '00:26', 3, NULL, NULL, 0),
-(14, 'qdPXmtKXXc4', 'Yapım işini tamamladığımız İlyasbey Sağlıklı Yaşam Merkezi \'miz', 'İlyasbey Sağlıklı Yaşam Merkezi', 'duyurular', '00:34', 1, NULL, NULL, 0),
-(15, 'uUFZvM9kqf4', 'Marmara\'nın İncisi Eskihisar\'da,30 bin metrekare yakın hayalet ağ çıkaracağız\r\n', 'Marmara\'nın İncisi Eskihisar', 'duyurular', '00:42', 1, NULL, NULL, 0),
-(16, 'BiY2WK24UHY', 'Şehirler Arası Otobüs Terminalimizin işlevselliğini artırıyoruz\r\n', 'Şehirler Arası Otobüs Terminalimizin işlevselliğini artırıyoruz', 'duyurular', '00:41', 1, NULL, NULL, 0),
-(17, 'xot-DBvkkq4', 'Matematik, Edebiyat Sınıfları ve modern derslikler gençliğin Güzide Merkezinde...\r\n', 'Matematik, Edebiyat Sınıfları ve modern derslikler gençliğin Güzide Merkezinde...\r\n\r\n', 'etkinlikler', '00:26', 3, NULL, NULL, 0),
-(18, 'ABIqjRnV5dU', 'Cam Şişe Bırakma, Ormanlarımız Hep Yaşasın!', 'Cam Şişe Bırakma, Ormanlarımız Hep Yaşasın!', 'etkinlikler', '00:21', 3, NULL, NULL, 0),
-(19, 'psmlNSPRDsM', 'Türkiye Panorama II', 'Türkiye Panorama II', 'etkinlikler', '03:22', 3, NULL, NULL, 0),
-(20, 'pAHStsCd9jo', 'E Atık | Kent Madenciliği', 'Geçtiğimiz hafta sonu düzenlediğimiz personel pikniğinden renkli anlar.', 'etkinlikler', '05:14', 3, NULL, NULL, 0),
-(21, 'eUBQYWMZyH8', 'Atık Sonu | End of Waste', 'Atık Sonu | End of Waste', 'etkinlikler', '03:51', 3, NULL, NULL, 0),
-(22, 'GWfDmGr6tlg', 'Gebze\'yi Sağlama Aldık', '\"Gebze\'yi Sağlama Aldık\" mottosuyla düzenlediğimiz 2019-2023 dönemi hizmet ve eserlerimizin sunumu il ve ilçe protokolünün katılımıyla gerçekleştirdik.', 'etkinlikler', '03:20', 3, NULL, NULL, 0),
-(23, 'D1b-CZYtCTg', 'Gebzeli CEZA', 'Gebzeli CEZA', 'etkinlikler', '00:40', 3, NULL, NULL, 0);
+INSERT INTO `videolar` (`id`, `youtube_id`, `baslik`, `aciklama`, `sure`, `kategori_id`, `vitrin`, `vitrin_baslik`, `vitrin_aciklama`) VALUES
+(1, 'qLqYPQgUPEc', 'Gebze Offroad Heyecanı', 'Nefes kesen anlar ve çamurlu yollar... Offroad tutkunları bu etkinlikte buluştu.', '00:30', 3, 0, NULL, NULL),
+(2, 'aUQ3uIAfL-k', 'Türkiye\'nin Sıfır Atık Kenti Bilgilendiriyor', 'Sıfır Atık Projesi Kapsamında atıkları kaynağından ayrıştıran Mobil Atık Getirme Merkezlerini Gebze\'mizde yaygınlaştırıyoruz.\r\n', '00:33', 3, 0, NULL, NULL),
+(3, 'RhVDYrAb0xQ', 'Gebze #shorts', 'Gebzemiz', '00:07', 3, 0, NULL, NULL),
+(4, 'c0vbYSFwMzU', 'Gebze Belediyesi MBB Altın Karınca Yarışması Dijital Kapı Projesi', 'Altın Karınca Yarışması', '02:46', 1, 0, NULL, NULL),
+(5, '-0Wxna6PjqQ', 'Vatandaşlarımızın Hayatını Kolaylaştırıyoruz...', 'İnteraktif Belediyecilik Vatandaşlarımızın Hayatını Kolaylaştırıyoruz.\r\n', '00:56', 3, 0, NULL, NULL),
+(6, 'e65zC48s8Wc', 'Çocuklarımızı Da Elbette Unutmadık', 'Çocuklarımızı da elbette unutmadık.', '00:46', 3, 0, NULL, NULL),
+(7, 'YXat3fIWc7w', 'İnteraktif Belediyecilikle Gebze\'de artık her şey çok kolay...', 'İnteraktif Belediyecilikle Gebze\'de artık her şey çok kolay.', '00:59', 1, 0, NULL, NULL),
+(8, 'QRizu8RhGnU', 'Dijital Belediye İnteraktif Yaklaşım', 'Dijital Belediye İnteraktif Yaklaşım', '05:12', 1, 0, NULL, NULL),
+(9, 'Z2dH2UIXb8Y', 'Zeki Bey\'in \'interaktif\' macerası başlıyor...', 'Zeki Bey\'in \'interaktif\' macerası başlıyor.', '00:55', 1, 0, NULL, NULL),
+(10, 'G2KNC3OAnjE', 'Türkiye Aşkına', 'Türkiye Aşkına', '00:42', 3, 0, NULL, NULL),
+(11, 'RhD1ArYsuKo', 'Türkiye\'nin 7/24 hizmet veren ilk ve tek bebek & çocuk bakımevini Gebze\'mizde hizmete açtık\r\n', 'Türkiye\'nin 7/24 hizmet veren ilk ve tek bebek & çocuk bakımevini Gebze\'mizde hizmete açtık\r\n', '00:48', 3, 0, NULL, NULL),
+(12, 'IEc5W0JyADU', 'Gesmek Sergimiz ', '#shorts', '00:07', 3, 0, NULL, NULL),
+(13, '3ePuzpC2S0Q', 'Eskihisarda Müzik Rüzgarı', 'Eskihisar\'da müzik rüzgarı', '00:26', 3, 0, NULL, NULL),
+(14, 'qdPXmtKXXc4', 'Yapım işini tamamladığımız İlyasbey Sağlıklı Yaşam Merkezi \'miz', 'İlyasbey Sağlıklı Yaşam Merkezi', '00:34', 1, 0, NULL, NULL),
+(15, 'uUFZvM9kqf4', 'Marmara\'nın İncisi Eskihisar\'da,30 bin metrekare yakın hayalet ağ çıkaracağız\r\n', 'Marmara\'nın İncisi Eskihisar', '00:42', 1, 0, NULL, NULL),
+(16, 'BiY2WK24UHY', 'Şehirler Arası Otobüs Terminalimizin işlevselliğini artırıyoruz\r\n', 'Şehirler Arası Otobüs Terminalimizin işlevselliğini artırıyoruz', '00:41', 1, 0, NULL, NULL),
+(17, 'xot-DBvkkq4', 'Matematik, Edebiyat Sınıfları ve modern derslikler gençliğin Güzide Merkezinde...\r\n', 'Matematik, Edebiyat Sınıfları ve modern derslikler gençliğin Güzide Merkezinde...\r\n\r\n', '00:26', 3, 0, NULL, NULL),
+(18, 'ABIqjRnV5dU', 'Cam Şişe Bırakma, Ormanlarımız Hep Yaşasın!', 'Cam Şişe Bırakma, Ormanlarımız Hep Yaşasın!', '00:21', 3, 0, NULL, NULL),
+(19, 'psmlNSPRDsM', 'Türkiye Panorama II', 'Türkiye Panorama II', '03:22', 3, 0, NULL, NULL),
+(20, 'pAHStsCd9jo', 'E Atık | Kent Madenciliği', 'Geçtiğimiz hafta sonu düzenlediğimiz personel pikniğinden renkli anlar.', '05:14', 3, 0, NULL, NULL),
+(21, 'eUBQYWMZyH8', 'Atık Sonu | End of Waste', 'Atık Sonu | End of Waste', '03:51', 3, 0, NULL, NULL),
+(22, 'GWfDmGr6tlg', 'Gebze\'yi Sağlama Aldık', '\"Gebze\'yi Sağlama Aldık\" mottosuyla düzenlediğimiz 2019-2023 dönemi hizmet ve eserlerimizin sunumu il ve ilçe protokolünün katılımıyla gerçekleştirdik.', '03:20', 3, 0, NULL, NULL),
+(23, 'D1b-CZYtCTg', 'Gebzeli CEZA', 'Gebzeli CEZA', '00:40', 3, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -760,7 +795,6 @@ INSERT INTO `videolar_kategori` (`id`, `slug`, `ad`) VALUES
 CREATE TABLE `yardimci_linkler` (
   `id` int(11) NOT NULL,
   `baslik` varchar(255) NOT NULL,
-  `kategori` varchar(50) NOT NULL,
   `logo_url` varchar(255) DEFAULT NULL,
   `hedef_url` varchar(500) NOT NULL,
   `kategori_id` int(11) DEFAULT NULL
@@ -770,27 +804,27 @@ CREATE TABLE `yardimci_linkler` (
 -- Tablo döküm verisi `yardimci_linkler`
 --
 
-INSERT INTO `yardimci_linkler` (`id`, `baslik`, `kategori`, `logo_url`, `hedef_url`, `kategori_id`) VALUES
-(1, 'OMIS', 'kurum-ici', '../images/otomasyon/omis_7572.png', 'https://ebelediye.gebze.bel.tr/eBelediye/', 1),
-(2, 'Ulakbel', 'kurum-ici', '../images/otomasyon/ulakbel_5496.png', 'https://ulakbel.gebze.bel.tr/ulakbel#/', 1),
-(3, 'İmar Yönetim Sistemi', 'kurum-ici', '../images/otomasyon/imar-yonetim-sistemi_8038.png', 'https://www.gebze.bel.tr/ebelediye/', 1),
-(4, 'Dijital Arşiv', 'kurum-ici', '../images/otomasyon/dijital-arsiv_415.png', 'https://www.gebze.bel.tr/', 1),
-(5, 'Outlook', 'kurum-ici', '../images/otomasyon/outlook_4005.png', 'https://outlook.live.com/', 1),
-(6, 'Sosyal Yardım', 'kurum-ici', '../images/otomasyon/sosyal-yardim_3767.png', 'https://www.turkiye.gov.tr/ashb-sosyal-yardim-bilgileri-sorgulama', 1),
-(7, 'Netcad', 'kurum-ici', '../images/otomasyon/netcad_3888.png', 'https://www.netcad.com/', 1),
-(8, 'E-Belediye Sistemi', 'kurum-ici', '../images/otomasyon/ebys_8493.png', 'https://www.belediye.gov.tr/', 1),
-(9, 'E-Belediye Evlendrme Modülü', 'kurum-ici', '../images/otomasyon/e-belediye-evlendirme-modulu_3993.png', 'https://www.belediye.gov.tr/evlendirme-modulu', 1),
-(10, 'E-Belediye Sosyal Yardım Modülü', 'kurum-ici', '../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png', 'https://www.belediye.gov.tr/sosyal-yardim-takip-sistemi-syts-modulu', 1),
-(11, 'Gebze Belediyesi', 'website', '../images/yardimci_linkler/web_siteleri/gebze-belediyesi.png', 'https://www.gebze.bel.tr/', 2),
-(12, 'Kocaeli Büyükşehir Belediyesi', 'website', '../images/yardimci_linkler/web_siteleri/kocaeli-buyuksehir-belediyesi.png', 'https://www.kocaeli.bel.tr/', 2),
-(13, 'Kocaeli Valiliği', 'website', '../images/yardimci_linkler/web_siteleri/kocaeli-vali.jpg', 'http://www.kocaeli.gov.tr/', 2),
-(14, 'Gebze Kaymakamlığı', 'website', '../images/yardimci_linkler/web_siteleri/gebze-kaymakam.png', 'http://www.gebze.gov.tr/', 2),
-(15, 'Türkiye Belediyeler Birliği', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/turkiye-belediyeler-birligi_2430.png', 'https://www.tbb.gov.tr/tr', 3),
-(16, 'Cumhurbaşkanlığı Uzaktan Eğitim Kapısı', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/cumhur.jpg', 'https://uzaktanegitimkapisi.cbiko.gov.tr/Giris', 3),
-(17, 'BTK Akademi Eğitim Portalı', 'bilgi', '../images/yardimci_linkler/bilgi_portallari/btk-akademi.jpg', 'https://www.btkakademi.gov.tr/', 3),
-(18, 'Memurlar.Net', 'faydalı', '../images/yardimci_linkler/faydali_linkler/memurlar.png', 'https://www.memurlar.net/', 4),
-(19, 'İlan', 'faydalı', '../images/yardimci_linkler/faydali_linkler/ilan.png', 'https://www.ilan.gov.tr/', 4),
-(20, 'Resmi Gazete', 'faydalı', '../images/yardimci_linkler/faydali_linkler/resmi.png', 'https://www.resmigazete.gov.tr/', 4);
+INSERT INTO `yardimci_linkler` (`id`, `baslik`, `logo_url`, `hedef_url`, `kategori_id`) VALUES
+(1, 'OMIS', '../images/otomasyon/omis_7572.png', 'https://ebelediye.gebze.bel.tr/eBelediye/', 1),
+(2, 'Ulakbel', '../images/otomasyon/ulakbel_5496.png', 'https://ulakbel.gebze.bel.tr/ulakbel#/', 1),
+(3, 'İmar Yönetim Sistemi', '../images/otomasyon/imar-yonetim-sistemi_8038.png', 'https://www.gebze.bel.tr/ebelediye/', 1),
+(4, 'Dijital Arşiv', '../images/otomasyon/dijital-arsiv_415.png', 'https://www.gebze.bel.tr/', 1),
+(5, 'Outlook', '../images/otomasyon/outlook_4005.png', 'https://outlook.live.com/', 1),
+(6, 'Sosyal Yardım', '../images/otomasyon/sosyal-yardim_3767.png', 'https://www.turkiye.gov.tr/ashb-sosyal-yardim-bilgileri-sorgulama', 1),
+(7, 'Netcad', '../images/otomasyon/netcad_3888.png', 'https://www.netcad.com/', 1),
+(8, 'E-Belediye Sistemi', '../images/otomasyon/ebys_8493.png', 'https://www.belediye.gov.tr/', 1),
+(9, 'E-Belediye Evlendrme Modülü', '../images/otomasyon/e-belediye-evlendirme-modulu_3993.png', 'https://www.belediye.gov.tr/evlendirme-modulu', 1),
+(10, 'E-Belediye Sosyal Yardım Modülü', '../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png', 'https://www.belediye.gov.tr/sosyal-yardim-takip-sistemi-syts-modulu', 1),
+(11, 'Gebze Belediyesi', '../images/yardimci_linkler/web_siteleri/gebze-belediyesi.png', 'https://www.gebze.bel.tr/', 2),
+(12, 'Kocaeli Büyükşehir Belediyesi', '../images/yardimci_linkler/web_siteleri/kocaeli-buyuksehir-belediyesi.png', 'https://www.kocaeli.bel.tr/', 2),
+(13, 'Kocaeli Valiliği', '../images/yardimci_linkler/web_siteleri/kocaeli-vali.jpg', 'http://www.kocaeli.gov.tr/', 2),
+(14, 'Gebze Kaymakamlığı', '../images/yardimci_linkler/web_siteleri/gebze-kaymakam.png', 'http://www.gebze.gov.tr/', 2),
+(15, 'Türkiye Belediyeler Birliği', '../images/yardimci_linkler/bilgi_portallari/turkiye-belediyeler-birligi_2430.png', 'https://www.tbb.gov.tr/tr', 3),
+(16, 'Cumhurbaşkanlığı Uzaktan Eğitim Kapısı', '../images/yardimci_linkler/bilgi_portallari/cumhur.jpg', 'https://uzaktanegitimkapisi.cbiko.gov.tr/Giris', 3),
+(17, 'BTK Akademi Eğitim Portalı', '../images/yardimci_linkler/bilgi_portallari/btk-akademi.jpg', 'https://www.btkakademi.gov.tr/', 3),
+(18, 'Memurlar.Net', '../images/yardimci_linkler/faydali_linkler/memurlar.png', 'https://www.memurlar.net/', 4),
+(19, 'İlan', '../images/yardimci_linkler/faydali_linkler/ilan.png', 'https://www.ilan.gov.tr/', 4),
+(20, 'Resmi Gazete', '../images/yardimci_linkler/faydali_linkler/resmi.png', 'https://www.resmigazete.gov.tr/', 4);
 
 -- --------------------------------------------------------
 
@@ -848,16 +882,36 @@ CREATE TABLE `yonetici_oturum_kayitlari` (
   `id` int(11) NOT NULL,
   `yonetici_id` int(11) NOT NULL,
   `giris_zamani` datetime NOT NULL,
-  `cikis_zamani` datetime DEFAULT NULL
+  `cikis_zamani` datetime DEFAULT NULL,
+  `ip_adresi` varchar(45) DEFAULT NULL,
+  `user_agent` varchar(255) DEFAULT NULL,
+  `kapanis_tipi` varchar(20) DEFAULT NULL,
+  `son_aktivite` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `yonetici_oturum_kayitlari`
 --
 
-INSERT INTO `yonetici_oturum_kayitlari` (`id`, `yonetici_id`, `giris_zamani`, `cikis_zamani`) VALUES
-(1, 1, '2026-07-09 13:48:41', NULL),
-(2, 1, '2026-07-09 13:58:36', NULL);
+INSERT INTO `yonetici_oturum_kayitlari` (`id`, `yonetici_id`, `giris_zamani`, `cikis_zamani`, `ip_adresi`, `user_agent`, `kapanis_tipi`, `son_aktivite`) VALUES
+(1, 1, '2026-07-09 13:48:41', '2026-07-10 11:28:25', NULL, NULL, 'otomatik', NULL),
+(2, 1, '2026-07-09 13:58:36', '2026-07-10 11:28:25', NULL, NULL, 'otomatik', NULL),
+(3, 1, '2026-07-10 11:28:25', '2026-07-10 11:32:34', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'manuel', '2026-07-10 11:32:34'),
+(4, 1, '2026-07-10 11:32:44', '2026-07-10 11:42:16', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:35:58'),
+(5, 1, '2026-07-10 11:42:28', '2026-07-10 11:47:00', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:42:29'),
+(6, 1, '2026-07-10 11:47:11', '2026-07-10 11:49:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:47:55'),
+(7, 1, '2026-07-10 11:52:25', '2026-07-10 11:56:22', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:52:26'),
+(8, 1, '2026-07-10 11:56:35', '2026-07-10 11:57:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:56:36'),
+(9, 1, '2026-07-10 11:59:24', '2026-07-10 12:00:41', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 11:59:25'),
+(10, 1, '2026-07-10 12:02:48', '2026-07-10 12:03:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 12:02:48'),
+(11, 1, '2026-07-10 12:05:31', '2026-07-10 12:05:57', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 12:05:53'),
+(12, 1, '2026-07-10 12:18:19', '2026-07-10 14:15:41', NULL, NULL, 'manuel', '2026-07-10 14:15:39'),
+(13, 1, '2026-07-10 14:15:53', '2026-07-10 14:15:55', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:15:53'),
+(14, 1, '2026-07-10 14:16:06', '2026-07-10 14:16:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:16:22'),
+(15, 1, '2026-07-10 14:19:51', '2026-07-10 14:20:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:19:51'),
+(16, 1, '2026-07-10 14:37:26', '2026-07-10 14:46:02', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 14:46:01'),
+(17, 1, '2026-07-10 15:33:39', '2026-07-10 15:58:58', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 15:43:13'),
+(18, 1, '2026-07-10 15:59:13', '2026-07-10 16:00:48', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-10 16:00:40');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -907,7 +961,15 @@ ALTER TABLE `duyurular_kategori`
 -- Tablo için indeksler `etkinlikler`
 --
 ALTER TABLE `etkinlikler`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_etkinlikler_durum_id` (`durum_id`);
+
+--
+-- Tablo için indeksler `etkinlikler_durum`
+--
+ALTER TABLE `etkinlikler_durum`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_etkinlikler_durum_slug` (`slug`);
 
 --
 -- Tablo için indeksler `etkinlikler_duyurular`
@@ -1002,7 +1064,6 @@ ALTER TABLE `vefat_bilgileri`
 ALTER TABLE `videolar`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_videolar_youtube_id` (`youtube_id`),
-  ADD KEY `idx_videolar_kategori` (`kategori`),
   ADD KEY `idx_videolar_kategori_id` (`kategori_id`),
   ADD KEY `idx_videolar_vitrin` (`vitrin`);
 
@@ -1018,7 +1079,7 @@ ALTER TABLE `videolar_kategori`
 --
 ALTER TABLE `yardimci_linkler`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_yardimci_linkler_kat_baslik_url` (`kategori`,`baslik`,`hedef_url`) USING HASH,
+  ADD UNIQUE KEY `uq_yardimci_linkler_kat_baslik_url` (`kategori_id`,`baslik`,`hedef_url`),
   ADD KEY `idx_yardimci_linkler_kategori_id` (`kategori_id`);
 
 --
@@ -1068,7 +1129,7 @@ ALTER TABLE `anketler`
 -- Tablo için AUTO_INCREMENT değeri `anketler_kategori`
 --
 ALTER TABLE `anketler_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `duyurular`
@@ -1089,10 +1150,16 @@ ALTER TABLE `etkinlikler`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- Tablo için AUTO_INCREMENT değeri `etkinlikler_durum`
+--
+ALTER TABLE `etkinlikler_durum`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- Tablo için AUTO_INCREMENT değeri `etkinlikler_duyurular`
 --
 ALTER TABLE `etkinlikler_duyurular`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `haberler`
@@ -1110,7 +1177,7 @@ ALTER TABLE `haber_galeri`
 -- Tablo için AUTO_INCREMENT değeri `icerik_izlemeleri`
 --
 ALTER TABLE `icerik_izlemeleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar`
@@ -1122,19 +1189,19 @@ ALTER TABLE `kaynaklar`
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_alt_kategori`
 --
 ALTER TABLE `kaynaklar_alt_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=953;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=957;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_kategori`
 --
 ALTER TABLE `kaynaklar_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=953;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=957;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `oturum_kayitlari`
 --
 ALTER TABLE `oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `personeller`
@@ -1170,7 +1237,7 @@ ALTER TABLE `videolar`
 -- Tablo için AUTO_INCREMENT değeri `videolar_kategori`
 --
 ALTER TABLE `videolar_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=491;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `yardimci_linkler`
@@ -1182,7 +1249,7 @@ ALTER TABLE `yardimci_linkler`
 -- Tablo için AUTO_INCREMENT değeri `yardimci_linkler_kategori`
 --
 ALTER TABLE `yardimci_linkler_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1897;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `yoneticiler`
@@ -1194,7 +1261,7 @@ ALTER TABLE `yoneticiler`
 -- Tablo için AUTO_INCREMENT değeri `yonetici_oturum_kayitlari`
 --
 ALTER TABLE `yonetici_oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar
@@ -1205,6 +1272,12 @@ ALTER TABLE `yonetici_oturum_kayitlari`
 --
 ALTER TABLE `anketler`
   ADD CONSTRAINT `fk_anketler_kategori` FOREIGN KEY (`kategori_id`) REFERENCES `anketler_kategori` (`id`) ON UPDATE CASCADE;
+
+--
+-- Tablo kısıtlamaları `etkinlikler`
+--
+ALTER TABLE `etkinlikler`
+  ADD CONSTRAINT `fk_etkinlikler_durum` FOREIGN KEY (`durum_id`) REFERENCES `etkinlikler_durum` (`id`) ON UPDATE CASCADE;
 
 --
 -- Tablo kısıtlamaları `etkinlikler_duyurular`
@@ -1254,6 +1327,12 @@ ALTER TABLE `videolar`
 --
 ALTER TABLE `yardimci_linkler`
   ADD CONSTRAINT `fk_yardimci_linkler_kategori` FOREIGN KEY (`kategori_id`) REFERENCES `yardimci_linkler_kategori` (`id`) ON UPDATE CASCADE;
+
+--
+-- Tablo kısıtlamaları `yonetici_oturum_kayitlari`
+--
+ALTER TABLE `yonetici_oturum_kayitlari`
+  ADD CONSTRAINT `fk_yonetici_oturum_yonetici` FOREIGN KEY (`yonetici_id`) REFERENCES `yoneticiler` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
