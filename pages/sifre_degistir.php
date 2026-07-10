@@ -1,41 +1,42 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 
-if (!isset($_SESSION['personel_id'])) {
-    header("Location: login.php");
-    exit;
+if (!isset($_SESSION["personel_id"])) {
+  header("Location: login.php");
+  exit();
 }
 
-$personel_id = $_SESSION['personel_id'];
+$personel_id = $_SESSION["personel_id"];
 $mesaj = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sifre_guncelle'])) {
-    $eski_sifre = md5(trim($_POST['eski_sifre']));
-    $yeni_sifre_ham = trim($_POST['yeni_sifre']);
-    $yeni_sifre = md5($yeni_sifre_ham);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["sifre_guncelle"])) {
+  $eski_sifre = md5(trim($_POST["eski_sifre"]));
+  $yeni_sifre_ham = trim($_POST["yeni_sifre"]);
+  $yeni_sifre = md5($yeni_sifre_ham);
 
-    $kontrol = $db->prepare("SELECT id FROM personeller WHERE id = ? AND sifre = ?");
-    $kontrol->execute([$personel_id, $eski_sifre]);
+  $kontrol = $db->prepare("SELECT id FROM personeller WHERE id = ? AND sifre = ?");
+  $kontrol->execute([$personel_id, $eski_sifre]);
 
-    if (empty($yeni_sifre_ham)) {
-        $mesaj = "<div class='alert alert-danger mb-4'>Yeni şifre boş bırakılamaz.</div>";
-    } elseif ($kontrol->rowCount() > 0) {
-        $guncelle = $db->prepare("UPDATE personeller SET sifre = ? WHERE id = ?");
-        if ($guncelle->execute([$yeni_sifre, $personel_id])) {
-            $_SESSION['profil_mesaj'] = "<div class='alert alert-success mb-4'>Şifreniz başarıyla değiştirildi!</div>";
-            header("Location: sifre_degistir.php");
-            exit;
-        } else {
-            $mesaj = "<div class='alert alert-danger mb-4'>Güncelleme sırasında bir hata oluştu.</div>";
-        }
+  if (empty($yeni_sifre_ham)) {
+    $mesaj = "<div class='alert alert-danger mb-4'>Yeni şifre boş bırakılamaz.</div>";
+  } elseif ($kontrol->rowCount() > 0) {
+    $guncelle = $db->prepare("UPDATE personeller SET sifre = ? WHERE id = ?");
+    if ($guncelle->execute([$yeni_sifre, $personel_id])) {
+      $_SESSION["profil_mesaj"] =
+        "<div class='alert alert-success mb-4'>Şifreniz başarıyla değiştirildi!</div>";
+      header("Location: sifre_degistir.php");
+      exit();
     } else {
-        $mesaj = "<div class='alert alert-danger mb-4'>Mevcut şifreniz hatalı!</div>";
+      $mesaj = "<div class='alert alert-danger mb-4'>Güncelleme sırasında bir hata oluştu.</div>";
     }
+  } else {
+    $mesaj = "<div class='alert alert-danger mb-4'>Mevcut şifreniz hatalı!</div>";
+  }
 }
 
-if (isset($_SESSION['profil_mesaj'])) {
-    $mesaj = $_SESSION['profil_mesaj'];
-    unset($_SESSION['profil_mesaj']);
+if (isset($_SESSION["profil_mesaj"])) {
+  $mesaj = $_SESSION["profil_mesaj"];
+  unset($_SESSION["profil_mesaj"]);
 }
 ?>
 <!doctype html>
@@ -51,11 +52,17 @@ if (isset($_SESSION['profil_mesaj'])) {
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<?php $pageCss = "profil.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "profil.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Şifre Değiştir"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Şifre Değiştir";
+    include "includes/breadcrumb.php";
+    ?>
 
     <div class="content-area">
       <div class="container profil-form-narrow">

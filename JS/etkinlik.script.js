@@ -24,7 +24,7 @@ function getEventStatus(endDate) {
   if (eventEndDate >= today) {
     return { status: "active", text: "Aktif", class: "aktif" };
   } else {
-    return { status: "expired", text: "SÃ¼resi Doldu", class: "pasif" };
+    return { status: "expired", text: "Süresi Doldu", class: "pasif" };
   }
 }
 

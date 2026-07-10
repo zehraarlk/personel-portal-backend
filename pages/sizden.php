@@ -1,19 +1,31 @@
 <?php
-include("baglan.php");
-$kayitId = isset($_GET["id"]) ? (int)$_GET["id"] : 1;
-$kayit = dbFetchOne($db, "SELECT * FROM sizden_gelenler WHERE id = ?", [$kayitId]);
+include "baglan.php";
+$kayitId = isset($_GET["id"]) ? (int) $_GET["id"] : 1;
+$kayit = dbFetchOne(
+  $db,
+  "SELECT sg.*, k.slug AS kategori_slug, k.ad AS kategori_adi
+     FROM sizden_gelenler sg
+     LEFT JOIN sizdengelenler_kategori k ON sg.kategori_id = k.id
+     WHERE sg.id = ?",
+  [$kayitId],
+);
 if (!$kayit) {
-    header("Location: sizden_gelenler.php");
-    exit;
+  header("Location: sizden_gelenler.php");
+  exit();
 }
 
 $viewResult = dbBumpUniqueView($db, "sizden_gelenler", $kayitId, "goruntulenme");
 $kayit["goruntulenme"] = $viewResult["count"];
 
 $digerKayitlar = dbFetchAll(
-    $db,
-    "SELECT * FROM sizden_gelenler WHERE id != ? ORDER BY tarih DESC LIMIT 18",
-    [$kayitId]
+  $db,
+  "SELECT sg.*, k.slug AS kategori_slug, k.ad AS kategori_adi
+     FROM sizden_gelenler sg
+     LEFT JOIN sizdengelenler_kategori k ON sg.kategori_id = k.id
+     WHERE sg.id != ?
+     ORDER BY sg.tarih DESC
+     LIMIT 18",
+  [$kayitId],
 );
 $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
 ?>
@@ -22,7 +34,9 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo htmlspecialchars($kayit['baslik']); ?> - Gebze Belediyesi Personel Portalı</title>
+    <title><?php echo htmlspecialchars(
+      $kayit["baslik"],
+    ); ?> - Gebze Belediyesi Personel Portalı</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -33,11 +47,18 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "sizden_gelen_detay.style.css"; $useDetailLayout = true; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "sizden_gelen_detay.style.css";
+$useDetailLayout = true;
+include "includes/site-styles.php";
+?>
   </head>
   <body class="detail-page">
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Sizden Gelenler"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Sizden Gelenler";
+    include "includes/breadcrumb.php";
+    ?>
 <div class="content-area">
       <div class="container">
         <div class="row detail-layout-row gx-3 gx-lg-4 gy-0">
@@ -45,19 +66,24 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
             <article class="news-detail-card">
               <div class="article-header">
                 <span class="article-category" id="articleCategory"
-                  ><?php echo htmlspecialchars($kayit['kategori_adi']); ?></span
+                  ><?php echo htmlspecialchars($kayit["kategori_adi"] ?? ""); ?></span
                 >
                 <h1 class="article-title" id="articleTitle">
-                  <?php echo htmlspecialchars($kayit['baslik']); ?>
+                  <?php echo htmlspecialchars($kayit["baslik"]); ?>
                 </h1>
                 <div class="article-meta">
                   <div class="meta-item">
                     <i class="fas fa-calendar-alt"></i>
-                    <span id="articleDate"><?php echo date("d.m.Y", strtotime($kayit['tarih'])); ?></span>
+                    <span id="articleDate"><?php echo date(
+                      "d.m.Y",
+                      strtotime($kayit["tarih"]),
+                    ); ?></span>
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-eye"></i>
-                    <span id="articleViews"><?php echo (int)$kayit['goruntulenme']; ?></span> görüntülenme
+                    <span id="articleViews"><?php echo (int) $kayit[
+                      "goruntulenme"
+                    ]; ?></span> görüntülenme
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-user"></i>
@@ -69,8 +95,8 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
               <div class="article-image-section">
                 <div class="article-image-container">
                   <img
-                    src="<?php echo htmlspecialchars(imgUrl($kayit['gorsel_yolu'] ?? '')); ?>"
-                    alt="<?php echo htmlspecialchars($kayit['baslik']); ?>"
+                    src="<?php echo htmlspecialchars(imgUrl($kayit["gorsel_yolu"] ?? "")); ?>"
+                    alt="<?php echo htmlspecialchars($kayit["baslik"]); ?>"
                     class="article-image"
                     id="mainArticleImage"
                   />
@@ -79,7 +105,7 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
 
               <div class="article-content">
                 <div class="article-body" id="articleBody">
-                  <?php echo nl2br(htmlspecialchars($kayit['ozet'])); ?>
+                  <?php echo nl2br(htmlspecialchars($kayit["ozet"])); ?>
                 </div>
               </div>
 
@@ -113,17 +139,25 @@ $digerKayitSayfalari = array_chunk($digerKayitlar, 6);
                     <?php foreach ($digerKayitSayfalari as $sayfa): ?>
                   <div class="department-item">
                       <?php foreach ($sayfa as $item): ?>
-                    <a href="sizden.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item">
+                    <a href="sizden.php?id=<?php echo (int) $item[
+                      "id"
+                    ]; ?>" class="other-news-item">
                       <img
-                        src="<?php echo htmlspecialchars(imgUrl($item['gorsel_yolu'] ?? '')); ?>"
+                        src="<?php echo htmlspecialchars(imgUrl($item["gorsel_yolu"] ?? "")); ?>"
                         class="other-news-img"
-                        alt="<?php echo htmlspecialchars($item['baslik']); ?>"
+                        alt="<?php echo htmlspecialchars($item["baslik"]); ?>"
                       />
                       <div class="other-news-content">
-                        <div class="department-category"><?php echo htmlspecialchars($item['kategori_adi']); ?></div>
-                        <h5 class="other-news-title"><?php echo htmlspecialchars($item['baslik']); ?></h5>
+                        <div class="department-category"><?php echo htmlspecialchars(
+                          $item["kategori_adi"] ?? "",
+                        ); ?></div>
+                        <h5 class="other-news-title"><?php echo htmlspecialchars(
+                          $item["baslik"],
+                        ); ?></h5>
                         <p class="other-news-description">
-                          <?php echo htmlspecialchars(mb_strimwidth(strip_tags($item['ozet']), 0, 90, '...')); ?>
+                          <?php echo htmlspecialchars(
+                            mb_strimwidth(strip_tags($item["ozet"]), 0, 90, "..."),
+                          ); ?>
                         </p>
                       </div>
                     </a>

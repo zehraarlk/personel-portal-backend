@@ -1,41 +1,53 @@
 <?php
 session_start();
-include("baglan.php");
+include "baglan.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tc_no']) && isset($_POST['telefon'])) {
-    $tc_no = trim($_POST['tc_no']);
-    $telefon = preg_replace('/\D/', '', trim($_POST['telefon'])); // sadece rakamlar
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["tc_no"]) && isset($_POST["telefon"])) {
+  $tc_no = trim($_POST["tc_no"]);
+  $telefon = preg_replace("/\D/", "", trim($_POST["telefon"])); // sadece rakamlar
 
-    if (empty($tc_no) || strlen($tc_no) !== 11 || !ctype_digit($tc_no)) {
-        echo json_encode(["status" => "error", "message" => "Geçerli bir T.C. Kimlik Numarası giriniz."]);
-        exit;
-    }
+  if (empty($tc_no) || strlen($tc_no) !== 11 || !ctype_digit($tc_no)) {
+    echo json_encode([
+      "status" => "error",
+      "message" => "Geçerli bir T.C. Kimlik Numarası giriniz.",
+    ]);
+    exit();
+  }
 
-    if (empty($telefon) || strlen($telefon) !== 11 || substr($telefon, 0, 2) !== "05") {
-        echo json_encode(["status" => "error", "message" => "Geçerli bir cep telefonu numarası giriniz. Örn: 05XX XXX XX XX"]);
-        exit;
-    }
+  if (empty($telefon) || strlen($telefon) !== 11 || substr($telefon, 0, 2) !== "05") {
+    echo json_encode([
+      "status" => "error",
+      "message" => "Geçerli bir cep telefonu numarası giriniz. Örn: 05XX XXX XX XX",
+    ]);
+    exit();
+  }
 
-    // Personel tablosunda T.C. kimlik no ve telefon eşleşmesi kontrolü
-    $sorgu = $db->prepare("SELECT * FROM personeller WHERE tc_no = ? AND telefon = ?");
-    $sorgu->execute([$tc_no, $telefon]);
-    $personel = $sorgu->fetch(PDO::FETCH_ASSOC);
+  // Personel tablosunda T.C. kimlik no ve telefon eşleşmesi kontrolü
+  $sorgu = $db->prepare("SELECT * FROM personeller WHERE tc_no = ? AND telefon = ?");
+  $sorgu->execute([$tc_no, $telefon]);
+  $personel = $sorgu->fetch(PDO::FETCH_ASSOC);
 
-    if ($personel) {
-        // Yeni geçici şifre oluşturup e-posta/sms ile gönderme akışı burada işlenir
-        $yeni_sifre = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
-        $sifre_hash = md5($yeni_sifre);
+  if ($personel) {
+    // Yeni geçici şifre oluşturup e-posta/sms ile gönderme akışı burada işlenir
+    $yeni_sifre = strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
+    $sifre_hash = md5($yeni_sifre);
 
-        $guncelle = $db->prepare("UPDATE personeller SET sifre = ? WHERE id = ?");
-        $guncelle->execute([$sifre_hash, $personel['id']]);
+    $guncelle = $db->prepare("UPDATE personeller SET sifre = ? WHERE id = ?");
+    $guncelle->execute([$sifre_hash, $personel["id"]]);
 
-        // TODO: $yeni_sifre değerini SMS/e-posta ile personele iletiniz
-        echo json_encode(["status" => "success", "message" => "Şifreniz sıfırlandı. Yeni şifreniz kayıtlı iletişim bilgilerinize gönderildi."]);
-        exit;
-    } else {
-        echo json_encode(["status" => "error", "message" => "Girdiğiniz bilgilerle eşleşen bir personel kaydı bulunamadı."]);
-        exit;
-    }
+    // TODO: $yeni_sifre değerini SMS/e-posta ile personele iletiniz
+    echo json_encode([
+      "status" => "success",
+      "message" => "Şifreniz sıfırlandı. Yeni şifreniz kayıtlı iletişim bilgilerinize gönderildi.",
+    ]);
+    exit();
+  } else {
+    echo json_encode([
+      "status" => "error",
+      "message" => "Girdiğiniz bilgilerle eşleşen bir personel kaydı bulunamadı.",
+    ]);
+    exit();
+  }
 }
 ?>
 <!doctype html>

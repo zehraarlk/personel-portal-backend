@@ -1,36 +1,56 @@
 <?php
 session_start();
-include("baglan.php");
+include "baglan.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kullanici_adi']) && isset($_POST['sifre'])) {
-    $kullanici_adi = trim($_POST['kullanici_adi']);
-    $sifre = md5(trim($_POST['sifre'])); // Şifreyi MD5'leyerek kontrol ediyoruz
+// Zaten giriş yapılmışsa panele yönlendir
+if (adminIsLoggedIn()) {
+  header("Location: admin/index.php");
+  exit();
+}
 
-    if (!empty($kullanici_adi) && !empty($sifre)) {
-        // Yöneticiler tablosundan kullanıcı adı ve şifre eşleşmesi kontrolü
-        $sorgu = $db->prepare("SELECT * FROM yoneticiler WHERE kullanici_adi = ? AND sifre = ?");
-        $sorgu->execute([$kullanici_adi, $sifre]);
-        $yonetici = $sorgu->fetch(PDO::FETCH_ASSOC);
+if (
+  $_SERVER["REQUEST_METHOD"] == "POST" &&
+  isset($_POST["kullanici_adi"]) &&
+  isset($_POST["sifre"])
+) {
+  $kullanici_adi = trim($_POST["kullanici_adi"]);
+  $sifre = trim($_POST["sifre"]);
 
-        if ($yonetici) {
-            $_SESSION['yonetici_id']       = $yonetici['id'];
-            $_SESSION['yonetici_kullanici'] = $yonetici['kullanici_adi'];
-            $_SESSION['yonetici_ad']       = $yonetici['ad'];
-            $_SESSION['yonetici_soyad']    = $yonetici['soyad'];
-            $_SESSION['yonetici_yetki']    = $yonetici['yetki'];
+  if (!empty($kullanici_adi) && $sifre !== "") {
+    $sorgu = $db->prepare(
+      "SELECT * FROM yoneticiler WHERE kullanici_adi = ? AND aktif = 1 LIMIT 1",
+    );
+    $sorgu->execute([$kullanici_adi]);
+    $yonetici = $sorgu->fetch(PDO::FETCH_ASSOC);
 
-            // 🕒 Giriş zamanını veritabanına kaydediyoruz
-            $giris_ekle = $db->prepare("INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani) VALUES (?, NOW())");
-            $giris_ekle->execute([$yonetici['id']]);
+    if ($yonetici && adminVerifyPassword((string) $yonetici["sifre"], $sifre)) {
+      $_SESSION["yonetici_id"] = $yonetici["id"];
+      $_SESSION["yonetici_kullanici"] = $yonetici["kullanici_adi"];
+      $_SESSION["yonetici_ad"] = $yonetici["ad"];
+      $_SESSION["yonetici_soyad"] = $yonetici["soyad"];
+      $_SESSION["yonetici_yetki"] = $yonetici["yetki"];
 
-            echo json_encode(["status" => "success"]);
-            exit;
-        } else {
-            echo json_encode(["status" => "error", "message" => "Kullanıcı adı veya şifre hatalı!"]);
-            exit;
-        }
+      $giris_ekle = $db->prepare(
+        "INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani) VALUES (?, NOW())",
+      );
+      $giris_ekle->execute([$yonetici["id"]]);
+      $_SESSION["yonetici_oturum_id"] = (int) $db->lastInsertId();
+
+      // Eski MD5 şifreyi bcrypt'e yükselt
+      if (strlen((string) $yonetici["sifre"]) === 32 && ctype_xdigit((string) $yonetici["sifre"])) {
+        $db
+          ->prepare("UPDATE yoneticiler SET sifre = ? WHERE id = ?")
+          ->execute([adminHashPassword($sifre), $yonetici["id"]]);
+      }
+
+      echo json_encode(["status" => "success"]);
+      exit();
+    } else {
+      echo json_encode(["status" => "error", "message" => "Kullanıcı adı veya şifre hatalı!"]);
+      exit();
     }
-    exit;
+  }
+  exit();
 }
 ?>
 <!doctype html>
@@ -283,7 +303,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kullanici_adi']) && is
             .then((res) => res.json())
             .then((data) => {
               if (data.status === "success") {
-                window.location.href = "yonetim_ana_sayfa.php";
+                window.location.href = "admin/index.php";
               } else {
                 errorDiv.innerText = data.message;
                 errorDiv.classList.remove("d-none");

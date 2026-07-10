@@ -1,28 +1,44 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $haberler = array_map(function ($h) {
-    $h["resim"] = imgUrl($h["resim"] ?? "");
-    return $h;
+  $h["resim"] = imgUrl($h["resim"] ?? "");
+  return $h;
 }, dbFetchAll($db, "SELECT * FROM etkinlikler ORDER BY tarih DESC, id DESC"));
 $duyurular = array_map(function ($d) {
-    $d["resim"] = imgUrl($d["resim"] ?? "");
-    return $d;
+  $d["resim"] = imgUrl($d["resim"] ?? "");
+  return $d;
 }, mapAnasayfaDuyurular($db, dbFetchAnasayfaDuyurular($db)));
 $personeller = mapPersonelJs(dbFetchAll($db, "SELECT * FROM personeller ORDER BY ad"));
 // Anasayfa "Kurum İçi Otomasyon Sistemleri" linkleri artık ayrı tabloda tutulur.
 // Geriye dönük uyumluluk: tablo yoksa eski kaynaktan okumaya devam et.
 $otomasyonLinkleri = dbHasAnyTable($db, ["anasayfa_linkler"])
-    ? dbFetchAll($db, "SELECT * FROM anasayfa_linkler ORDER BY id")
-    : dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
+  ? dbFetchAll($db, "SELECT * FROM anasayfa_linkler ORDER BY id")
+  : dbFetchAll($db, "SELECT * FROM yardimci_linkler WHERE kategori = ? ORDER BY id", ["kurum-ici"]);
 $ilkHaber = $haberler[0] ?? null;
-$sql_dogum = "SELECT * FROM personeller WHERE MONTH(dogum_tarihi) = MONTH(NOW()) AND DAY(dogum_tarihi) = DAY(NOW()) ORDER BY ad";
+$sql_dogum =
+  "SELECT * FROM personeller WHERE MONTH(dogum_tarihi) = MONTH(NOW()) AND DAY(dogum_tarihi) = DAY(NOW()) ORDER BY ad";
 $anasayfaDogumKayitlari = mapPersonelJs(dbFetchAll($db, $sql_dogum));
 
 // 🇹🇷 Ekrandaki tarihi dinamik olarak Türkçe basmak için dizi kurgusu
-$aylar = ["", "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+$aylar = [
+  "",
+  "Ocak",
+  "Şubat",
+  "Mart",
+  "Nisan",
+  "Mayıs",
+  "Haziran",
+  "Temmuz",
+  "Ağustos",
+  "Eylül",
+  "Ekim",
+  "Kasım",
+  "Aralık",
+];
 $gunler = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
 
-$anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y") . " " . $gunler[date("w")];
+$anasayfaBugunTarih =
+  date("d") . " " . $aylar[(int) date("m")] . " " . date("Y") . " " . $gunler[date("w")];
 ?>
 <!doctype html>
 <html lang="tr">
@@ -40,7 +56,10 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "ana_sayfa.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "ana_sayfa.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
@@ -66,9 +85,10 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
                     style="max-height: 500px"
                   />
                   <div class="ana-haber-baslik-container">
-                    <a href="etkinlikd.php?id=<?= (int)($ilkHaber['id'] ?? 1) ?>" id="ana-haber-link" class="ana-haber-baslik-link">
+                    <a href="etkinlikd.php?id=<?= (int) ($ilkHaber["id"] ??
+                      1) ?>" id="ana-haber-link" class="ana-haber-baslik-link">
                       <h3 id="ana-haber-baslik" class="ana-haber-baslik">
-                        <?= htmlspecialchars($ilkHaber['baslik'] ?? 'Haberler & Etkinlikler') ?>
+                        <?= htmlspecialchars($ilkHaber["baslik"] ?? "Haberler & Etkinlikler") ?>
                       </h3>
                     </a>
                   </div>
@@ -157,22 +177,26 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
                 </div>
                 <div class="otomasyon-grid">
 <?php foreach ($otomasyonLinkleri as $link):
-    $logo = otomasyonLogoUrl($link["baslik"], $link["logo_url"] ?? "");
-?>
+  $logo = otomasyonLogoUrl($link["baslik"], $link["logo_url"] ?? ""); ?>
                   <div class="otomasyon-item">
                     <div class="otomasyon-logo">
                       <?php if ($logo): ?>
-                      <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars($link["baslik"]) ?>" class="otomasyon-icon" />
+                      <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars(
+  $link["baslik"],
+) ?>" class="otomasyon-icon" />
                       <?php else: ?>
                       <div class="otomasyon-icon-fallback" aria-hidden="true"><i class="fas fa-desktop"></i></div>
                       <?php endif; ?>
                     </div>
                     <h3 class="otomasyon-isim"><?= htmlspecialchars($link["baslik"]) ?></h3>
-                    <a href="<?= htmlspecialchars($link["hedef_url"] ?? "#") ?>" target="_blank" rel="noopener" class="otomasyon-btn">
+                    <a href="<?= htmlspecialchars(
+                      $link["hedef_url"] ?? "#",
+                    ) ?>" target="_blank" rel="noopener" class="otomasyon-btn">
                       <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
                     </a>
                   </div>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
                 </div>
               </div>
             </div>
@@ -192,7 +216,10 @@ $anasayfaBugunTarih = date("d") . " " . $aylar[(int)date("m")] . " " . date("Y")
       <script src="../JS/navbar.js"></script>
       <script>
   // PHP'deki veriyi JavaScript'e aktarıyoruz
-  const anasayfaPersonelleri = <?php echo json_encode($anasayfaDogumKayitlari, JSON_UNESCAPED_UNICODE); ?>;
+  const anasayfaPersonelleri = <?php echo json_encode(
+    $anasayfaDogumKayitlari,
+    JSON_UNESCAPED_UNICODE,
+  ); ?>;
   
   document.addEventListener("DOMContentLoaded", function () {
     const listeElementi = document.getElementById("personelListesiAnasayfa");

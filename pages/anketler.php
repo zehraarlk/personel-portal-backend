@@ -1,32 +1,41 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $kayitlar = dbFetchAnketler($db);
 
 $badgeMap = [
-    "active"    => ["Aktif", "status-active", "fa-play-circle"],
-    "pending"   => ["Beklemede", "status-pending", "fa-clock"],
-    "completed" => ["Tamamlandı", "status-completed", "fa-check-circle"],
-    "expired"   => ["Süresi Doldu", "status-expired", "fa-times-circle"],
+  "active" => ["Aktif", "status-active", "fa-play-circle"],
+  "pending" => ["Beklemede", "status-pending", "fa-clock"],
+  "completed" => ["Tamamlandı", "status-completed", "fa-check-circle"],
+  "expired" => ["Süresi Doldu", "status-expired", "fa-times-circle"],
 ];
 
 function renderAnketCard(array $k, array $badgeMap): void
 {
-    [$durum, $badgeClass, $badgeIcon] = $badgeMap[$k["kategori"]] ?? ["Aktif", "status-active", "fa-play-circle"];
-    $katilim = (int)($k["katilim_sayisi"] ?? 0);
-    $hedef = max(1, (int)($k["hedef_katilim"] ?? 1));
-    $yuzde = min(100, round(($katilim / $hedef) * 100));
-    $favori = (int)($k["favori"] ?? 0) === 1;
-    $id = (int)$k["id"];
-?>
+  [$durum, $badgeClass, $badgeIcon] = $badgeMap[$k["kategori"]] ?? [
+    "Aktif",
+    "status-active",
+    "fa-play-circle",
+  ];
+  $katilim = (int) ($k["katilim_sayisi"] ?? 0);
+  $hedef = max(1, (int) ($k["hedef_katilim"] ?? 1));
+  $yuzde = min(100, round(($katilim / $hedef) * 100));
+  $favori = (int) ($k["favori"] ?? 0) === 1;
+  $id = (int) $k["id"];
+  ?>
         <div class="col-md-6 col-lg-4 survey-item" data-id="<?= $id ?>" data-category="<?= htmlspecialchars($k["kategori"]) ?>" data-favorite="<?= $favori ? "1" : "0" ?>">
           <div class="survey-card h-100 d-flex flex-column">
             <span class="status-badge <?= $badgeClass ?>"><i class="fas <?= $badgeIcon ?> me-1"></i><?= $durum ?></span>
-            <img src="<?= htmlspecialchars(imgUrl($k["resim_url"] ?? "")) ?>" class="survey-img" alt="<?= htmlspecialchars($k["baslik"]) ?>" />
+            <img src="<?= htmlspecialchars(
+              imgUrl($k["resim_url"] ?? ""),
+            ) ?>" class="survey-img" alt="<?= htmlspecialchars($k["baslik"]) ?>" />
             <div class="p-4 d-flex flex-column justify-content-between flex-grow-1">
               <div>
                 <h5 class="survey-title"><?= htmlspecialchars($k["baslik"]) ?></h5>
                 <p class="survey-desc"><?= htmlspecialchars($k["aciklama"] ?? "") ?></p>
-                <p class="survey-date"><i class="fas fa-calendar me-1"></i><?= date("d.m.Y", strtotime($k["baslangic_tarihi"])) ?> - <?= date("d.m.Y", strtotime($k["bitis_tarihi"])) ?></p>
+                <p class="survey-date"><i class="fas fa-calendar me-1"></i><?= date(
+                  "d.m.Y",
+                  strtotime($k["baslangic_tarihi"]),
+                ) ?> - <?= date("d.m.Y", strtotime($k["bitis_tarihi"])) ?></p>
                 <div class="progress-container">
                   <div class="d-flex justify-content-between">
                     <span class="participation-rate">Katılım: <?= $katilim ?>/<?= $hedef ?> kişi</span>
@@ -68,11 +77,17 @@ function renderAnketCard(array $k, array $badgeMap): void
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
       rel="stylesheet"
     />
-<?php $pageCss = "anketler.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "anketler.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Anketler"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Anketler";
+    include "includes/breadcrumb.php";
+    ?>
     <main class="main-container container py-5">
       <div class="surveys-header">
         <h1 class="surveys-title">Anketler</h1>
@@ -109,7 +124,9 @@ function renderAnketCard(array $k, array $badgeMap): void
       </div>
 
       <div class="row g-4" id="surveyContainer">
-<?php foreach ($kayitlar as $k): renderAnketCard($k, $badgeMap); endforeach; ?>
+<?php foreach ($kayitlar as $k):
+  renderAnketCard($k, $badgeMap);
+endforeach; ?>
       </div>
 
       <div id="emptyState" class="empty-state d-none">

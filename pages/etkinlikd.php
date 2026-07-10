@@ -1,19 +1,19 @@
 <?php
-include("baglan.php");
-$etkinlikId = isset($_GET["id"]) ? (int)$_GET["id"] : 1;
+include "baglan.php";
+$etkinlikId = isset($_GET["id"]) ? (int) $_GET["id"] : 1;
 $etkinlik = dbFetchOne($db, "SELECT * FROM etkinlikler WHERE id = ?", [$etkinlikId]);
 if (!$etkinlik) {
-    header("Location: etkinlikler.php");
-    exit;
+  header("Location: etkinlikler.php");
+  exit();
 }
 
 $viewResult = dbBumpUniqueView($db, "etkinlikler", $etkinlikId, "view");
 $etkinlik["view"] = $viewResult["count"];
 
 $digerEtkinlikler = dbFetchAll(
-    $db,
-    "SELECT * FROM etkinlikler WHERE id != ? ORDER BY tarih DESC LIMIT 18",
-    [$etkinlikId]
+  $db,
+  "SELECT * FROM etkinlikler WHERE id != ? ORDER BY tarih DESC LIMIT 18",
+  [$etkinlikId],
 );
 $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
 ?>
@@ -22,7 +22,9 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo htmlspecialchars($etkinlik['baslik']); ?> - Gebze Belediyesi Personel Portalı</title>
+    <title><?php echo htmlspecialchars(
+      $etkinlik["baslik"],
+    ); ?> - Gebze Belediyesi Personel Portalı</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -33,26 +35,40 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "etkinlik_detay.style.css"; $useDetailLayout = true; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "etkinlik_detay.style.css";
+$useDetailLayout = true;
+include "includes/site-styles.php";
+?>
   </head>
   <body class="detail-page">
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Etkinlik Detayı"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Etkinlik Detayı";
+    include "includes/breadcrumb.php";
+    ?>
 <div class="content-area">
       <div class="container">
         <div class="row detail-layout-row gx-3 gx-lg-4 gy-0">
           <div class="col-12 col-lg-8">
             <article class="news-detail-card">
               <div class="article-header">
-                <h1 class="article-title" id="articleTitle"><?php echo htmlspecialchars($etkinlik['baslik']); ?></h1>
+                <h1 class="article-title" id="articleTitle"><?php echo htmlspecialchars(
+                  $etkinlik["baslik"],
+                ); ?></h1>
                 <div class="article-meta">
                   <div class="meta-item">
                     <i class="fas fa-calendar-alt"></i>
-                    <span id="articleDate"><?php echo date("d.m.Y", strtotime($etkinlik['tarih'])); ?></span>
+                    <span id="articleDate"><?php echo date(
+                      "d.m.Y",
+                      strtotime($etkinlik["tarih"]),
+                    ); ?></span>
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-eye"></i>
-                    <span id="articleViews"><?php echo (int)$etkinlik['view']; ?></span> görüntülenme
+                    <span id="articleViews"><?php echo (int) $etkinlik[
+                      "view"
+                    ]; ?></span> görüntülenme
                   </div>
                   <div class="meta-item">
                     <i class="fas fa-user"></i>
@@ -65,8 +81,8 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
               <div class="article-image-section">
                 <div class="article-image-container">
                   <img
-                    src="<?php echo htmlspecialchars(imgUrl($etkinlik['resim'] ?? '')); ?>"
-                    alt="<?php echo htmlspecialchars($etkinlik['baslik']); ?>"
+                    src="<?php echo htmlspecialchars(imgUrl($etkinlik["resim"] ?? "")); ?>"
+                    alt="<?php echo htmlspecialchars($etkinlik["baslik"]); ?>"
                     class="article-image"
                     id="mainArticleImage"
                   />
@@ -75,7 +91,7 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
 
               <div class="article-content">
                 <div class="article-body" id="articleBody">
-                  <?php echo nl2br(htmlspecialchars($etkinlik['aciklama'])); ?>
+                  <?php echo nl2br(htmlspecialchars($etkinlik["aciklama"])); ?>
                 </div>
               </div>
 
@@ -109,16 +125,22 @@ $digerEtkinlikSayfalari = array_chunk($digerEtkinlikler, 6);
                     <?php foreach ($digerEtkinlikSayfalari as $sayfa): ?>
                   <div class="department-item">
                       <?php foreach ($sayfa as $item): ?>
-                    <a href="etkinlikd.php?id=<?php echo (int)$item['id']; ?>" class="other-news-item">
+                    <a href="etkinlikd.php?id=<?php echo (int) $item[
+                      "id"
+                    ]; ?>" class="other-news-item">
                       <img
-                        src="<?php echo htmlspecialchars(imgUrl($item['resim'] ?? '')); ?>"
+                        src="<?php echo htmlspecialchars(imgUrl($item["resim"] ?? "")); ?>"
                         class="other-news-img"
-                        alt="<?php echo htmlspecialchars($item['baslik']); ?>"
+                        alt="<?php echo htmlspecialchars($item["baslik"]); ?>"
                       />
                       <div class="other-news-content">
-                        <h5 class="other-news-title"><?php echo htmlspecialchars($item['baslik']); ?></h5>
+                        <h5 class="other-news-title"><?php echo htmlspecialchars(
+                          $item["baslik"],
+                        ); ?></h5>
                         <p class="other-news-description">
-                          <?php echo htmlspecialchars(mb_strimwidth(strip_tags($item['aciklama']), 0, 90, '...')); ?>
+                          <?php echo htmlspecialchars(
+                            mb_strimwidth(strip_tags($item["aciklama"]), 0, 90, "..."),
+                          ); ?>
                         </p>
                       </div>
                     </a>

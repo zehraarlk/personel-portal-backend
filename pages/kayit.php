@@ -1,52 +1,70 @@
 <?php
 session_start();
-include("baglan.php");
+include "baglan.php";
 
 // Zaten girişliyse veya cookie ile otomatik giriş olabiliyorsa anasayfaya git
 if (!empty($_SESSION["personel_id"]) || authTryAutoLogin($db)) {
-    header("Location: ana_sayfa.php");
-    exit;
+  header("Location: ana_sayfa.php");
+  exit();
 }
 
 $mesaj = "";
 $status = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $sicil_no     = trim($_POST['sicil_no']);
-    $ad           = trim($_POST['ad']);
-    $soyad        = trim($_POST['soyad']);
-    $email        = trim($_POST['email']);
-    $sifre        = trim($_POST['sifre']);
-    $dogum_tarihi = trim($_POST['dogum_tarihi']);
+  $sicil_no = trim($_POST["sicil_no"]);
+  $ad = trim($_POST["ad"]);
+  $soyad = trim($_POST["soyad"]);
+  $email = trim($_POST["email"]);
+  $sifre = trim($_POST["sifre"]);
+  $dogum_tarihi = trim($_POST["dogum_tarihi"]);
 
-    if (!empty($sicil_no) && !empty($ad) && !empty($soyad) && !empty($email) && !empty($sifre) && !empty($dogum_tarihi)) {
-        
-        // Sicil numarası veya email daha önce alınmış mı kontrolü
-        $kontrol = $db->prepare("SELECT id FROM personeller WHERE sicil_no = ? OR email = ?");
-        $kontrol->execute([$sicil_no, $email]);
-        
-        if ($kontrol->rowCount() > 0) {
-            $status = "error";
-            $mesaj = "Bu sicil numarası veya e-posta adresi sistemde zaten kayıtlı!";
-        } else {
-            // Şifreyi MD5'liyoruz
-            $sifre_md5 = md5($sifre);
-            // Varsayılan profil fotoğrafı yolu
-            $varsayilan_foto = "../images/login/login.jpg";
+  if (
+    !empty($sicil_no) &&
+    !empty($ad) &&
+    !empty($soyad) &&
+    !empty($email) &&
+    !empty($sifre) &&
+    !empty($dogum_tarihi)
+  ) {
+    // Sicil numarası veya email daha önce alınmış mı kontrolü
+    $kontrol = $db->prepare("SELECT id FROM personeller WHERE sicil_no = ? OR email = ?");
+    $kontrol->execute([$sicil_no, $email]);
 
-            $kaydet = $db->prepare("INSERT INTO personeller (sicil_no, ad, soyad, email, sifre, dogum_tarihi, foto_url) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            if ($kaydet->execute([$sicil_no, $ad, $soyad, $email, $sifre_md5, $dogum_tarihi, $varsayilan_foto])) {
-                $status = "success";
-                $mesaj = "Personel kaydı başarıyla oluşturuldu! Giriş sayfasına yönlendiriliyorsunuz.";
-            } else {
-                $status = "error";
-                $mesaj = "Kayıt sırasında teknik bir hata oluştu.";
-            }
-        }
+    if ($kontrol->rowCount() > 0) {
+      $status = "error";
+      $mesaj = "Bu sicil numarası veya e-posta adresi sistemde zaten kayıtlı!";
     } else {
+      // Şifreyi MD5'liyoruz
+      $sifre_md5 = md5($sifre);
+      // Varsayılan profil fotoğrafı yolu
+      $varsayilan_foto = "../images/login/login.jpg";
+
+      $kaydet = $db->prepare(
+        "INSERT INTO personeller (sicil_no, ad, soyad, email, sifre, dogum_tarihi, foto_url) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      );
+      if (
+        $kaydet->execute([
+          $sicil_no,
+          $ad,
+          $soyad,
+          $email,
+          $sifre_md5,
+          $dogum_tarihi,
+          $varsayilan_foto,
+        ])
+      ) {
+        $status = "success";
+        $mesaj = "Personel kaydı başarıyla oluşturuldu! Giriş sayfasına yönlendiriliyorsunuz.";
+      } else {
         $status = "error";
-        $mesaj = "Lütfen tüm alanları eksiksiz doldurunuz!";
+        $mesaj = "Kayıt sırasında teknik bir hata oluştu.";
+      }
     }
+  } else {
+    $status = "error";
+    $mesaj = "Lütfen tüm alanları eksiksiz doldurunuz!";
+  }
 }
 ?>
 <!doctype html>
@@ -82,11 +100,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <h2 class="login-title">Yeni Personel Kaydı</h2>
         
-        <?php if(!empty($mesaj)): ?>
-            <div class="alert alert-<?php echo $status == 'success' ? 'success' : 'danger'; ?> text-start small py-2 mb-3">
+        <?php if (!empty($mesaj)): ?>
+            <div class="alert alert-<?php echo $status == "success"
+              ? "success"
+              : "danger"; ?> text-start small py-2 mb-3">
                 <?php echo $mesaj; ?>
             </div>
-            <?php if($status == 'success'): ?>
+            <?php if ($status == "success"): ?>
                 <script>setTimeout(() => { window.location.href = 'login.php'; }, 2500);</script>
             <?php endif; ?>
         <?php endif; ?>

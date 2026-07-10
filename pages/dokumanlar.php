@@ -1,13 +1,13 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $dokumanlar = dbFetchAll(
-    $db,
-    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.ikon, r.dosya_yolu, r.boyut, r.tarih
+  $db,
+  "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.ikon, r.dosya_yolu, r.boyut, r.tarih
      FROM kaynaklar r
      JOIN kaynaklar_kategori k ON r.kategori_id = k.id
      WHERE k.slug = ?
      ORDER BY r.tarih DESC",
-    ["Dökümanlar"]
+  ["Dökümanlar"],
 );
 ?>
 <!doctype html>
@@ -26,11 +26,17 @@ $dokumanlar = dbFetchAll(
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "dokumanlar.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "dokumanlar.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Dokümanlar"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Dokümanlar";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-container">
       <header class="page-header">
         <div class="content">
@@ -55,18 +61,19 @@ $dokumanlar = dbFetchAll(
       <div class="documents-grid" id="documentsGrid">
 <?php if (count($dokumanlar) > 0): ?>
 <?php foreach ($dokumanlar as $row):
-    $uzanti = strtolower(pathinfo($row["dosya_yolu"], PATHINFO_EXTENSION));
-    $extIcon = "fa-file-alt";
-    if ($uzanti === "pdf") {
-        $extIcon = "fa-file-pdf";
-    } elseif (in_array($uzanti, ["doc", "docx"], true)) {
-        $extIcon = "fa-file-word";
-    } elseif (in_array($uzanti, ["xls", "xlsx"], true)) {
-        $extIcon = "fa-file-excel";
-    }
-    $icon = !empty($row["ikon"]) ? $row["ikon"] : $extIcon;
-    $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
-?>
+
+  $uzanti = strtolower(pathinfo($row["dosya_yolu"], PATHINFO_EXTENSION));
+  $extIcon = "fa-file-alt";
+  if ($uzanti === "pdf") {
+    $extIcon = "fa-file-pdf";
+  } elseif (in_array($uzanti, ["doc", "docx"], true)) {
+    $extIcon = "fa-file-word";
+  } elseif (in_array($uzanti, ["xls", "xlsx"], true)) {
+    $extIcon = "fa-file-excel";
+  }
+  $icon = !empty($row["ikon"]) ? $row["ikon"] : $extIcon;
+  $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
+  ?>
         <div class="document-card" data-category="document">
           <div class="document-header">
             <div class="document-icon">
@@ -100,7 +107,8 @@ $dokumanlar = dbFetchAll(
             </button>
           </div>
         </div>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
 <?php else: ?>
         <p>Henüz eklenmiş döküman bulunmuyor.</p>
 <?php endif; ?>

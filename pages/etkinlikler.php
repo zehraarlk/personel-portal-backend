@@ -1,5 +1,5 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $etkinlikler = dbFetchAll($db, "SELECT * FROM etkinlikler ORDER BY tarih DESC");
 $toplamEtkinlik = count($etkinlikler);
 ?>
@@ -19,11 +19,17 @@ $toplamEtkinlik = count($etkinlikler);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "etkinlik.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "etkinlik.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Etkinlikler"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Etkinlikler";
+    include "includes/breadcrumb.php";
+    ?>
 <!-- Breadcrumb Section - Logo ve başlık ile aynı hizada --><!-- Page Header - Logo ve breadcrumb ile aynı hizada -->
     <div class="page-header">
       <div class="nav-container">

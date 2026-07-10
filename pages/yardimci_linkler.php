@@ -1,5 +1,5 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $kayitlar = dbFetchYardimciLinkler($db);
 ?>
 <!doctype html>
@@ -18,11 +18,17 @@ $kayitlar = dbFetchYardimciLinkler($db);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "yardimci_link.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "yardimci_link.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Yardımcı Linkler"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Yardımcı Linkler";
+    include "includes/breadcrumb.php";
+    ?>
 <!-- Breadcrumb --><div class="main-container">
       <!-- Sayfa Başlığı -->
       <header class="page-header">
@@ -53,20 +59,24 @@ $kayitlar = dbFetchYardimciLinkler($db);
         </div>
         <div class="links-grid" id="linksGrid">
 <?php foreach ($kayitlar as $k):
-    $logo = yardimciLinkLogo($k);
-?>
-          <div class="link-card" data-category="<?= htmlspecialchars($k['kategori']) ?>">
+  $logo = yardimciLinkLogo($k); ?>
+          <div class="link-card" data-category="<?= htmlspecialchars($k["kategori"]) ?>">
             <div class="card-image">
 <?php if ($logo): ?>
-              <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars($k['baslik']) ?>" class="system-logo" />
+              <img src="<?= htmlspecialchars($logo) ?>" alt="<?= htmlspecialchars(
+  $k["baslik"],
+) ?>" class="system-logo" />
 <?php else: ?>
               <i class="fas fa-external-link-alt link-fallback-icon" aria-hidden="true"></i>
 <?php endif; ?>
             </div>
-            <h3 class="link-title"><?= htmlspecialchars($k['baslik']) ?></h3>
-            <a class="site-btn" href="<?= htmlspecialchars($k['hedef_url']) ?>" target="_blank"> Siteye Git </a>
+            <h3 class="link-title"><?= htmlspecialchars($k["baslik"]) ?></h3>
+            <a class="site-btn" href="<?= htmlspecialchars(
+              $k["hedef_url"],
+            ) ?>" target="_blank"> Siteye Git </a>
           </div>
-          <?php endforeach; ?>
+          <?php
+endforeach; ?>
         </div>
       </div>
     </div>

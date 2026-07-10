@@ -1,25 +1,30 @@
 <?php
 // Eğer bu sayfa dahil edilmeden önce session_start() başlatılmadıysa otomatik başlatıyoruz kanka
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Oturum açmış personelin verileri yoksa varsayılan değerler atıyoruz ki hata fırlatmasın
-$session_ad = isset($_SESSION['ad']) ? $_SESSION['ad'] : 'Kullanıcı';
-$session_soyad = isset($_SESSION['soyad']) ? $_SESSION['soyad'] : 'Adı';
-$session_email = isset($_SESSION['email']) ? $_SESSION['email'] : 'personel@gebze.bel.tr';
-$session_foto = !empty($_SESSION['fotograf']) ? $_SESSION['fotograf'] : '../images/login/login.jpg';
-$session_oturum_aktif = !empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id']);
+$session_ad = isset($_SESSION["ad"]) ? $_SESSION["ad"] : "Kullanıcı";
+$session_soyad = isset($_SESSION["soyad"]) ? $_SESSION["soyad"] : "Adı";
+$session_email = isset($_SESSION["email"]) ? $_SESSION["email"] : "personel@gebze.bel.tr";
+$session_foto = !empty($_SESSION["fotograf"]) ? $_SESSION["fotograf"] : "../images/login/login.jpg";
+$session_oturum_aktif = !empty($_SESSION["personel_id"]) && !empty($_SESSION["oturum_id"]);
 
 // Oturum kaydı yanlışlıkla kapanmışsa (hızlı yenileme vb.) yeniden aç
-if (!empty($_SESSION['personel_id']) && empty($_SESSION['oturum_id']) && isset($db) && $db instanceof PDO) {
-    $_SESSION['oturum_id'] = oturumStart($db, (int)$_SESSION['personel_id']);
-    $session_oturum_aktif = true;
+if (
+  !empty($_SESSION["personel_id"]) &&
+  empty($_SESSION["oturum_id"]) &&
+  isset($db) &&
+  $db instanceof PDO
+) {
+  $_SESSION["oturum_id"] = oturumStart($db, (int) $_SESSION["personel_id"]);
+  $session_oturum_aktif = true;
 }
 
 // Aktif oturumun son aktivite zamanını yenile
 if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
-    oturumTouch($db, (int)$_SESSION['oturum_id']);
+  oturumTouch($db, (int) $_SESSION["oturum_id"]);
 }
 ?>
 <?php if ($session_oturum_aktif): ?>
@@ -259,7 +264,9 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
               <div class="profile-info">
                 <img src="<?php echo $session_foto; ?>" alt="Profil" class="profile-menu-img" />
                 <div class="profile-details">
-                  <span class="profile-name"><?php echo $session_ad . " " . $session_soyad; ?></span>
+                  <span class="profile-name"><?php echo $session_ad .
+                    " " .
+                    $session_soyad; ?></span>
                   <span class="profile-role">Personel</span>
                 </div>
               </div>
@@ -298,7 +305,9 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
         <div class="side-menu-profile">
           <img src="<?php echo $session_foto; ?>" alt="Profil" class="side-menu-profile-img" />
           <div class="side-menu-profile-details">
-            <span class="side-menu-profile-name"><?php echo $session_ad . " " . $session_soyad; ?></span>
+            <span class="side-menu-profile-name"><?php echo $session_ad .
+              " " .
+              $session_soyad; ?></span>
             <span class="side-menu-profile-email"><?php echo $session_email; ?></span>
           </div>
         </div>

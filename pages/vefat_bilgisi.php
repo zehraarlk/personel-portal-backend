@@ -1,5 +1,5 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $vefatKayitlari = dbFetchAll($db, "SELECT * FROM vefat_bilgileri ORDER BY vefat_tarihi DESC");
 ?>
 <!doctype html>
@@ -18,11 +18,17 @@ $vefatKayitlari = dbFetchAll($db, "SELECT * FROM vefat_bilgileri ORDER BY vefat_
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "vefat_bilgisi.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "vefat_bilgisi.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Vefat Bilgisi"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Vefat Bilgisi";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-content container">
       <div class="container">
         <div class="page-header">

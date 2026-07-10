@@ -11,7 +11,11 @@ $useDetailLayout = !empty($useDetailLayout);
     <link rel="shortcut icon" type="image/png" href="../images/favicon.png" />
     <link rel="apple-touch-icon" href="../images/favicon.png" />
 <?php if ($pageCss !== ""): ?>
-    <link rel="stylesheet" href="../CSS/<?= htmlspecialchars(basename($pageCss), ENT_QUOTES, "UTF-8") ?>" />
+    <link rel="stylesheet" href="../CSS/<?= htmlspecialchars(
+      basename($pageCss),
+      ENT_QUOTES,
+      "UTF-8",
+    ) ?>" />
 <?php endif; ?>
     <link rel="stylesheet" href="../CSS/navbar.css" />
     <link rel="stylesheet" href="../CSS/footer.css" />

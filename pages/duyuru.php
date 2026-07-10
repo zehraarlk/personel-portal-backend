@@ -1,5 +1,5 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $kayitlar = dbFetchEtkinliklerDuyurular($db);
 ?>
 <!doctype html>
@@ -18,11 +18,17 @@ $kayitlar = dbFetchEtkinliklerDuyurular($db);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "duyuru.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "duyuru.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Duyurular"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Duyurular";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-container container py-5">
       <!-- Sayfa Başlığı -->
       <header class="page-header">
@@ -49,44 +55,51 @@ $kayitlar = dbFetchEtkinliklerDuyurular($db);
       <!-- Duyurular Grid -->
       <div class="documents-grid news-grid" id="documentsGrid">
 <?php foreach ($kayitlar as $k):
-  $tarihFmt = !empty($k['tarih']) ? date('d.m.Y', strtotime($k['tarih'])) : '';
-  $resimUrl = imgUrl($k['resim_url'] ?? '');
-?>
+
+  $tarihFmt = !empty($k["tarih"]) ? date("d.m.Y", strtotime($k["tarih"])) : "";
+  $resimUrl = imgUrl($k["resim_url"] ?? "");
+  ?>
         <div
           class="document-card news-card"
-          data-type="<?= htmlspecialchars($k['alt_tip'] ?? '', ENT_QUOTES) ?>"
-          data-category="<?= htmlspecialchars($k['alt_tip'] ?? '', ENT_QUOTES) ?>"
-          data-baslik="<?= htmlspecialchars($k['baslik'], ENT_QUOTES) ?>"
-          data-aciklama="<?= htmlspecialchars($k['aciklama'] ?? '', ENT_QUOTES) ?>"
-          data-kategori="<?= htmlspecialchars($k['kategori_adi'] ?? '', ENT_QUOTES) ?>"
+          data-type="<?= htmlspecialchars($k["alt_tip"] ?? "", ENT_QUOTES) ?>"
+          data-category="<?= htmlspecialchars($k["alt_tip"] ?? "", ENT_QUOTES) ?>"
+          data-baslik="<?= htmlspecialchars($k["baslik"], ENT_QUOTES) ?>"
+          data-aciklama="<?= htmlspecialchars($k["aciklama"] ?? "", ENT_QUOTES) ?>"
+          data-kategori="<?= htmlspecialchars($k["kategori_adi"] ?? "", ENT_QUOTES) ?>"
           data-tarih="<?= htmlspecialchars($tarihFmt, ENT_QUOTES) ?>"
           data-resim="<?= htmlspecialchars($resimUrl, ENT_QUOTES) ?>"
-          data-dosya="<?= htmlspecialchars($k['dosya_url'] ?? '', ENT_QUOTES) ?>"
-          data-video="<?= htmlspecialchars($k['video_url'] ?? '', ENT_QUOTES) ?>"
+          data-dosya="<?= htmlspecialchars($k["dosya_url"] ?? "", ENT_QUOTES) ?>"
+          data-video="<?= htmlspecialchars($k["video_url"] ?? "", ENT_QUOTES) ?>"
         >
           <img
             src="<?= htmlspecialchars($resimUrl) ?>"
-            alt="<?= htmlspecialchars($k['baslik']) ?>"
+            alt="<?= htmlspecialchars($k["baslik"]) ?>"
             class="news-image"
             loading="lazy"
           />
           <div class="news-content">
-            <?php if (!empty($k['kategori_adi'])): ?>
-            <span class="document-category news-department-name"><?= htmlspecialchars($k['kategori_adi']) ?></span>
+            <?php if (!empty($k["kategori_adi"])): ?>
+            <span class="document-category news-department-name"><?= htmlspecialchars(
+              $k["kategori_adi"],
+            ) ?></span>
             <?php endif; ?>
-            <h3 class="document-title news-title"><?= htmlspecialchars($k['baslik']) ?></h3>
-            <p class="document-description news-excerpt"><?= htmlspecialchars($k['aciklama'] ?? '') ?></p>
-            <?php if (!empty($k['tarih'])): ?>
+            <h3 class="document-title news-title"><?= htmlspecialchars($k["baslik"]) ?></h3>
+            <p class="document-description news-excerpt"><?= htmlspecialchars(
+              $k["aciklama"] ?? "",
+            ) ?></p>
+            <?php if (!empty($k["tarih"])): ?>
             <div class="document-meta news-meta">
               <span class="document-date news-date">
                 <i class="fas fa-calendar-alt"></i>
-                <?= date('d.m.Y', strtotime($k['tarih'])) ?>
+                <?= date("d.m.Y", strtotime($k["tarih"])) ?>
               </span>
             </div>
             <?php endif; ?>
             <div class="download-section">
-              <?php if (!empty($k['video_url'])): ?>
-              <a class="preview-btn preview-btn-secondary" href="<?= htmlspecialchars($k['video_url']) ?>" target="_blank" rel="noopener">Videoyu İzle</a>
+              <?php if (!empty($k["video_url"])): ?>
+              <a class="preview-btn preview-btn-secondary" href="<?= htmlspecialchars(
+                $k["video_url"],
+              ) ?>" target="_blank" rel="noopener">Videoyu İzle</a>
               <?php endif; ?>
               <button
                 class="preview-btn btn-duyuru-detail"
@@ -99,7 +112,8 @@ $kayitlar = dbFetchEtkinliklerDuyurular($db);
             </div>
           </div>
         </div>
-        <?php endforeach; ?>
+        <?php
+endforeach; ?>
       </div>
     </div>
 

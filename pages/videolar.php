@@ -1,8 +1,21 @@
 <?php
-include("baglan.php");
-$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE id = 1");
+include "baglan.php";
+$vitrinVideo = dbFetchVitrinVideo($db);
 $tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
 dbEnsureVideoMetadata($db, $tumVideolar);
+if ($vitrinVideo) {
+  $vitrinId = (int) $vitrinVideo["id"];
+  $tumVideolar = array_values(
+    array_filter($tumVideolar, static fn(array $video): bool => (int) $video["id"] !== $vitrinId),
+  );
+}
+$vitrinBaslik = !empty($vitrinVideo["vitrin_baslik"])
+  ? $vitrinVideo["vitrin_baslik"]
+  : $vitrinVideo["baslik"] ?? "Gebze'de Offroad Heyecanı";
+$vitrinAciklama = !empty($vitrinVideo["vitrin_aciklama"])
+  ? $vitrinVideo["vitrin_aciklama"]
+  : $vitrinVideo["aciklama"] ?? "Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...";
+$vitrinYoutubeId = $vitrinVideo["youtube_id"] ?? "qLqYPQgUPEc";
 ?>
 <!doctype html>
 <html lang="tr">
@@ -18,11 +31,17 @@ dbEnsureVideoMetadata($db, $tumVideolar);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "videolar.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "videolar.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Videolar"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Videolar";
+    include "includes/breadcrumb.php";
+    ?>
 <main class="container py-5">
       <section class="row align-items-center mb-5 gx-5 featured-video-section">
   <div class="col-lg-7 mb-4 mb-lg-0">
@@ -30,10 +49,14 @@ dbEnsureVideoMetadata($db, $tumVideolar);
       class="featured-video-placeholder rounded-3 shadow-lg card-thumbnail"
       data-bs-toggle="modal"
       data-bs-target="#videoModal"
-      data-youtube-id="<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>"
+      data-youtube-id="<?php echo htmlspecialchars($vitrinYoutubeId, ENT_QUOTES, "UTF-8"); ?>"
     >
       <img
-        src="https://img.youtube.com/vi/<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>/maxresdefault.jpg"
+        src="https://img.youtube.com/vi/<?php echo htmlspecialchars(
+          $vitrinYoutubeId,
+          ENT_QUOTES,
+          "UTF-8",
+        ); ?>/maxresdefault.jpg"
         alt="Haftanın Videosu"
         class="img-fluid rounded-3 w-100 h-100"
         style="object-fit: cover"
@@ -44,10 +67,10 @@ dbEnsureVideoMetadata($db, $tumVideolar);
   
   <div class="col-lg-5">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-      Haftanın Videosu: <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['baslik'], ENT_QUOTES, 'UTF-8') : "Gebze'de Offroad Heyecanı"; ?>
+      Haftanın Videosu: <?php echo htmlspecialchars($vitrinBaslik, ENT_QUOTES, "UTF-8"); ?>
     </h1>
     <p class="lead">
-      <?php echo !empty($vitrinVideo) ? htmlspecialchars($vitrinVideo['aciklama'], ENT_QUOTES, 'UTF-8') : 'Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...'; ?>
+      <?php echo htmlspecialchars($vitrinAciklama, ENT_QUOTES, "UTF-8"); ?>
     </p>
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
@@ -56,7 +79,7 @@ dbEnsureVideoMetadata($db, $tumVideolar);
         class="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
         data-bs-toggle="modal"
         data-bs-target="#videoModal"
-        data-youtube-id="<?php echo !empty($vitrinVideo) ? $vitrinVideo['youtube_id'] : 'qLqYPQgUPEc'; ?>"
+        data-youtube-id="<?php echo htmlspecialchars($vitrinYoutubeId, ENT_QUOTES, "UTF-8"); ?>"
       >
         Videoyu İzle
       </button>
@@ -142,7 +165,10 @@ dbEnsureVideoMetadata($db, $tumVideolar);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const veritabanindanGelenVideolar = <?php echo json_encode($tumVideolar, JSON_UNESCAPED_UNICODE); ?>;
+        const veritabanindanGelenVideolar = <?php echo json_encode(
+          $tumVideolar,
+          JSON_UNESCAPED_UNICODE,
+        ); ?>;
     </script>
     <script src="../JS/videolar.script.js"></script>
     <script src="../JS/navbar.js"></script>

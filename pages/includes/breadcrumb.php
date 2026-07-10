@@ -1,9 +1,8 @@
 <?php
 /** @var string $pageTitle Sayfa başlığı – boşsa breadcrumb gösterilmez */
 if (empty($pageTitle)) {
-    return;
-}
-?>
+  return;
+} ?>
     <div class="breadcrumb-section">
       <div class="breadcrumb-container">
         <nav aria-label="breadcrumb">

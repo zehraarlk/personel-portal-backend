@@ -1,13 +1,13 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $egitimler = dbFetchAll(
-    $db,
-    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.dosya_yolu, r.boyut, r.tarih
+  $db,
+  "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.dosya_yolu, r.boyut, r.tarih
      FROM kaynaklar r
      JOIN kaynaklar_kategori k ON r.kategori_id = k.id
      WHERE k.slug = ?
      ORDER BY r.tarih DESC",
-    ["Eğitimler"]
+  ["Eğitimler"],
 );
 ?>
 <!doctype html>
@@ -26,11 +26,17 @@ $egitimler = dbFetchAll(
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "egitim.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "egitim.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Eğitim"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Eğitim";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-container container-py-5">
       <header class="page-header">
         <div class="content">
@@ -55,9 +61,10 @@ $egitimler = dbFetchAll(
       <div class="documents-grid" id="documentsGrid">
 <?php if (count($egitimler) > 0): ?>
 <?php foreach ($egitimler as $row):
-    $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
-    $video = htmlspecialchars($row["dosya_yolu"], ENT_QUOTES);
-?>
+
+  $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
+  $video = htmlspecialchars($row["dosya_yolu"], ENT_QUOTES);
+  ?>
         <div class="document-card" data-category="training">
           <div class="document-header">
             <div class="document-info">
@@ -88,7 +95,8 @@ $egitimler = dbFetchAll(
             </button>
           </div>
         </div>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
 <?php else: ?>
         <p>Henüz eklenmiş eğitim bulunmuyor.</p>
 <?php endif; ?>

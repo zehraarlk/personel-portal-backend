@@ -1,37 +1,39 @@
 <?php
 session_start();
-include("baglan.php");
+include "baglan.php";
 $hataMesaji = "";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['sicil_no']) && isset($_POST['sifre'])) {
-    $sicil_no = trim($_POST['sicil_no']);
-    $sifre = md5(trim($_POST['sifre'])); // Şifreyi MD5'leyerek kontrol ediyoruz
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["sicil_no"]) && isset($_POST["sifre"])) {
+  $sicil_no = trim($_POST["sicil_no"]);
+  $sifre = md5(trim($_POST["sifre"])); // Şifreyi MD5'leyerek kontrol ediyoruz
 
-    if (!empty($sicil_no) && !empty($sifre)) {
-        // Personeller tablosundan sicil no ve şifre eşleşmesi kontrolü
-        $sorgu = $db->prepare("SELECT * FROM personeller WHERE sicil_no = ? AND sifre = ?");
-        $sorgu->execute([$sicil_no, $sifre]);
-        $personel = $sorgu->fetch(PDO::FETCH_ASSOC);
+  if (!empty($sicil_no) && !empty($sifre)) {
+    // Personeller tablosundan sicil no ve şifre eşleşmesi kontrolü
+    $sorgu = $db->prepare("SELECT * FROM personeller WHERE sicil_no = ? AND sifre = ?");
+    $sorgu->execute([$sicil_no, $sifre]);
+    $personel = $sorgu->fetch(PDO::FETCH_ASSOC);
 
-        if ($personel) {
-            $_SESSION['personel_id'] = $personel['id'];
-            $_SESSION['sicil_no']     = $personel['sicil_no'];
-            $_SESSION['email']        = $personel['email'];
-            $_SESSION['fotograf']     = !empty($personel['foto_url']) ? $personel['foto_url'] : '../images/login/login.jpg';
-            $_SESSION['ad']           = $personel['ad'];
-            $_SESSION['soyad']        = $personel['soyad'];
+    if ($personel) {
+      $_SESSION["personel_id"] = $personel["id"];
+      $_SESSION["sicil_no"] = $personel["sicil_no"];
+      $_SESSION["email"] = $personel["email"];
+      $_SESSION["fotograf"] = !empty($personel["foto_url"])
+        ? $personel["foto_url"]
+        : "../images/login/login.jpg";
+      $_SESSION["ad"] = $personel["ad"];
+      $_SESSION["soyad"] = $personel["soyad"];
 
-            // 🕒 Giriş: eski açık oturumları kapat, yenisini aç
-            $_SESSION['oturum_id'] = oturumStart($db, (int)$personel['id']);
+      // 🕒 Giriş: eski açık oturumları kapat, yenisini aç
+      $_SESSION["oturum_id"] = oturumStart($db, (int) $personel["id"]);
 
-            echo json_encode(["status" => "success"]);
-            exit;
-        } else {
-            echo json_encode(["status" => "error", "message" => "Sicil numarası veya şifre hatalı!"]);
-            exit;
-        }
+      echo json_encode(["status" => "success"]);
+      exit();
+    } else {
+      echo json_encode(["status" => "error", "message" => "Sicil numarası veya şifre hatalı!"]);
+      exit();
     }
-    exit;
+  }
+  exit();
 }
 ?>
 <!doctype html>

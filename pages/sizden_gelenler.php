@@ -1,11 +1,14 @@
 <?php
-include("baglan.php");
-$sizdenGelenler = dbFetchAll($db, "
+include "baglan.php";
+$sizdenGelenler = dbFetchAll(
+  $db,
+  "
     SELECT sg.*, k.slug AS kategori_slug, k.ad AS kategori_adi
     FROM sizden_gelenler sg
     LEFT JOIN sizdengelenler_kategori k ON sg.kategori_id = k.id
     ORDER BY sg.tarih DESC
-");
+",
+);
 $toplamKayit = count($sizdenGelenler);
 ?>
 <!doctype html>
@@ -24,11 +27,17 @@ $toplamKayit = count($sizdenGelenler);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "sizden_gelenler.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "sizden_gelenler.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Sizden Gelenler"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Sizden Gelenler";
+    include "includes/breadcrumb.php";
+    ?>
 <!-- Breadcrumb Section - Logo ile aynı hizaya getirildi --><!-- Page Header - Logo ile aynı hizaya getirildi -->
     <div class="page-header">
       <div class="nav-container">

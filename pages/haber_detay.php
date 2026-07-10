@@ -1,17 +1,21 @@
 <?php
-include("baglan.php");
-$haberId = isset($_GET["id"]) ? (int)$_GET["id"] : 1;
+include "baglan.php";
+$haberId = isset($_GET["id"]) ? (int) $_GET["id"] : 1;
 dbEnsureColumn($db, "haberler", "view", "INT(11) NOT NULL DEFAULT 0");
 $haber = dbFetchOne($db, "SELECT * FROM haberler WHERE id = ?", [$haberId]);
 if ($haber) {
-    $viewResult = dbBumpUniqueView($db, "haberler", $haberId, "view");
-    $haber["view"] = $viewResult["count"];
+  $viewResult = dbBumpUniqueView($db, "haberler", $haberId, "view");
+  $haber["view"] = $viewResult["count"];
 }
-$galeri = dbFetchAll($db, "SELECT * FROM haber_galeri WHERE haber_id = ? ORDER BY sira", [$haberId]);
+$galeri = dbFetchAll($db, "SELECT * FROM haber_galeri WHERE haber_id = ? ORDER BY sira", [
+  $haberId,
+]);
 if (empty($galeri) && $haber) {
-    $galeri = [["resim_url" => $haber["resim"] ?? ""]];
+  $galeri = [["resim_url" => $haber["resim"] ?? ""]];
 }
-$digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY id DESC LIMIT 12", [$haberId]);
+$digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY id DESC LIMIT 12", [
+  $haberId,
+]);
 ?>
 <!doctype html>
 <html lang="tr">
@@ -29,11 +33,17 @@ $digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY 
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "haber_detay.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "haber_detay.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Haber Detayı"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Haber Detayı";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="content-area">
       <div class="row">
         <div>
@@ -96,7 +106,7 @@ $digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY 
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
                     <i class="fas fa-eye"></i>
-                    <span id="articleViews"><?= (int)($haber["view"] ?? 0) ?></span> görüntülenme
+                    <span id="articleViews"><?= (int) ($haber["view"] ?? 0) ?></span> görüntülenme
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
                     <i class="fas fa-user"></i>
@@ -145,11 +155,15 @@ $digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY 
             <h4 class="other-news-title"><i class="fas fa-bullhorn"></i> Diğer Haberler</h4>
             <div id="other-news-list" class="other-news-list">
 <?php foreach ($digerHaberler as $h): ?>
-              <a href="haber_detay.php?id=<?= (int)$h["id"] ?>" class="other-news-item">
-                <img src="<?= htmlspecialchars(imgUrl($h["resim"] ?? "")) ?>" alt="<?= htmlspecialchars($h["baslik"]) ?>" />
+              <a href="haber_detay.php?id=<?= (int) $h["id"] ?>" class="other-news-item">
+                <img src="<?= htmlspecialchars(
+                  imgUrl($h["resim"] ?? ""),
+                ) ?>" alt="<?= htmlspecialchars($h["baslik"]) ?>" />
                 <div>
                   <div class="item-title"><?= htmlspecialchars($h["baslik"]) ?></div>
-                  <p style="color: rgb(135, 135, 135)"><?= htmlspecialchars($h["aciklama"] ?? "") ?></p>
+                  <p style="color: rgb(135, 135, 135)"><?= htmlspecialchars(
+                    $h["aciklama"] ?? "",
+                  ) ?></p>
                 </div>
               </a>
               <?php endforeach; ?>
@@ -162,10 +176,12 @@ $digerHaberler = dbFetchAll($db, "SELECT * FROM haberler WHERE id != ? ORDER BY 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     const phpGaleriGorseller = <?php
-      $galeriKaynak = !empty($galeri) ? $galeri : [["resim_url" => $haber["resim"] ?? ""]];
-      echo jsonData(array_map(function ($g) {
-        return ["resim" => imgUrl($g["resim_url"] ?? $g["resim"] ?? "")];
-      }, $galeriKaynak));
+    $galeriKaynak = !empty($galeri) ? $galeri : [["resim_url" => $haber["resim"] ?? ""]];
+    echo jsonData(
+      array_map(function ($g) {
+        return ["resim" => imgUrl($g["resim_url"] ?? ($g["resim"] ?? ""))];
+      }, $galeriKaynak),
+    );
     ?>;
     const phpHaberBaslik = <?= json_encode($haber["baslik"] ?? "", JSON_UNESCAPED_UNICODE) ?>;
   </script>

@@ -1,13 +1,13 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $protokoller = dbFetchAll(
-    $db,
-    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.ikon, r.dosya_yolu, r.boyut, r.tarih
+  $db,
+  "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, r.ikon, r.dosya_yolu, r.boyut, r.tarih
      FROM kaynaklar r
      JOIN kaynaklar_kategori k ON r.kategori_id = k.id
      WHERE k.slug = ?
      ORDER BY r.tarih DESC",
-    ["Protokoller"]
+  ["Protokoller"],
 );
 ?>
 <!doctype html>
@@ -26,11 +26,17 @@ $protokoller = dbFetchAll(
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "protokol.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "protokol.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Protokoller"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Protokoller";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-container">
       <header class="page-header">
         <div class="content">
@@ -55,10 +61,11 @@ $protokoller = dbFetchAll(
       <div class="documents-grid" id="documentsGrid">
 <?php if (count($protokoller) > 0): ?>
 <?php foreach ($protokoller as $row):
-    $uzanti = strtolower(pathinfo($row["dosya_yolu"], PATHINFO_EXTENSION));
-    $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
-    $ikon = !empty($row["ikon"]) ? $row["ikon"] : "fa-file-signature";
-?>
+
+  $uzanti = strtolower(pathinfo($row["dosya_yolu"], PATHINFO_EXTENSION));
+  $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
+  $ikon = !empty($row["ikon"]) ? $row["ikon"] : "fa-file-signature";
+  ?>
         <div class="document-card" data-category="protocol">
           <div class="document-header">
             <div class="document-icon">
@@ -89,7 +96,8 @@ $protokoller = dbFetchAll(
             </button>
           </div>
         </div>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
 <?php else: ?>
         <p>Henüz eklenmiş protokol bulunmuyor.</p>
 <?php endif; ?>

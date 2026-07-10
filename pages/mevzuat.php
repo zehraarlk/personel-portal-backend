@@ -1,21 +1,21 @@
 <?php
-include("baglan.php");
+include "baglan.php";
 $mevzuatlar = dbFetchAll(
-    $db,
-    "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, ak.slug AS alt_kategori,
+  $db,
+  "SELECT r.id, r.baslik, r.aciklama, k.slug AS kategori, ak.slug AS alt_kategori,
             r.ikon, r.dosya_yolu, r.resmi_sayfa, r.boyut, r.tarih
      FROM kaynaklar r
      JOIN kaynaklar_kategori k ON r.kategori_id = k.id
      LEFT JOIN kaynaklar_alt_kategori ak ON r.alt_kategori_id = ak.id
      WHERE k.slug = ?
      ORDER BY r.tarih DESC",
-    ["Mevzuatlar"]
+  ["Mevzuatlar"],
 );
 $altKategoriMap = [
-    "genel"      => "Genel Mevzuatlar",
-    "memur"      => "Memur Mevzuatları",
-    "sozlesmeli" => "Sözleşmeli Memur Mevzuatları",
-    "isci"       => "İşçi Mevzuatları",
+  "genel" => "Genel Mevzuatlar",
+  "memur" => "Memur Mevzuatları",
+  "sozlesmeli" => "Sözleşmeli Memur Mevzuatları",
+  "isci" => "İşçi Mevzuatları",
 ];
 ?>
 <!doctype html>
@@ -34,11 +34,17 @@ $altKategoriMap = [
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-<?php $pageCss = "mevzuat.style.css"; include "includes/site-styles.php"; ?>
+<?php
+$pageCss = "mevzuat.style.css";
+include "includes/site-styles.php";
+?>
   </head>
   <body>
     <?php include "includes/header-nav.php"; ?>
-    <?php $pageTitle = "Mevzuatlar"; include "includes/breadcrumb.php"; ?>
+    <?php
+    $pageTitle = "Mevzuatlar";
+    include "includes/breadcrumb.php";
+    ?>
     <div class="main-container">
       <header class="page-header">
         <div class="content">
@@ -72,12 +78,15 @@ $altKategoriMap = [
       <div class="documents-grid" id="documentsGrid">
 <?php if (count($mevzuatlar) > 0): ?>
 <?php foreach ($mevzuatlar as $row):
-    $altKod = !empty($row["alt_kategori"]) ? $row["alt_kategori"] : "genel";
-    $altAd = $altKategoriMap[$altKod] ?? "Genel Mevzuatlar";
-    $ikon = !empty($row["ikon"]) ? $row["ikon"] : "fa-folder-open";
-    $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
-?>
-        <div class="document-card" data-category="regulation" data-type="<?= htmlspecialchars($altKod) ?>">
+
+  $altKod = !empty($row["alt_kategori"]) ? $row["alt_kategori"] : "genel";
+  $altAd = $altKategoriMap[$altKod] ?? "Genel Mevzuatlar";
+  $ikon = !empty($row["ikon"]) ? $row["ikon"] : "fa-folder-open";
+  $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
+  ?>
+        <div class="document-card" data-category="regulation" data-type="<?= htmlspecialchars(
+          $altKod,
+        ) ?>">
           <div class="document-header">
             <div class="document-icon">
               <i class="fas <?= htmlspecialchars($ikon) ?>"></i>
@@ -118,7 +127,8 @@ $altKategoriMap = [
 <?php endif; ?>
           </div>
         </div>
-<?php endforeach; ?>
+<?php
+endforeach; ?>
 <?php else: ?>
         <p>Henüz eklenmiş mevzuat bulunmuyor.</p>
 <?php endif; ?>
