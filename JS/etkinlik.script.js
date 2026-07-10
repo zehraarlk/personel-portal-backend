@@ -247,7 +247,7 @@ function showNoResults() {
 // Update results count
 function updateResultsCount() {
   if (resultsCount) {
-    resultsCount.innerHTML = `<strong>${filteredData.length}</strong> sonuÃ§ bulundu`;
+    resultsCount.innerHTML = `<strong>${filteredData.length}</strong> sonuç bulundu`;
   }
 }
 

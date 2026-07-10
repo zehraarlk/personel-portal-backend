@@ -262,7 +262,12 @@ function dbFillVideoFromYoutube(PDO $db, array $video): array
   $needsBaslik = dbVideoFieldIsEmpty($video["baslik"] ?? null);
   $needsAciklama = dbVideoFieldIsEmpty($video["aciklama"] ?? null);
   $needsSure = dbVideoFieldIsEmpty($video["sure"] ?? null);
-  $needsKategori = dbVideoFieldIsEmpty($video["kategori"] ?? null);
+  $hasKategoriColumn = dbColumnExists($db, "videolar", "kategori");
+  $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
+  $needsKategori =
+    $hasKategoriColumn &&
+    dbVideoFieldIsEmpty($video["kategori"] ?? null) &&
+    !($hasKategoriId && !empty($video["kategori_id"]));
 
   if (!$needsBaslik && !$needsAciklama && !$needsSure && !$needsKategori) {
     return $video;
@@ -348,6 +353,11 @@ function dbVideolarListSql(PDO $db): string
 function dbEnsureVideoMetadata(PDO $db, array &$videos): void
 {
   $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
+  $hasKategoriColumn = dbColumnExists($db, "videolar", "kategori");
+  $syncFields = ["baslik", "aciklama", "sure"];
+  if ($hasKategoriColumn) {
+    $syncFields[] = "kategori";
+  }
 
   foreach ($videos as $i => $row) {
     $filled = dbFillVideoFromYoutube($db, $row);
@@ -356,7 +366,7 @@ function dbEnsureVideoMetadata(PDO $db, array &$videos): void
     $setParts = [];
     $params = [];
 
-    foreach (["baslik", "aciklama", "sure", "kategori"] as $field) {
+    foreach ($syncFields as $field) {
       $oldValue = trim((string) ($row[$field] ?? ""));
       $newValue = trim((string) ($filled[$field] ?? ""));
       if ($oldValue === "" && $newValue !== "" && $newValue !== ($row[$field] ?? "")) {
@@ -1602,14 +1612,31 @@ function dbVideolarKategoriAdiEslemesi(): array
   ];
 }
 
-function dbVideolarKategoriAdi(string $slug): string
+function dbVideolarKategoriAdi(?string $slug): string
 {
-  $slug = trim($slug);
+  $slug = trim((string) $slug);
   $eslesme = dbVideolarKategoriAdiEslemesi();
   if (isset($eslesme[$slug])) {
     return $eslesme[$slug];
   }
-  return $slug !== "" ? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8") : $slug;
+  return $slug !== "" ? mb_convert_case($slug, MB_CASE_TITLE, "UTF-8") : "-";
+}
+
+/** videolar satırlarına kategori_id üzerinden slug ekler (kategori kolonu yoksa). */
+function dbVideolarAttachKategoriSlug(PDO $db, array $videos): array
+{
+  $slugById = [];
+  foreach (dbVideolarKategoriler($db) as $kat) {
+    $slugById[(int) $kat["id"]] = (string) $kat["slug"];
+  }
+
+  foreach ($videos as $i => $video) {
+    if (empty($video["kategori"]) && !empty($video["kategori_id"])) {
+      $videos[$i]["kategori"] = $slugById[(int) $video["kategori_id"]] ?? "";
+    }
+  }
+
+  return $videos;
 }
 
 /**
@@ -2656,6 +2683,69 @@ function dbFetchYardimciLinkler(PDO $db): array
   );
 }
 
+function dbFetchOneYardimciLink(PDO $db, int $id): ?array
+{
+  if ($id <= 0) {
+    return null;
+  }
+  if (dbColumnExists($db, "yardimci_linkler", "kategori")) {
+    return dbFetchOne($db, "SELECT * FROM yardimci_linkler WHERE id = ?", [$id]);
+  }
+  return dbFetchOne(
+    $db,
+    "SELECT t.*, k.slug AS kategori
+         FROM yardimci_linkler t
+         LEFT JOIN yardimci_linkler_kategori k ON k.id = t.kategori_id
+         WHERE t.id = ?",
+    [$id],
+  );
+}
+
+function dbYardimciLinkKategoriLabel(array $row, array $katMap): string
+{
+  $slug = (string) ($row["kategori"] ?? "");
+  return $katMap[$slug] ?? $slug;
+}
+
+function dbYardimciLinkInsert(
+  PDO $db,
+  string $baslik,
+  string $kategoriSlug,
+  ?string $logo,
+  string $hedef,
+): void {
+  if (dbColumnExists($db, "yardimci_linkler", "kategori")) {
+    $db->prepare(
+      "INSERT INTO yardimci_linkler (baslik, kategori, logo_url, hedef_url) VALUES (?, ?, ?, ?)",
+    )->execute([$baslik, $kategoriSlug, $logo, $hedef]);
+    return;
+  }
+  $kategoriId = dbYardimciLinklerKategoriId($db, $kategoriSlug);
+  $db->prepare(
+    "INSERT INTO yardimci_linkler (baslik, kategori_id, logo_url, hedef_url) VALUES (?, ?, ?, ?)",
+  )->execute([$baslik, $kategoriId, $logo, $hedef]);
+}
+
+function dbYardimciLinkUpdate(
+  PDO $db,
+  int $id,
+  string $baslik,
+  string $kategoriSlug,
+  ?string $logo,
+  string $hedef,
+): void {
+  if (dbColumnExists($db, "yardimci_linkler", "kategori")) {
+    $db->prepare(
+      "UPDATE yardimci_linkler SET baslik=?, kategori=?, logo_url=?, hedef_url=? WHERE id=?",
+    )->execute([$baslik, $kategoriSlug, $logo, $hedef, $id]);
+    return;
+  }
+  $kategoriId = dbYardimciLinklerKategoriId($db, $kategoriSlug);
+  $db->prepare(
+    "UPDATE yardimci_linkler SET baslik=?, kategori_id=?, logo_url=?, hedef_url=? WHERE id=?",
+  )->execute([$baslik, $kategoriId, $logo, $hedef, $id]);
+}
+
 function dbEnsureIndex(PDO $db, string $table, string $indexName, array $columns): void
 {
   try {
@@ -2828,11 +2918,46 @@ function mapEtkinlikler(array $rows): array
         ? date("d.m.Y", strtotime($r["bitis_tarihi"] ?? $r["tarih"]))
         : "",
       "views" => (int) ($r["view"] ?? 0),
-      "status" => $r["durum"] ?? "aktif",
+      "status" => dbEtkinliklerResolveDurum($r),
       "image" => imgUrl($r["resim"] ?? ""),
     ],
     $rows,
   );
+}
+
+function dbEtkinliklerHasDurumColumn(PDO $db): bool
+{
+  static $has = null;
+  if ($has === null) {
+    $has = dbColumnExists($db, "etkinlikler", "durum");
+  }
+  return $has;
+}
+
+/** durum kolonu yoksa bitiş tarihine göre aktif/pasif döndürür. */
+function dbEtkinliklerResolveDurum(array $row): string
+{
+  $durum = trim((string) ($row["durum"] ?? ""));
+  if ($durum !== "" && in_array($durum, ["aktif", "pasif"], true)) {
+    return $durum;
+  }
+
+  $bitis = $row["bitis_tarihi"] ?? $row["tarih"] ?? null;
+  if (empty($bitis)) {
+    return "aktif";
+  }
+
+  $ts = strtotime((string) $bitis);
+  if ($ts === false) {
+    return "aktif";
+  }
+
+  return $ts >= strtotime("today") ? "aktif" : "pasif";
+}
+
+function dbEtkinliklerDurumLabel(string $durum): string
+{
+  return $durum === "aktif" ? "Aktif" : "Pasif";
 }
 
 function mapSizdenGelenler(array $rows): array

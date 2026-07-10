@@ -103,7 +103,9 @@ include "includes/site-styles.php";
     <script>
     window.eventData = <?php echo jsonData(mapEtkinlikler($etkinlikler)); ?>;
     </script>
-    <script src="../JS/etkinlik.script.js"></script>
+    <script src="../JS/etkinlik.script.js?v=<?php echo (int) @filemtime(
+      __DIR__ . "/../JS/etkinlik.script.js",
+    ); ?>"></script>
       <script src="../JS/navbar.js"></script>
   </body>
 </html>

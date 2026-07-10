@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../includes/auth.php";
 
 $id = (int) ($_GET["id"] ?? 0);
-$row = $id > 0 ? dbFetchOne($db, "SELECT * FROM yardimci_linkler WHERE id = ?", [$id]) : null;
+$row = dbFetchOneYardimciLink($db, $id);
 if (!$row) {
   adminFlashSet("danger", "Link bulunamadı.");
   header("Location: index.php");
@@ -23,17 +23,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($logo === null && !empty($_FILES["logo"]["name"])) {
       $hata = "Logo yüklenemedi.";
     } else {
-      $db
-        ->prepare(
-          "UPDATE yardimci_linkler SET baslik=?, kategori=?, logo_url=?, hedef_url=? WHERE id=?",
-        )
-        ->execute([
-          trim($_POST["baslik"] ?? ""),
-          trim($_POST["kategori"] ?? ""),
-          $logo,
-          trim($_POST["hedef_url"] ?? ""),
-          $id,
-        ]);
+      dbYardimciLinkUpdate(
+        $db,
+        $id,
+        trim($_POST["baslik"] ?? ""),
+        trim($_POST["kategori"] ?? ""),
+        $logo,
+        trim($_POST["hedef_url"] ?? ""),
+      );
       adminFlashSet("success", "Link güncellendi.");
       header("Location: index.php");
       exit();

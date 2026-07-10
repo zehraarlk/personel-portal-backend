@@ -21,11 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       if ($logo === null && !empty($_FILES["logo"]["name"])) {
         $hata = "Logo yüklenemedi.";
       } else {
-        $db
-          ->prepare(
-            "INSERT INTO yardimci_linkler (baslik, kategori, logo_url, hedef_url) VALUES (?, ?, ?, ?)",
-          )
-          ->execute([$baslik, $kategori, $logo, $hedef]);
+        dbYardimciLinkInsert($db, $baslik, $kategori, $logo, $hedef);
         adminFlashSet("success", "Link eklendi.");
         header("Location: index.php");
         exit();

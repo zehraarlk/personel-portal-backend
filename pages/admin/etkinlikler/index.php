@@ -37,10 +37,11 @@ include __DIR__ . "/../includes/header.php";
               "UTF-8",
             ) ?></strong></td>
             <td><?= date("d.m.Y", strtotime($row["tarih"])) ?></td>
-            <td><span class="admin-badge admin-badge-<?= $row["durum"] === "aktif"
+            <?php $durum = dbEtkinliklerResolveDurum($row); ?>
+            <td><span class="admin-badge admin-badge-<?= $durum === "aktif"
               ? "etkinlikler"
               : "duyurular" ?>"><?= htmlspecialchars(
-  $row["durum"],
+  dbEtkinliklerDurumLabel($durum),
   ENT_QUOTES,
   "UTF-8",
 ) ?></span></td>

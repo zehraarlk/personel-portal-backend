@@ -1,39 +1,29 @@
 <?php
-<<<<<<< HEAD
 include "baglan.php";
 $vitrinVideo = dbFetchVitrinVideo($db);
-$tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
-dbEnsureVideoMetadata($db, $tumVideolar);
+$tumVideolar = dbVideolarAttachKategoriSlug(
+  $db,
+  dbFetchAll($db, dbVideolarListSql($db)),
+);
+
 if ($vitrinVideo) {
   $vitrinId = (int) $vitrinVideo["id"];
   $tumVideolar = array_values(
-    array_filter($tumVideolar, static fn(array $video): bool => (int) $video["id"] !== $vitrinId),
+    array_filter(
+      $tumVideolar,
+      static fn(array $video): bool => (int) $video["id"] !== $vitrinId,
+    ),
   );
 }
-$vitrinBaslik = !empty($vitrinVideo["vitrin_baslik"])
-  ? $vitrinVideo["vitrin_baslik"]
-  : $vitrinVideo["baslik"] ?? "Gebze'de Offroad Heyecanı";
-$vitrinAciklama = !empty($vitrinVideo["vitrin_aciklama"])
-  ? $vitrinVideo["vitrin_aciklama"]
-  : $vitrinVideo["aciklama"] ?? "Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...";
-$vitrinYoutubeId = $vitrinVideo["youtube_id"] ?? "qLqYPQgUPEc";
-=======
-include("baglan.php");
-$vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar WHERE vitrin = 1 ORDER BY id DESC LIMIT 1");
-// Eğer hiç vitrin videosu işaretlenmemişse, listedeki en güncel videoyu yedek olarak göster
-if (empty($vitrinVideo)) {
-    $vitrinVideo = dbFetchOne($db, "SELECT * FROM videolar ORDER BY id DESC LIMIT 1");
-}
-$tumVideolar = dbFetchAll($db, "SELECT * FROM videolar ORDER BY id ASC");
 
-// Vitrin için özel başlık/açıklama girilmemişse, videonun kendi başlık/açıklamasını kullan
 $vitrinBaslik = "Gebze'de Offroad Heyecanı";
 $vitrinAciklama = "Belediyemizin yürüttüğü son projeler ve önemli gelişmeler...";
-if (!empty($vitrinVideo)) {
-    $vitrinBaslik = !empty($vitrinVideo['vitrin_baslik']) ? $vitrinVideo['vitrin_baslik'] : $vitrinVideo['baslik'];
-    $vitrinAciklama = !empty($vitrinVideo['vitrin_aciklama']) ? $vitrinVideo['vitrin_aciklama'] : $vitrinVideo['aciklama'];
+$vitrinYoutubeId = "qLqYPQgUPEc";
+if ($vitrinVideo) {
+  $vitrinBaslik = $vitrinVideo["baslik"] ?? $vitrinBaslik;
+  $vitrinAciklama = $vitrinVideo["aciklama"] ?? $vitrinAciklama;
+  $vitrinYoutubeId = $vitrinVideo["youtube_id"] ?? $vitrinYoutubeId;
 }
->>>>>>> b3231190de073d3560dd8734537fbcae2ba5e1cd
 ?>
 <!doctype html>
 <html lang="tr">
@@ -85,17 +75,10 @@ include "includes/site-styles.php";
   
   <div class="col-lg-5">
     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-<<<<<<< HEAD
       Haftanın Videosu: <?php echo htmlspecialchars($vitrinBaslik, ENT_QUOTES, "UTF-8"); ?>
     </h1>
     <p class="lead">
       <?php echo htmlspecialchars($vitrinAciklama, ENT_QUOTES, "UTF-8"); ?>
-=======
-      Haftanın Videosu: <?php echo htmlspecialchars($vitrinBaslik, ENT_QUOTES, 'UTF-8'); ?>
-    </h1>
-    <p class="lead">
-      <?php echo htmlspecialchars($vitrinAciklama, ENT_QUOTES, 'UTF-8'); ?>
->>>>>>> b3231190de073d3560dd8734537fbcae2ba5e1cd
     </p>
     
     <div class="d-grid gap-2 d-md-flex justify-content-md-start">

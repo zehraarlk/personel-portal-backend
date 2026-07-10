@@ -29,11 +29,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif ($baslik === "" || $tarih === "") {
       $hata = "Başlık ve tarih zorunludur.";
     } else {
-      $db
-        ->prepare(
-          "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, durum=?, resim=? WHERE id=?",
-        )
-        ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim, $id]);
+      if (dbEtkinliklerHasDurumColumn($db)) {
+        $db
+          ->prepare(
+            "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, durum=?, resim=? WHERE id=?",
+          )
+          ->execute([$baslik, $aciklama, $tarih, $bitis, $durum, $resim, $id]);
+      } else {
+        $db
+          ->prepare(
+            "UPDATE etkinlikler SET baslik=?, aciklama=?, tarih=?, bitis_tarihi=?, resim=? WHERE id=?",
+          )
+          ->execute([$baslik, $aciklama, $tarih, $bitis, $resim, $id]);
+      }
       adminFlashSet("success", "Etkinlik güncellendi.");
       header("Location: index.php");
       exit();
@@ -87,11 +95,11 @@ include __DIR__ . "/../includes/header.php";
           ENT_QUOTES,
           "UTF-8",
         ) ?>" /></div>
-        <div class="col-md-4 mb-3"><label class="form-label">Durum</label><select name="durum" class="form-select"><option value="aktif" <?= $row[
-          "durum"
-        ] === "aktif"
+        <div class="col-md-4 mb-3"><label class="form-label">Durum</label><select name="durum" class="form-select"><?php $mevcutDurum = dbEtkinliklerResolveDurum(
+          $row,
+        ); ?><option value="aktif" <?= $mevcutDurum === "aktif"
           ? "selected"
-          : "" ?>>Aktif</option><option value="pasif" <?= $row["durum"] === "pasif"
+          : "" ?>>Aktif</option><option value="pasif" <?= $mevcutDurum === "pasif"
   ? "selected"
   : "" ?>>Pasif</option></select></div>
       </div>
