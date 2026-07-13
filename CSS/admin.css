@@ -46,6 +46,21 @@ body.admin-body {
   overflow-x: hidden;
 }
 
+.admin-brand-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-brand-link:hover {
+  color: #fff;
+  text-decoration: none;
+}
+
+.admin-brand-link:hover .admin-brand img {
+  opacity: 0.92;
+}
+
 .admin-brand {
   padding: 22px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);

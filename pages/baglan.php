@@ -1155,6 +1155,24 @@ function portalProfileFotoUrl(): string
   return $path;
 }
 
+function portalOturumDurumEtiket(?string $cikis, ?string $tip, int $id, int $aktifId): array
+{
+  if (empty($cikis)) {
+    if ($aktifId > 0 && $id === $aktifId) {
+      return ["🔵 Açık", "badge-acik", "Aktif Seans"];
+    }
+    return ["⚪ Açık (eski)", "bg-secondary text-white", "Kapanmamış"];
+  }
+  $map = [
+    "manuel" => "Manuel çıkış",
+    "sekme" => "Sekme/tarayıcı kapanışı",
+    "otomatik" => "Otomatik kapanış",
+    "eski" => "Eski kayıt temizliği",
+  ];
+  $tipText = $map[$tip ?? ""] ?? "Kapatıldı";
+  return ["🟢 Kapatıldı", "bg-success-subtle text-success", $tipText];
+}
+
 /**
  * Üst menü / profil alanı için oturum tipine göre görünen ad, rol ve çıkış bilgisi.
  * Öncelik: yönetici oturumu > personel oturumu > misafir.

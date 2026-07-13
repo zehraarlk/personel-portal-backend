@@ -1,40 +1,41 @@
 <?php
 include "baglan.php";
 
-if (!isset($_SESSION["personel_id"])) {
+$yoneticiModu = adminIsLoggedIn();
+$personelModu = !$yoneticiModu && !empty($_SESSION["personel_id"]);
+
+if (!$yoneticiModu && !$personelModu) {
   header("Location: login.php");
   exit();
 }
 
-$personel_id = (int) $_SESSION["personel_id"];
-$aktifOturumId = isset($_SESSION["oturum_id"]) ? (int) $_SESSION["oturum_id"] : 0;
-
-$oturumlar = dbFetchAll(
-  $db,
-  "SELECT id, giris_zamani, cikis_zamani, kapanis_tipi, ip_adresi, son_aktivite
-     FROM oturum_kayitlari
-     WHERE personel_id = ?
-     ORDER BY id DESC
-     LIMIT 15",
-  [$personel_id],
-);
-
-function oturumDurumEtiket(?string $cikis, ?string $tip, int $id, int $aktifId): array
-{
-  if (empty($cikis)) {
-    if ($aktifId > 0 && $id === $aktifId) {
-      return ["🔵 Açık", "badge-acik", "Aktif Seans"];
-    }
-    return ["⚪ Açık (eski)", "bg-secondary text-white", "Kapanmamış"];
-  }
-  $map = [
-    "manuel" => "Manuel çıkış",
-    "sekme" => "Sekme/tarayıcı kapanışı",
-    "otomatik" => "Otomatik kapanış",
-    "eski" => "Eski kayıt temizliği",
-  ];
-  $tipText = $map[$tip ?? ""] ?? "Kapatıldı";
-  return ["🟢 Kapatıldı", "bg-success-subtle text-success", $tipText];
+if ($yoneticiModu) {
+  yoneticiOturumTouch($db, (int) ($_SESSION["yonetici_oturum_id"] ?? 0));
+  $aktifOturumId = (int) ($_SESSION["yonetici_oturum_id"] ?? 0);
+  $oturumlar = dbFetchAll(
+    $db,
+    "SELECT id, giris_zamani, cikis_zamani, kapanis_tipi, ip_adresi, son_aktivite, user_agent
+       FROM yonetici_oturum_kayitlari
+       WHERE yonetici_id = ?
+       ORDER BY id DESC
+       LIMIT 15",
+    [(int) $_SESSION["yonetici_id"]],
+  );
+  $cikisUrl = "admin/cikis.php";
+  $aciklama = "Son 15 yönetici oturum kaydı. Site/sekme kapatıldığında oturum otomatik kapanır.";
+} else {
+  $aktifOturumId = isset($_SESSION["oturum_id"]) ? (int) $_SESSION["oturum_id"] : 0;
+  $oturumlar = dbFetchAll(
+    $db,
+    "SELECT id, giris_zamani, cikis_zamani, kapanis_tipi, ip_adresi, son_aktivite
+       FROM oturum_kayitlari
+       WHERE personel_id = ?
+       ORDER BY id DESC
+       LIMIT 15",
+    [(int) $_SESSION["personel_id"]],
+  );
+  $cikisUrl = "cikis.php";
+  $aciklama = "Son 15 giriş kaydı. Site/sekme kapatıldığında oturum otomatik kapanır.";
 }
 ?>
 <!doctype html>
@@ -66,15 +67,15 @@ include "includes/site-styles.php";
       <div class="container profil-form-wide">
         <div class="card profil-card">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <span><i class="fas fa-history"></i>Oturum Bilgileri</span>
-            <a href="cikis.php" class="btn btn-cikis btn-sm" onclick="return confirm('Çıkış yapmak istediğinizden emin misiniz?');">
+            <span><i class="fas fa-history"></i>Oturum Bilgileri<?= $yoneticiModu
+              ? " (Yönetici)"
+              : "" ?></span>
+            <a href="<?= htmlspecialchars($cikisUrl, ENT_QUOTES, "UTF-8") ?>" class="btn btn-cikis btn-sm" onclick="return confirm('Çıkış yapmak istediğinizden emin misiniz?');">
               <i class="fas fa-sign-out-alt me-1"></i>Çıkış Yap
             </a>
           </div>
           <div class="card-body p-4">
-            <p class="text-muted small mb-3">
-              Son 15 giriş kaydı. Site/sekme kapatıldığında oturum otomatik kapanır.
-            </p>
+            <p class="text-muted small mb-3"><?= htmlspecialchars($aciklama, ENT_QUOTES, "UTF-8") ?></p>
             <div class="table-responsive">
               <table class="table table-hover align-middle">
                 <thead class="table-light">
@@ -82,13 +83,14 @@ include "includes/site-styles.php";
                     <th>Giriş</th>
                     <th>Çıkış</th>
                     <th>Kapanış</th>
+                    <?php if ($yoneticiModu): ?><th>IP</th><?php endif; ?>
                     <th>Durum</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php if (!empty($oturumlar)): ?>
                     <?php foreach ($oturumlar as $oturum):
-                      [$durum, $badgeClass, $tipText] = oturumDurumEtiket(
+                      [$durum, $badgeClass, $tipText] = portalOturumDurumEtiket(
                         $oturum["cikis_zamani"] ?? null,
                         $oturum["kapanis_tipi"] ?? null,
                         (int) $oturum["id"],
@@ -97,25 +99,49 @@ include "includes/site-styles.php";
                       <tr>
                         <td>
                           <i class="far fa-clock text-success me-2"></i>
-                          <?php echo date("d.m.Y H:i:s", strtotime($oturum["giris_zamani"])); ?>
+                          <?= htmlspecialchars(
+                            date("d.m.Y H:i:s", strtotime($oturum["giris_zamani"])),
+                            ENT_QUOTES,
+                            "UTF-8",
+                          ) ?>
                         </td>
                         <td>
                           <?php if (!empty($oturum["cikis_zamani"])): ?>
                             <i class="far fa-clock text-danger me-2"></i>
-                            <?php echo date("d.m.Y H:i:s", strtotime($oturum["cikis_zamani"])); ?>
+                            <?= htmlspecialchars(
+                              date("d.m.Y H:i:s", strtotime($oturum["cikis_zamani"])),
+                              ENT_QUOTES,
+                              "UTF-8",
+                            ) ?>
                           <?php else: ?>
-                            <span class="badge <?php echo $badgeClass; ?>"><?php echo htmlspecialchars(
-  $tipText,
-); ?></span>
+                            <span class="badge <?= htmlspecialchars(
+                              $badgeClass,
+                              ENT_QUOTES,
+                              "UTF-8",
+                            ) ?>"><?= htmlspecialchars($tipText, ENT_QUOTES, "UTF-8") ?></span>
                           <?php endif; ?>
                         </td>
-                        <td class="small text-muted"><?php echo htmlspecialchars($tipText); ?></td>
-                        <td><?php echo $durum; ?></td>
+                        <td class="small text-muted"><?= htmlspecialchars(
+                          $tipText,
+                          ENT_QUOTES,
+                          "UTF-8",
+                        ) ?></td>
+                        <?php if ($yoneticiModu): ?>
+                          <td class="small text-muted"><?= htmlspecialchars(
+                            $oturum["ip_adresi"] ?? "-",
+                            ENT_QUOTES,
+                            "UTF-8",
+                          ) ?></td>
+                        <?php endif; ?>
+                        <td><?= htmlspecialchars($durum, ENT_QUOTES, "UTF-8") ?></td>
                       </tr>
-                    <?php
-                    endforeach; ?>
+                    <?php endforeach; ?>
                   <?php else: ?>
-                    <tr><td colspan="4" class="text-center text-muted py-3">Kayıtlı oturum geçmişi bulunamadı.</td></tr>
+                    <tr>
+                      <td colspan="<?= $yoneticiModu ? 5 : 4 ?>" class="text-center text-muted py-3">
+                        Kayıtlı oturum geçmişi bulunamadı.
+                      </td>
+                    </tr>
                   <?php endif; ?>
                 </tbody>
               </table>

@@ -295,6 +295,11 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
       <i class="fas fa-cog"></i><span>Yönetim Paneli</span>
     </a>
   </li>
+  <li>
+    <a href="oturum_bilgileri.php" class="profile-menu-item">
+      <i class="fas fa-history"></i><span>Oturum Bilgileri</span>
+    </a>
+  </li>
 <?php else: ?>
   <li>
     <a href="email_degistir.php" class="profile-menu-item">
@@ -371,6 +376,7 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
 <?php endif; ?>
 <?php if ($session_tip === "yonetici"): ?>
         <li><a href="admin/index.php"><i class="fas fa-cog"></i> Yönetim Paneli</a></li>
+        <li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
 <?php endif; ?>
         <li><a href="<?php echo htmlspecialchars(
           $session_cikis_url,

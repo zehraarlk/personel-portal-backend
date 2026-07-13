@@ -52,7 +52,7 @@ $menuItems = [
   [
     "id" => "vefat",
     "label" => "Vefat Bilgileri",
-    "icon" => "fa-heart",
+    "icon" => "fa-ribbon",
     "href" => $adminBase . "vefat_bilgileri/index.php",
   ],
   [
@@ -67,6 +67,7 @@ $menuItems = [
   <button type="button" class="admin-sidebar-close" id="adminSidebarClose" aria-label="Menüyü kapat">
     <i class="fas fa-times"></i>
   </button>
+  <a href="<?= htmlspecialchars($adminBase . "index.php", ENT_QUOTES, "UTF-8") ?>" class="admin-brand-link">
   <div class="admin-brand">
     <img src="<?= htmlspecialchars(
       adminImgUrl($assetBase, "images/logo(2).png"),
@@ -76,6 +77,7 @@ $menuItems = [
     <h1>Gebze Belediyesi</h1>
     <p>Personel Portalı · Yönetim Paneli</p>
   </div>
+  </a>
 
   <nav class="admin-nav">
     <div class="admin-nav-section">Yönetim</div>
