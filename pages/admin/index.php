@@ -30,6 +30,12 @@ $stats = [
     "color" => "orange",
   ],
   [
+    "label" => "Personeller",
+    "value" => adminCountTable($db, "personeller"),
+    "icon" => "fa-users",
+    "color" => "purple",
+  ],
+  [
     "label" => "Anketler",
     "value" => adminCountTable($db, "anketler"),
     "icon" => "fa-poll",
@@ -81,6 +87,7 @@ include __DIR__ . "/includes/header.php";
       </div>
       <div class="admin-card-body">
         <div class="admin-quick-links">
+          <a href="personeller/ekle.php" class="admin-quick-link"><i class="fas fa-user-plus"></i><div><strong>Personel Ekle</strong><div class="text-muted small">Yeni personel kaydı</div></div></a>
           <a href="videolar/ekle.php" class="admin-quick-link"><i class="fas fa-video"></i><div><strong>Yeni Video</strong><div class="text-muted small">YouTube ID ile</div></div></a>
           <a href="duyurular/ekle.php" class="admin-quick-link"><i class="fas fa-bullhorn"></i><div><strong>Yeni Duyuru</strong><div class="text-muted small">Duyuru ekle</div></div></a>
           <a href="etkinlikler/ekle.php" class="admin-quick-link"><i class="fas fa-calendar-plus"></i><div><strong>Yeni Etkinlik</strong><div class="text-muted small">Etkinlik ekle</div></div></a>

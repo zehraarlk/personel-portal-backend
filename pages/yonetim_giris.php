@@ -1,5 +1,4 @@
 <?php
-session_start();
 include "baglan.php";
 
 // Zaten aktif oturum varsa panele yönlendir
@@ -16,12 +15,14 @@ if (
   isset($_POST["kullanici_adi"]) &&
   isset($_POST["sifre"])
 ) {
+  header("Content-Type: application/json; charset=utf-8");
+
   $kullanici_adi = trim($_POST["kullanici_adi"]);
-  $sifre = trim($_POST["sifre"]);
+  $sifre = (string) $_POST["sifre"];
 
   if (!empty($kullanici_adi) && $sifre !== "") {
     $sorgu = $db->prepare(
-      "SELECT * FROM yoneticiler WHERE kullanici_adi = ? AND aktif = 1 LIMIT 1",
+      "SELECT * FROM yoneticiler WHERE LOWER(kullanici_adi) = LOWER(?) AND aktif = 1 LIMIT 1",
     );
     $sorgu->execute([$kullanici_adi]);
     $yonetici = $sorgu->fetch(PDO::FETCH_ASSOC);
@@ -237,6 +238,7 @@ if (
         </div>
         <div class="badge-panel"><i class="bi bi-shield-lock-fill"></i> YÖNETİM PANELİ</div>
         <div class="login-subtitle">YÖNETİCİ GİRİŞ EKRANI</div>
+        <p class="text-muted small mb-3">Yönetim paneli girişi personel girişinden ayrıdır.</p>
 
         <div id="phpError" class="alert alert-danger d-none text-start small py-2 mb-3"></div>
 
@@ -309,7 +311,7 @@ if (
 
           let formData = new FormData();
           formData.append("kullanici_adi", username.value.trim());
-          formData.append("sifre", password.value.trim());
+          formData.append("sifre", password.value);
 
           fetch("yonetim_giris.php", { method: "POST", body: formData })
             .then((res) => res.json())

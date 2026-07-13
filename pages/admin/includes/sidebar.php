@@ -8,6 +8,12 @@ $menuItems = [
     "href" => $adminBase . "index.php",
   ],
   [
+    "id" => "personeller",
+    "label" => "Personeller",
+    "icon" => "fa-users",
+    "href" => $adminBase . "personeller/index.php",
+  ],
+  [
     "id" => "videolar",
     "label" => "Videolar",
     "icon" => "fa-video",
@@ -72,8 +78,23 @@ $menuItems = [
   </div>
 
   <nav class="admin-nav">
+    <div class="admin-nav-section">Yönetim</div>
+    <?php foreach (array_slice($menuItems, 0, 2) as $item): ?>
+      <a
+        href="<?= htmlspecialchars($item["href"], ENT_QUOTES, "UTF-8") ?>"
+        class="<?= htmlspecialchars(
+          ($currentPage === $item["id"] ? "active" : "") .
+            (!empty($item["disabled"]) ? " disabled" : ""),
+          ENT_QUOTES,
+          "UTF-8"
+        ) ?>"
+      >
+        <i class="fas <?= htmlspecialchars($item["icon"], ENT_QUOTES, "UTF-8") ?>"></i>
+        <?= htmlspecialchars($item["label"], ENT_QUOTES, "UTF-8") ?>
+      </a>
+    <?php endforeach; ?>
     <div class="admin-nav-section">İçerik Yönetimi</div>
-    <?php foreach ($menuItems as $item): ?>
+    <?php foreach (array_slice($menuItems, 2) as $item): ?>
       <a
         href="<?= htmlspecialchars($item["href"], ENT_QUOTES, "UTF-8") ?>"
         class="<?= htmlspecialchars(

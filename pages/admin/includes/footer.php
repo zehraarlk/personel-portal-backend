@@ -18,11 +18,7 @@
           }
           document.body.classList.toggle("admin-sidebar-open", open);
           toggle.setAttribute("aria-expanded", open ? "true" : "false");
-
-          var icon = toggle.querySelector("i");
-          if (icon) {
-            icon.className = open ? "fas fa-times" : "fas fa-bars";
-          }
+          toggle.setAttribute("aria-label", open ? "Menüyü kapat" : "Menüyü aç");
         }
 
         toggle.addEventListener("click", function (e) {

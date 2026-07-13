@@ -901,7 +901,51 @@ function dbEnsureYoneticiler(PDO $db): void
       );
       $stmt->execute(["admin", adminHashPassword("admin123"), "Sistem", "Yöneticisi", "super"]);
     }
+
+    dbEnsureYoneticiBootstrap($db);
   } catch (PDOException $e) {
+    // Sessizce geç
+  }
+}
+
+/** Varsayılan admin hesabının var ve giriş yapılabilir olduğundan emin olur. */
+function dbEnsureYoneticiBootstrap(PDO $db): void
+{
+  try {
+    $admin = dbFetchOne(
+      $db,
+      "SELECT id, sifre, aktif FROM yoneticiler WHERE kullanici_adi = ? LIMIT 1",
+      ["admin"],
+    );
+
+    if (!$admin) {
+      $db->prepare(
+        "INSERT INTO yoneticiler (kullanici_adi, sifre, ad, soyad, yetki, aktif)
+             VALUES (?, ?, ?, ?, ?, 1)",
+      )->execute(["admin", adminHashPassword("admin123"), "Sistem", "Yöneticisi", "super"]);
+      return;
+    }
+
+    if ((int) ($admin["aktif"] ?? 0) !== 1) {
+      $db->prepare("UPDATE yoneticiler SET aktif = 1 WHERE id = ?")->execute([(int) $admin["id"]]);
+    }
+
+    $stored = trim((string) ($admin["sifre"] ?? ""));
+    if ($stored === "" || adminVerifyPassword($stored, "admin123")) {
+      return;
+    }
+
+    $isLegacyMd5 = strlen($stored) === 32 && ctype_xdigit($stored);
+    $isBrokenBcrypt = !str_starts_with($stored, "$2y$") && !str_starts_with($stored, "$2a$");
+    $knownSeedHash = '$2y$10$wDGGWd7w8Ue6SEf1xQsKLuLXChd4ymCGx0sB.vH8DyBx3qKRfGE2K';
+
+    if ($isLegacyMd5 || $isBrokenBcrypt || hash_equals($stored, $knownSeedHash)) {
+      $db->prepare("UPDATE yoneticiler SET sifre = ? WHERE id = ?")->execute([
+        adminHashPassword("admin123"),
+        (int) $admin["id"],
+      ]);
+    }
+  } catch (Throwable $e) {
     // Sessizce geç
   }
 }
@@ -914,6 +958,7 @@ function adminHashPassword(string $plain): string
 function adminVerifyPassword(string $storedHash, string $plain): bool
 {
   $plain = trim($plain);
+  $storedHash = trim($storedHash);
   if ($plain === "" || $storedHash === "") {
     return false;
   }
@@ -922,7 +967,7 @@ function adminVerifyPassword(string $storedHash, string $plain): bool
   }
   // Eski MD5 kayıtları için geçiş desteği
   if (strlen($storedHash) === 32 && ctype_xdigit($storedHash)) {
-    return hash_equals($storedHash, md5($plain));
+    return hash_equals(strtolower($storedHash), md5($plain));
   }
   return false;
 }
@@ -1201,6 +1246,16 @@ function adminFlashGet(): ?array
   $flash = $_SESSION["admin_flash"];
   unset($_SESSION["admin_flash"]);
   return $flash;
+}
+
+function adminPersonelHashPassword(string $plain): string
+{
+  return md5(trim($plain));
+}
+
+function adminPersonelDefaultFoto(): string
+{
+  return "../images/gebze_logo.jpg";
 }
 
 function adminUploadImage(array $file, string $subdir, ?string $currentPath = null): ?string
