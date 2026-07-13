@@ -58,6 +58,9 @@ $menuItems = [
 ];
 ?>
 <aside class="admin-sidebar" id="adminSidebar">
+  <button type="button" class="admin-sidebar-close" id="adminSidebarClose" aria-label="Menüyü kapat">
+    <i class="fas fa-times"></i>
+  </button>
   <div class="admin-brand">
     <img src="<?= htmlspecialchars(
       adminImgUrl($assetBase, "images/logo(2).png"),

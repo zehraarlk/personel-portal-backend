@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../includes/auth.php";
 
 $id = isset($_GET["id"]) ? (int) $_GET["id"] : 0;
-$video = $id > 0 ? dbFetchOne($db, "SELECT * FROM videolar WHERE id = ?", [$id]) : null;
+$video = dbFetchOneVideo($db, $id);
 
 if (!$video) {
   adminFlashSet("danger", "Video bulunamadı.");
@@ -139,9 +139,8 @@ include __DIR__ . "/../includes/header.php";
               <label for="kategori" class="form-label">Kategori</label>
               <select class="form-select" id="kategori" name="kategori" required>
                 <?php foreach ($kategoriler as $kat): ?>
-                  <option value="<?= htmlspecialchars($kat, ENT_QUOTES, "UTF-8") ?>" <?= $video[
-  "kategori"
-] === $kat
+                  <?php $videoKategori = (string) ($video["kategori"] ?? "duyurular"); ?>
+                  <option value="<?= htmlspecialchars($kat, ENT_QUOTES, "UTF-8") ?>" <?= $videoKategori === $kat
   ? "selected"
   : "" ?>>
                     <?= htmlspecialchars(dbVideolarKategoriAdi($kat), ENT_QUOTES, "UTF-8") ?>

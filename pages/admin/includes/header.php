@@ -19,15 +19,25 @@ $flash = adminFlashGet();
       $assetBase,
       ENT_QUOTES,
       "UTF-8",
-    ) ?>CSS/admin.css" />
+    ) ?>CSS/admin.css?v=<?= (int) @filemtime(
+      __DIR__ . "/../../../CSS/admin.css",
+    ) ?>" />
   </head>
   <body class="admin-body">
     <div class="admin-layout">
       <?php include __DIR__ . "/sidebar.php"; ?>
+      <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop" aria-hidden="true"></div>
       <div class="admin-main">
         <header class="admin-topbar">
           <div class="d-flex align-items-center gap-3">
-            <button type="button" class="admin-menu-toggle" id="adminMenuToggle" aria-label="Menü">
+            <button
+              type="button"
+              class="admin-menu-toggle"
+              id="adminMenuToggle"
+              aria-label="Menü"
+              aria-expanded="false"
+              aria-controls="adminSidebar"
+            >
               <i class="fas fa-bars"></i>
             </button>
             <h2><?= htmlspecialchars($pageTitle, ENT_QUOTES, "UTF-8") ?></h2>

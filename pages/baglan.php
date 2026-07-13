@@ -267,9 +267,7 @@ function dbFillVideoFromYoutube(PDO $db, array $video): array
   $hasKategoriColumn = dbColumnExists($db, "videolar", "kategori");
   $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
   $needsKategori =
-    $hasKategoriColumn &&
-    dbVideoFieldIsEmpty($video["kategori"] ?? null) &&
-    !($hasKategoriId && !empty($video["kategori_id"]));
+    dbVideoFieldIsEmpty($video["kategori"] ?? null) && !($hasKategoriId && !empty($video["kategori_id"]));
 
   if (!$needsBaslik && !$needsAciklama && !$needsSure && !$needsKategori) {
     return $video;
@@ -347,9 +345,56 @@ function dbSetVitrinVideo(PDO $db, int $id): bool
 
 function dbVideolarListSql(PDO $db): string
 {
-  return dbColumnExists($db, "videolar", "vitrin")
-    ? "SELECT * FROM videolar ORDER BY vitrin DESC, id ASC"
-    : "SELECT * FROM videolar ORDER BY id ASC";
+  $hasVitrin = dbColumnExists($db, "videolar", "vitrin");
+  $order = $hasVitrin ? "vitrin DESC, id ASC" : "id ASC";
+  $orderAliased = $hasVitrin ? "v.vitrin DESC, v.id ASC" : "v.id ASC";
+
+  if (dbColumnExists($db, "videolar", "kategori")) {
+    return "SELECT * FROM videolar ORDER BY {$order}";
+  }
+
+  return "SELECT v.*, k.slug AS kategori
+          FROM videolar v
+          LEFT JOIN videolar_kategori k ON k.id = v.kategori_id
+          ORDER BY {$orderAliased}";
+}
+
+function dbFetchOneVideo(PDO $db, int $id): ?array
+{
+  if ($id <= 0) {
+    return null;
+  }
+
+  if (dbColumnExists($db, "videolar", "kategori")) {
+    return dbFetchOne($db, "SELECT * FROM videolar WHERE id = ?", [$id]);
+  }
+
+  return dbFetchOne(
+    $db,
+    "SELECT v.*, k.slug AS kategori
+         FROM videolar v
+         LEFT JOIN videolar_kategori k ON k.id = v.kategori_id
+         WHERE v.id = ?",
+    [$id],
+  );
+}
+
+function dbVideolarResolveKategoriSlug(PDO $db, array $row): string
+{
+  $slug = trim((string) ($row["kategori"] ?? ""));
+  if ($slug !== "") {
+    return $slug;
+  }
+
+  $kategoriId = (int) ($row["kategori_id"] ?? 0);
+  if ($kategoriId > 0) {
+    $kat = dbFetchOne($db, "SELECT slug FROM videolar_kategori WHERE id = ?", [$kategoriId]);
+    if ($kat) {
+      return (string) $kat["slug"];
+    }
+  }
+
+  return "duyurular";
 }
 
 function dbEnsureVideoMetadata(PDO $db, array &$videos): void
@@ -1633,7 +1678,7 @@ function dbVideolarAttachKategoriSlug(PDO $db, array $videos): array
   }
 
   foreach ($videos as $i => $video) {
-    if (empty($video["kategori"]) && !empty($video["kategori_id"])) {
+    if (trim((string) ($video["kategori"] ?? "")) === "" && !empty($video["kategori_id"])) {
       $videos[$i]["kategori"] = $slugById[(int) $video["kategori_id"]] ?? "";
     }
   }
@@ -3300,20 +3345,35 @@ function dbReorderVideolarRows(PDO $db, array $rows): void
     $db->exec("DELETE FROM videolar");
     $db->exec("ALTER TABLE videolar AUTO_INCREMENT = 1");
 
+    $hasKategoriColumn = dbColumnExists($db, "videolar", "kategori");
     $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
 
-    $stmt = $hasKategoriId
-      ? $db->prepare(
+    if ($hasKategoriId && $hasKategoriColumn) {
+      $stmt = $db->prepare(
         "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, kategori_id, sure) VALUES (?, ?, ?, ?, ?, ?)",
-      )
-      : $db->prepare(
+      );
+    } elseif ($hasKategoriId) {
+      $stmt = $db->prepare(
+        "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori_id, sure) VALUES (?, ?, ?, ?, ?)",
+      );
+    } elseif ($hasKategoriColumn) {
+      $stmt = $db->prepare(
         "INSERT INTO videolar (youtube_id, baslik, aciklama, kategori, sure) VALUES (?, ?, ?, ?, ?)",
       );
+    } else {
+      $stmt = $db->prepare(
+        "INSERT INTO videolar (youtube_id, baslik, aciklama, sure) VALUES (?, ?, ?, ?)",
+      );
+    }
 
     foreach ($rows as $row) {
-      $params = [$row["youtube_id"], $row["baslik"], $row["aciklama"], $row["kategori"]];
+      $kategoriSlug = dbVideolarResolveKategoriSlug($db, $row);
+      $params = [$row["youtube_id"], $row["baslik"], $row["aciklama"]];
+      if ($hasKategoriColumn) {
+        $params[] = $kategoriSlug;
+      }
       if ($hasKategoriId) {
-        $params[] = dbVideolarKategoriId($db, $row["kategori"] ?? "");
+        $params[] = dbVideolarKategoriId($db, $kategoriSlug);
       }
       $params[] = $row["sure"];
       $stmt->execute($params);
@@ -3473,33 +3533,55 @@ function dbUpdateVideo(PDO $db, int $id, array $video): bool
     $clear->execute([$id]);
   }
 
+  $hasKategoriColumn = dbColumnExists($db, "videolar", "kategori");
   $hasKategoriId = dbColumnExists($db, "videolar", "kategori_id");
-  $kategoriId = null;
-  if ($hasKategoriId && !empty($merged["kategori"])) {
-    $kategoriId = dbVideolarKategoriId($db, (string) $merged["kategori"]);
+  $kategoriSlug = dbVideolarResolveKategoriSlug($db, $merged);
+  if (!empty($video["kategori"])) {
+    $kategoriSlug = trim((string) $video["kategori"]);
   }
+  $kategoriId = $hasKategoriId ? dbVideolarKategoriId($db, $kategoriSlug) : null;
 
   if ($hasKategoriId) {
     if ($hasVitrin) {
-      $stmt = $db->prepare(
-        "UPDATE videolar
+      if ($hasKategoriColumn) {
+        $stmt = $db->prepare(
+          "UPDATE videolar
                  SET youtube_id = ?, baslik = ?, aciklama = ?, kategori = ?, kategori_id = ?, sure = ?,
                      vitrin_baslik = ?, vitrin_aciklama = ?, vitrin = ?
                  WHERE id = ?",
-      );
-      $stmt->execute([
-        $merged["youtube_id"],
-        $merged["baslik"] ?? "",
-        $merged["aciklama"] ?? "",
-        $merged["kategori"] ?? "duyurular",
-        $kategoriId,
-        $merged["sure"] ?? "00:00",
-        $merged["vitrin_baslik"] ?? null,
-        $merged["vitrin_aciklama"] ?? null,
-        !empty($merged["vitrin"]) ? 1 : 0,
-        $id,
-      ]);
-    } else {
+        );
+        $stmt->execute([
+          $merged["youtube_id"],
+          $merged["baslik"] ?? "",
+          $merged["aciklama"] ?? "",
+          $kategoriSlug,
+          $kategoriId,
+          $merged["sure"] ?? "00:00",
+          $merged["vitrin_baslik"] ?? null,
+          $merged["vitrin_aciklama"] ?? null,
+          !empty($merged["vitrin"]) ? 1 : 0,
+          $id,
+        ]);
+      } else {
+        $stmt = $db->prepare(
+          "UPDATE videolar
+                 SET youtube_id = ?, baslik = ?, aciklama = ?, kategori_id = ?, sure = ?,
+                     vitrin_baslik = ?, vitrin_aciklama = ?, vitrin = ?
+                 WHERE id = ?",
+        );
+        $stmt->execute([
+          $merged["youtube_id"],
+          $merged["baslik"] ?? "",
+          $merged["aciklama"] ?? "",
+          $kategoriId,
+          $merged["sure"] ?? "00:00",
+          $merged["vitrin_baslik"] ?? null,
+          $merged["vitrin_aciklama"] ?? null,
+          !empty($merged["vitrin"]) ? 1 : 0,
+          $id,
+        ]);
+      }
+    } elseif ($hasKategoriColumn) {
       $stmt = $db->prepare(
         "UPDATE videolar
                  SET youtube_id = ?, baslik = ?, aciklama = ?, kategori = ?, kategori_id = ?, sure = ?
@@ -3509,7 +3591,21 @@ function dbUpdateVideo(PDO $db, int $id, array $video): bool
         $merged["youtube_id"],
         $merged["baslik"] ?? "",
         $merged["aciklama"] ?? "",
-        $merged["kategori"] ?? "duyurular",
+        $kategoriSlug,
+        $kategoriId,
+        $merged["sure"] ?? "00:00",
+        $id,
+      ]);
+    } else {
+      $stmt = $db->prepare(
+        "UPDATE videolar
+                 SET youtube_id = ?, baslik = ?, aciklama = ?, kategori_id = ?, sure = ?
+                 WHERE id = ?",
+      );
+      $stmt->execute([
+        $merged["youtube_id"],
+        $merged["baslik"] ?? "",
+        $merged["aciklama"] ?? "",
         $kategoriId,
         $merged["sure"] ?? "00:00",
         $id,
@@ -3527,7 +3623,7 @@ function dbUpdateVideo(PDO $db, int $id, array $video): bool
         $merged["youtube_id"],
         $merged["baslik"] ?? "",
         $merged["aciklama"] ?? "",
-        $merged["kategori"] ?? "duyurular",
+        $kategoriSlug,
         $merged["sure"] ?? "00:00",
         $merged["vitrin_baslik"] ?? null,
         $merged["vitrin_aciklama"] ?? null,
@@ -3544,7 +3640,7 @@ function dbUpdateVideo(PDO $db, int $id, array $video): bool
         $merged["youtube_id"],
         $merged["baslik"] ?? "",
         $merged["aciklama"] ?? "",
-        $merged["kategori"] ?? "duyurular",
+        $kategoriSlug,
         $merged["sure"] ?? "00:00",
         $id,
       ]);

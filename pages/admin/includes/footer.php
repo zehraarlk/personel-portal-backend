@@ -3,9 +3,66 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      document.getElementById("adminMenuToggle")?.addEventListener("click", function () {
-        document.getElementById("adminSidebar")?.classList.toggle("open");
-      });
+      (function () {
+        var sidebar = document.getElementById("adminSidebar");
+        var toggle = document.getElementById("adminMenuToggle");
+        var closeBtn = document.getElementById("adminSidebarClose");
+        var backdrop = document.getElementById("adminSidebarBackdrop");
+        if (!sidebar || !toggle) return;
+
+        function setMenuOpen(open) {
+          sidebar.classList.toggle("open", open);
+          if (backdrop) {
+            backdrop.classList.toggle("show", open);
+            backdrop.setAttribute("aria-hidden", open ? "false" : "true");
+          }
+          document.body.classList.toggle("admin-sidebar-open", open);
+          toggle.setAttribute("aria-expanded", open ? "true" : "false");
+
+          var icon = toggle.querySelector("i");
+          if (icon) {
+            icon.className = open ? "fas fa-times" : "fas fa-bars";
+          }
+        }
+
+        toggle.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          setMenuOpen(!sidebar.classList.contains("open"));
+        });
+
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            setMenuOpen(false);
+          });
+        }
+
+        if (backdrop) {
+          backdrop.addEventListener("click", function () {
+            setMenuOpen(false);
+          });
+        }
+
+        sidebar.querySelectorAll("a[href]").forEach(function (link) {
+          link.addEventListener("click", function () {
+            setMenuOpen(false);
+          });
+        });
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && sidebar.classList.contains("open")) {
+            setMenuOpen(false);
+          }
+        });
+
+        window.addEventListener("resize", function () {
+          if (window.innerWidth > 992 && sidebar.classList.contains("open")) {
+            setMenuOpen(false);
+          }
+        });
+      })();
     </script>
     <script>
     (function () {
