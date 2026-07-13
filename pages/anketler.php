@@ -8,6 +8,12 @@ $badgeMap = [
   "completed" => ["Tamamlandı", "status-completed", "fa-check-circle"],
   "expired" => ["Süresi Doldu", "status-expired", "fa-times-circle"],
 ];
+// Giriş yapmış personelin katılım sağladığı anket ID listesini tek bir query ile çekelim
+$katilinanAnketler = [];
+if (!empty($_SESSION["personel_id"])) {
+    $katilimlar = dbFetchAll($db, "SELECT DISTINCT anket_id FROM anket_cevaplari WHERE personel_id = ?", [(int)$_SESSION["personel_id"]]);
+    $katilinanAnketler = array_column($katilimlar, 'anket_id');
+}
 
 function renderAnketCard(array $k, array $badgeMap): void
 {
@@ -47,16 +53,23 @@ function renderAnketCard(array $k, array $badgeMap): void
                 </div>
               </div>
               <div class="mt-3 d-grid gap-2">
-                <a href="#" class="btn survey-btn w-100"><i class="fas fa-edit me-2"></i>Ankete Katıl</a>
-                <button
-                  type="button"
-                  class="btn favorite-toggle-btn w-100<?= $favori ? " active" : "" ?>"
-                  data-id="<?= $id ?>"
-                >
-                  <i class="<?= $favori ? "fas" : "far" ?> fa-star me-2"></i>
-                  <?= $favori ? "Favorilerden Çıkar" : "Favorilere Ekle" ?>
-                </button>
-              </div>
+  <?php if (empty($_SESSION["personel_id"])): ?>
+      <a href="login.php" class="btn btn-secondary w-100"><i class="fas fa-sign-in-alt me-2"></i>Katılmak İçin Giriş Yap</a>
+  <?php else: 
+      global $katilinanAnketler;
+      if (in_array($id, $katilinanAnketler, true)): ?>
+          <!-- Personel katıldıysa yine aynı sayfaya GÖRÜNTÜLEMEK için gönderiyoruz -->
+          <a href="anket_katil.php?id=<?= $id ?>" class="btn btn-info text-white w-100"><i class="fas fa-eye me-2"></i>Cevaplarınızı Görüntüleyin</a>
+      <?php else: ?>
+          <a href="anket_katil.php?id=<?= $id ?>" class="btn survey-btn w-100"><i class="fas fa-edit me-2"></i>Ankete Katıl</a>
+      <?php endif; ?>
+  <?php endif; ?>
+  
+  <button type="button" class="btn favorite-toggle-btn w-100<?= $favori ? " active" : "" ?>" data-id="<?= $id ?>">
+    <i class="<?= $favori ? "fas" : "far" ?> fa-star me-2"></i>
+    <?= $favori ? "Favorilerden Çıkar" : "Favorilere Ekle" ?>
+  </button>
+</div>
             </div>
           </div>
         </div>

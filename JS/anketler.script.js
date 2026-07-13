@@ -160,10 +160,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ========== ANKET KARTLARI İNTERAKSİYONU ==========
+ // ========== ANKET KARTLARI İNTERAKSİYONU ==========
   const surveyBtns = document.querySelectorAll(".survey-btn");
   surveyBtns.forEach((btn) => {
     btn.addEventListener("click", function (e) {
+      // Eğer buton gerçek bir linke (anket_katil.php veya sonuclar.php) gidiyorsa engelleme yapma
+      if (this.getAttribute("href") !== "#") {
+        return; 
+      }
+      
       e.preventDefault();
       console.log("Anket butonu tıklandı");
 

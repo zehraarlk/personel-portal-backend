@@ -62,6 +62,8 @@ dbEnsureYardimciLinklerKategori($db);
 dbEnsureEtkinliklerDurum($db);
 // Yönetici tablosu ve varsayılan admin hesabı
 dbEnsureYoneticiler($db);
+// Anket soru, seçenek ve cevap tabloları: yoksa oluştur
+dbEnsureAnketSoruSistemi($db);
 
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
@@ -3754,5 +3756,39 @@ function importPersonelDb(): void
       '"' . $mysql . '" -u root --default-character-set=utf8mb4 -e "SOURCE ' . $path . '" 2>nul',
     );
   }
+}
+function dbEnsureAnketSoruSistemi(PDO $db): void {
+  try {
+    $db->exec("CREATE TABLE IF NOT EXISTS `anket_sorulari` (
+      `id` INT AUTO_INCREMENT PRIMARY KEY,
+      `anket_id` INT NOT NULL,
+      `soru_metni` TEXT NOT NULL,
+      `soru_tipi` ENUM('coktan_secmeli', 'acik_uclu') NOT NULL DEFAULT 'coktan_secmeli',
+      `sira` INT NOT NULL DEFAULT 0,
+      FOREIGN KEY (`anket_id`) REFERENCES `anketler`(`id`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS `anket_secenekleri` (
+      `id` INT AUTO_INCREMENT PRIMARY KEY,
+      `soru_id` INT NOT NULL,
+      `secenek_metni` VARCHAR(255) NOT NULL,
+      FOREIGN KEY (`soru_id`) REFERENCES `anket_sorulari`(`id`) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS `anket_cevaplari` (
+      `id` INT AUTO_INCREMENT PRIMARY KEY,
+      `anket_id` INT NOT NULL,
+      `personel_id` INT NOT NULL,
+      `soru_id` INT NOT NULL,
+      `secenek_id` INT DEFAULT NULL,
+      `cevap_metni` TEXT DEFAULT NULL,
+      `olusturma_tarihi` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (`anket_id`) REFERENCES `anketler`(`id`) ON DELETE CASCADE,
+      FOREIGN KEY (`personel_id`) REFERENCES `personeller`(`id`) ON DELETE CASCADE,
+      FOREIGN KEY (`soru_id`) REFERENCES `anket_sorulari`(`id`) ON DELETE CASCADE,
+      FOREIGN KEY (`secenek_id`) REFERENCES `anket_secenekleri`(`id`) ON DELETE CASCADE,
+      UNIQUE KEY `uq_personel_soru` (`personel_id`, `soru_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
+  } catch (PDOException $e) {}
 }
 ?>

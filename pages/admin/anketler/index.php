@@ -119,63 +119,37 @@ include __DIR__ . "/../includes/header.php";
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm text-start">
-
-                      <!-- Düzenle -->
-                      <li>
-
-                        <a
-                          class="dropdown-item d-flex align-items-center gap-2"
-                          href="duzenle.php?id=<?= (int) $row["id"] ?>"
-                        >
-                          <i class="fas fa-pen"></i>
-                          Düzenle
-                        </a>
-
-                      </li>
-
-                      <li>
-                        <hr class="dropdown-divider">
-                      </li>
-
-                      <!-- Sil -->
-                      <li>
-
-                        <form
-                          method="post"
-                          action="sil.php"
-                          class="m-0"
-                          onsubmit="return confirm('Bu anketi silmek istediğinize emin misiniz?');"
-                        >
-
-                          <input
-                            type="hidden"
-                            name="id"
-                            value="<?= (int) $row["id"] ?>"
-                          >
-
-                          <input
-                            type="hidden"
-                            name="csrf"
-                            value="<?= htmlspecialchars(
-                              adminCsrfToken(),
-                              ENT_QUOTES,
-                              "UTF-8"
-                            ) ?>"
-                          >
-
-                          <button
-                            type="submit"
-                            class="dropdown-item text-danger d-flex align-items-center gap-2"
-                          >
-                            <i class="fas fa-trash"></i>
-                            Sil
-                          </button>
-
-                        </form>
-
-                      </li>
-
-                    </ul>
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="sorular.php?anket_id=<?= (int)$row["id"] ?>">
+      <i class="fas fa-list-check text-primary"></i>
+      Soruları Yönet
+    </a>
+  </li>
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="sonuclar.php?anket_id=<?= (int)$row["id"] ?>">
+      <i class="fas fa-chart-pie text-success"></i>
+      Anket Sonuçları
+    </a>
+  </li>
+  <li><hr class="dropdown-divider"></li>
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="duzenle.php?id=<?= (int) $row["id"] ?>">
+      <i class="fas fa-pen"></i>
+      Düzenle
+    </a>
+  </li>
+  <li><hr class="dropdown-divider"></li>
+  <li>
+    <form method="post" action="sil.php" class="m-0" onsubmit="return confirm('Bu anketi silmek istediğinize emin misiniz?');">
+      <input type="hidden" name="id" value="<?= (int) $row["id"] ?>">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(adminCsrfToken(), ENT_QUOTES, "UTF-8") ?>">
+      <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
+        <i class="fas fa-trash"></i>
+        Sil
+      </button>
+    </form>
+  </li>
+</ul>
 
                   </div>
 
