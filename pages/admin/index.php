@@ -36,6 +36,12 @@ $stats = [
     "color" => "purple",
   ],
   [
+  "label" => "Yöneticiler",
+  "value" => adminCountTable($db, "yoneticiler"),
+  "icon" => "fa-user-shield",
+  "color" => "orange",
+  ],
+  [
     "label" => "Anketler",
     "value" => adminCountTable($db, "anketler"),
     "icon" => "fa-poll",
