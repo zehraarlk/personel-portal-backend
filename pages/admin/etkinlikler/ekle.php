@@ -60,15 +60,11 @@ include __DIR__ . "/../includes/header.php";
         <div class="col-md-4 mb-3"><label class="form-label">Bitiş</label><input type="date" name="bitis_tarihi" class="form-control" /></div>
         <div class="col-md-4 mb-3"><label class="form-label">Durum</label><select name="durum" class="form-select"><option value="aktif">Aktif</option><option value="pasif">Pasif</option></select></div>
       </div>
-<<<<<<< HEAD
       <div class="mb-4"><?= adminImageFieldHtml($assetBase, null, [
         "name" => "resim",
         "label" => "Görsel",
         "hint" => "JPG, PNG veya WEBP yükleyebilirsiniz.",
       ]) ?></div>
-=======
-      <div class="mb-4"><label class="form-label">Görsel</label><input type="file" name="resim" class="form-control" accept="image/*" /></div>
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
       <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Kaydet</button>
     </form>
   </div>

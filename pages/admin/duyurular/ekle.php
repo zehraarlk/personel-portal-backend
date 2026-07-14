@@ -129,15 +129,10 @@ include __DIR__ . "/../includes/header.php";
             ) ?>" />
           </div>
           <div class="mb-4">
-<<<<<<< HEAD
             <?= adminImageFieldHtml($assetBase, null, [
               "name" => "resim",
               "label" => "Görsel",
             ]) ?>
-=======
-            <label class="form-label">Görsel</label>
-            <input type="file" name="resim" class="form-control" accept="image/*" />
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
           </div>
           <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Kaydet</button>
         </form>

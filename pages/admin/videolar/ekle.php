@@ -69,7 +69,6 @@ include __DIR__ . "/../includes/header.php";
             "UTF-8",
           ) ?>" />
 
-<<<<<<< HEAD
           <div class="admin-img-field mb-4">
             <div class="admin-img-preview">
               <img data-preview-img data-youtube-thumb alt="" hidden />
@@ -77,8 +76,6 @@ include __DIR__ . "/../includes/header.php";
             </div>
           </div>
 
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
           <div class="mb-4">
             <label for="youtube_id" class="form-label">YouTube ID veya URL <span class="text-danger">*</span></label>
             <input
@@ -86,10 +83,7 @@ include __DIR__ . "/../includes/header.php";
               class="form-control"
               id="youtube_id"
               name="youtube_id"
-<<<<<<< HEAD
               data-youtube-input
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
               placeholder="qLqYPQgUPEc veya https://www.youtube.com/watch?v=..."
               value="<?= htmlspecialchars($_POST["youtube_id"] ?? "", ENT_QUOTES, "UTF-8") ?>"
               required

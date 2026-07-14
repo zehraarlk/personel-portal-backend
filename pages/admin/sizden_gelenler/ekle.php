@@ -80,14 +80,10 @@ include __DIR__ . "/../includes/header.php";
       <div class="mb-3"><label class="form-label">Tarih</label><input type="date" name="tarih" class="form-control" value="<?= date(
         "Y-m-d",
       ) ?>" /></div>
-<<<<<<< HEAD
       <div class="mb-4"><?= adminImageFieldHtml($assetBase, null, [
         "name" => "gorsel",
         "label" => "Görsel",
       ]) ?></div>
-=======
-      <div class="mb-4"><label class="form-label">Görsel</label><input type="file" name="gorsel" class="form-control" accept="image/*" /></div>
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
       <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Kaydet</button>
     </form>
   </div>

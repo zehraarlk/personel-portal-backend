@@ -28,7 +28,6 @@ include __DIR__ . "/../includes/header.php";
 
 </div>
 
-<<<<<<< HEAD
 <form method="get" class="admin-form mb-4 d-flex flex-wrap gap-2 align-items-end">
   <div>
     <label class="form-label" for="kaynakKategori">Kategori</label>
@@ -50,38 +49,6 @@ include __DIR__ . "/../includes/header.php";
     </select>
   </div>
 </form>
-=======
-<!-- Kategori filtreleri -->
-<div class="mb-4 d-flex flex-wrap gap-2">
-
-  <a
-    href="index.php"
-    class="admin-btn admin-btn-sm <?= $kategoriFiltre === ""
-      ? "admin-btn-primary"
-      : "admin-btn-secondary" ?>"
-  >
-    Tümü
-  </a>
-
-  <?php foreach ($kategoriler as $kat): ?>
-
-    <a
-      href="index.php?kategori=<?= urlencode($kat["slug"]) ?>"
-      class="admin-btn admin-btn-sm <?= $kategoriFiltre === $kat["slug"]
-        ? "admin-btn-primary"
-        : "admin-btn-secondary" ?>"
-    >
-      <?= htmlspecialchars(
-        $kat["ad"],
-        ENT_QUOTES,
-        "UTF-8"
-      ) ?>
-    </a>
-
-  <?php endforeach; ?>
-
-</div>
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
 <div class="admin-card">
 

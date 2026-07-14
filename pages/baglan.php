@@ -4,36 +4,11 @@ if (!headers_sent()) {
 }
 mb_internal_encoding("UTF-8");
 
-<<<<<<< HEAD
 require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/../config/database.php";
 
 try {
   $db = getPDO();
-=======
-$host = "localhost";
-$db_name = "personel_db";
-$username = "root";
-$password = "";
-
-try {
-  $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password, [
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci",
-  ]);
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  $pdo->exec(
-    "CREATE DATABASE IF NOT EXISTS `$db_name` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci",
-  );
-  $db = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password, [
-    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci",
-  ]);
-  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
-  $db->exec("SET CHARACTER SET utf8mb4");
-  // dbEnsureSchema($db); // GEÇİCİ OLARAK KAPATILDI: her sayfa yüklemesinde
-  // db/personel_db.sql'i tekrar import edip etkinlikler/sizden_gelenler
-  // tablolarındaki güncel verileri eski demo veriyle eziyordu.
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 } catch (PDOException $e) {
   die("Veritabanı bağlantı hatası: " . $e->getMessage());
 }
@@ -42,199 +17,6 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
-<<<<<<< HEAD
-=======
-
-/* =========================================================
- * ORTAK SİTE İKONLARI
- * site_ikonlari tablosunu doldurur ve ikonları tek sorguda okur.
- * ========================================================= */
-if (!function_exists("dbEnsureSiteIcons")) {
-  function dbEnsureSiteIcons(PDO $db): void
-  {
-    static $done = false;
-    if ($done) {
-      return;
-    }
-    $done = true;
-
-    $varsayilanIkonlar = [
-      ["menu_ac", "Mobil Menüyü Aç", "arayuz", "fas fa-bars", null, 10],
-      ["anasayfa", "Anasayfa", "navigasyon", "fas fa-home", null, 20],
-      ["videolar", "Videolar", "navigasyon", "fas fa-video", null, 30],
-      ["etkinlikler", "Etkinlikler", "navigasyon", "fas fa-newspaper", null, 40],
-      ["sizden_gelenler", "Sizden Gelenler", "navigasyon", "fas fa-comments", null, 50],
-      ["etkinlik_takvimi", "Etkinlik Takvimi", "navigasyon", "fas fa-calendar-check", null, 60],
-      ["duyurular", "Duyurular", "navigasyon", "fas fa-bullhorn", null, 70],
-      ["kaynaklar", "Kaynaklar", "navigasyon", "fas fa-landmark", null, 80],
-      ["protokoller", "Protokoller", "navigasyon", "fas fa-file-signature", null, 90],
-      ["dokumanlar", "Dokümanlar", "navigasyon", "fas fa-file-alt", null, 100],
-      ["mevzuatlar", "Mevzuatlar", "navigasyon", "fas fa-balance-scale", null, 110],
-      ["egitimler", "Eğitimler", "navigasyon", "fas fa-graduation-cap", null, 120],
-      ["diger", "Diğer", "navigasyon", "fas fa-file-alt", null, 130],
-      ["anketler", "Anketler", "navigasyon", "fas fa-poll", null, 140],
-      ["yardimci_linkler", "Yardımcı Linkler", "navigasyon", "fas fa-link", null, 150],
-      ["vefat_bilgisi", "Vefat Eden Bilgisi", "navigasyon", "fas fa-ribbon", "#222222", 160],
-      ["dogum_gunu", "Doğum Günü Bilgisi", "navigasyon", "fas fa-birthday-cake", null, 170],
-      ["yonetim_paneli", "Yönetim Paneli", "profil", "fas fa-cog", null, 180],
-      ["oturum_bilgileri", "Oturum Bilgileri", "profil", "fas fa-history", null, 190],
-      ["email_degistir", "E-posta Değiştir", "profil", "fas fa-envelope", null, 200],
-      ["sifre_degistir", "Şifre Değiştir", "profil", "fas fa-key", null, 210],
-      ["cikis_yap", "Çıkış Yap", "profil", "fas fa-sign-out-alt", null, 220],
-      ["telefon", "Telefon", "iletisim", "fas fa-phone", null, 230],
-      ["eposta", "E-posta", "iletisim", "fas fa-envelope", null, 240],
-      ["facebook", "Facebook", "sosyal", "fab fa-facebook-f", null, 250],
-      ["twitter", "Twitter / X", "sosyal", "fab fa-twitter", null, 260],
-      ["instagram", "Instagram", "sosyal", "fab fa-instagram", null, 270],
-      ["youtube", "YouTube", "sosyal", "fab fa-youtube", null, 280],
-      ["linkedin", "LinkedIn", "sosyal", "fab fa-linkedin-in", null, 290],
-      ["arama", "Arama", "arayuz", "fas fa-search", null, 300],
-      ["tarih", "Tarih", "bilgi", "fas fa-calendar-alt", null, 310],
-      ["goruntulenme", "Görüntülenme", "bilgi", "fas fa-eye", null, 320],
-      ["kullanici", "Kullanıcı / Yazar", "bilgi", "fas fa-user", null, 330],
-      ["geri_don", "Geri Dön", "arayuz", "fas fa-arrow-left", null, 340],
-      ["onceki", "Önceki", "arayuz", "fas fa-chevron-left", null, 350],
-      ["sonraki", "Sonraki", "arayuz", "fas fa-chevron-right", null, 360],
-      ["pdf_dosyasi", "PDF Dosyası", "dosya", "fas fa-file-pdf", null, 370],
-      ["kaydet", "Kaydet", "form", "fas fa-save", null, 380],
-      ["video_oynat", "Videoyu Oynat", "video", "fas fa-play", null, 390],
-      ["harici_baglanti", "Harici Bağlantı", "baglanti", "fas fa-external-link-alt", null, 400],
-      ["etkinlik_sayfa", "Etkinlik Sayfası", "sayfa", "fa-solid fa-calendar-days", null, 410],
-      ["oturum_saati", "Oturum Saati", "oturum", "far fa-clock", null, 420],
-      ["yonetim_guvenlik_bi", "Yönetim Güvenliği", "giris", "bi bi-shield-lock-fill", null, 430],
-      ["sifre_goster_bi", "Şifreyi Göster", "giris", "bi bi-eye", null, 440],
-      ["sifre_gizle_bi", "Şifreyi Gizle", "giris", "bi bi-eye-slash", null, 450],
-      ["giris_yap_bi", "Giriş Yap", "giris", "bi bi-box-arrow-in-right", null, 460],
-      ["geri_don_bi", "Geri Dön", "giris", "bi bi-arrow-left", null, 470],
-      ["islem_yukleniyor_bi", "İşlem Yapılıyor", "arayuz", "bi bi-arrow-clockwise", null, 480],
-      ["personel_kayit_bi", "Personel Kaydı", "giris", "bi bi-person-plus-fill", null, 490],
-      ["islem_basarili_bi", "İşlem Başarılı", "durum", "bi bi-check-circle", null, 500],
-      ["anasayfa_haberler", "Ana Sayfa Haberler Başlığı", "anasayfa", "fas fa-bullhorn", null, 510],
-      ["duyuru_zili", "Duyuru Zili", "duyuru", "fas fa-bell", null, 520],
-      ["dogum_sayfa", "Doğum Günü Sayfa İkonu", "dogum", "fa-solid fa-cake-candles", null, 530],
-      ["otomasyon_sistem", "Otomasyon Sistemi", "anasayfa", "fas fa-desktop", null, 540],
-      ["anket_kilit_acik", "Anket Cevapları Açık", "anket", "fas fa-lock-open", null, 550],
-      ["anket_gonder", "Anketi Gönder", "anket", "fas fa-paper-plane", null, 560],
-      ["anket_durum_aktif", "Aktif Anket", "anket", "fas fa-play-circle", null, 570],
-      ["anket_durum_beklemede", "Bekleyen Anket", "anket", "fas fa-clock", null, 580],
-      ["anket_durum_tamamlandi", "Tamamlanan Anket", "anket", "fas fa-check-circle", null, 590],
-      ["anket_durum_suresi_doldu", "Süresi Dolan Anket", "anket", "fas fa-times-circle", null, 600],
-      ["anket_tarih", "Anket Tarihi", "anket", "fas fa-calendar", null, 610],
-      ["anket_giris", "Ankete Giriş", "anket", "fas fa-sign-in-alt", null, 620],
-      ["anket_duzenle", "Ankete Katıl / Düzenle", "anket", "fas fa-edit", null, 630],
-      ["anket_favori_dolu", "Favorideki Anket", "anket", "fas fa-star", null, 640],
-      ["anket_favori_bos", "Favoride Olmayan Anket", "anket", "far fa-star", null, 650],
-      ["anket_liste", "Anket Listesi", "anket", "fas fa-list", null, 660],
-      ["indir", "Dosya İndir", "dosya", "fas fa-download", null, 670],
-      ["dosya_word", "Word Dosyası", "dosya", "fas fa-file-word", null, 680],
-      ["dosya_excel", "Excel Dosyası", "dosya", "fas fa-file-excel", null, 690],
-      ["dosya_belge", "Belge Dosyası", "dosya", "fas fa-file-alt", null, 700],
-      ["dosya_genel", "Genel Dosya", "dosya", "fas fa-file", null, 710],
-      ["egitim_video", "Eğitim Videosu", "egitim", "fas fa-video", null, 720],
-    ];
-
-    try {
-      // Tablo yoksa bu bölüm sessizce atlanır.
-      $mevcutAnahtarlar = $db
-        ->query("SELECT anahtar FROM site_ikonlari")
-        ->fetchAll(PDO::FETCH_COLUMN);
-
-      $mevcut = [];
-      foreach ($mevcutAnahtarlar as $anahtar) {
-        $mevcut[(string) $anahtar] = true;
-      }
-
-      $ekle = $db->prepare(
-        "INSERT INTO site_ikonlari
-          (anahtar, ad, kategori, ikon_sinifi, renk, sira, aktif)
-         VALUES (?, ?, ?, ?, ?, ?, 1)",
-      );
-
-      foreach ($varsayilanIkonlar as $ikon) {
-        if (isset($mevcut[$ikon[0]])) {
-          continue;
-        }
-
-        $ekle->execute($ikon);
-      }
-    } catch (Throwable $e) {
-      error_log("site_ikonlari doldurma hatası: " . $e->getMessage());
-    }
-  }
-}
-
-if (!function_exists("portalSiteIcons")) {
-  function portalSiteIcons(PDO $db): array
-  {
-    static $cache = [];
-    $cacheKey = spl_object_id($db);
-
-    if (isset($cache[$cacheKey])) {
-      return $cache[$cacheKey];
-    }
-
-    $cache[$cacheKey] = [];
-
-    try {
-      $stmt = $db->query(
-        "SELECT anahtar, ikon_sinifi, renk
-         FROM site_ikonlari
-         WHERE aktif = 1
-         ORDER BY sira ASC, id ASC",
-      );
-
-      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $satir) {
-        $anahtar = trim((string) ($satir["anahtar"] ?? ""));
-        if ($anahtar === "") {
-          continue;
-        }
-
-        $cache[$cacheKey][$anahtar] = [
-          "ikon_sinifi" => trim((string) ($satir["ikon_sinifi"] ?? "")),
-          "renk" => trim((string) ($satir["renk"] ?? "")),
-        ];
-      }
-    } catch (Throwable $e) {
-      error_log("site_ikonlari okuma hatası: " . $e->getMessage());
-    }
-
-    return $cache[$cacheKey];
-  }
-}
-
-if (!function_exists("portalSiteIconClass")) {
-  function portalSiteIconClass(PDO $db, string $anahtar, string $varsayilan): string
-  {
-    $ikonlar = portalSiteIcons($db);
-    $sinif = trim((string) ($ikonlar[$anahtar]["ikon_sinifi"] ?? ""));
-
-    // class alanında yalnızca harf, sayı, boşluk, alt çizgi ve tire kabul edilir.
-    if ($sinif === "" || !preg_match('/^[a-zA-Z0-9 _-]+$/', $sinif)) {
-      $sinif = $varsayilan;
-    }
-
-    return htmlspecialchars($sinif, ENT_QUOTES, "UTF-8");
-  }
-}
-
-if (!function_exists("portalSiteIconStyle")) {
-  function portalSiteIconStyle(PDO $db, string $anahtar): string
-  {
-    $ikonlar = portalSiteIcons($db);
-    $renk = trim((string) ($ikonlar[$anahtar]["renk"] ?? ""));
-
-    if ($renk === "" || !preg_match('/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/', $renk)) {
-      return "";
-    }
-
-    return 'style="color: ' . htmlspecialchars($renk, ENT_QUOTES, "UTF-8") . ';"';
-  }
-}
-
-// Her sayfa baglan.php dosyasını çağırdığı için eksik ikonlar otomatik eklenir.
-dbEnsureSiteIcons($db);
-
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 // Anasayfa linkleri tablosu: yoksa oluştur + ilk kurulumda doldur
 dbEnsureAnasayfaLinkler($db);
 // Kalıcı oturum (remember-me) alanları: yoksa ekle
@@ -263,11 +45,6 @@ dbEnsureYardimciLinklerKategori($db);
 dbEnsureEtkinliklerDurum($db);
 // Yönetici tablosu ve varsayılan admin hesabı
 dbEnsureYoneticiler($db);
-<<<<<<< HEAD
-=======
-// Anket soru, seçenek ve cevap tabloları: yoksa oluştur
-dbEnsureAnketSoruSistemi($db);
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
@@ -652,7 +429,6 @@ function dbEnsureVideoMetadata(PDO $db, array &$videos): void
   }
 }
 
-<<<<<<< HEAD
 function imgUrl(?string $path, string $fallback = "../images/logo(2).webp"): string
 {
   $path = trim((string) $path);
@@ -665,29 +441,13 @@ function imgUrl(?string $path, string $fallback = "../images/logo(2).webp"): str
     return $resolvedFallback;
   }
   return "../images/logo(2).webp";
-=======
-function imgUrl(?string $path, string $fallback = "../images/logo(2).png"): string
-{
-  $path = trim((string) $path);
-  if ($path !== "" && imageFileExists($path)) {
-    return normalizeImagePath($path);
-  }
-  if ($fallback !== "" && imageFileExists($fallback)) {
-    return normalizeImagePath($fallback);
-  }
-  return "../images/logo(2).png";
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 }
 
 /** Admin paneli alt klasörlerinden görsellerin doğru yüklenmesi için URL üretir. */
 function adminImgUrl(
   string $assetBase,
   ?string $path,
-<<<<<<< HEAD
   string $fallback = "images/logo(2).webp",
-=======
-  string $fallback = "images/logo(2).png",
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 ): string {
   $path = trim((string) $path);
   $resolved =
@@ -703,7 +463,6 @@ function adminImgUrl(
   return rtrim($assetBase, "/") . "/" . ltrim($relative, "/");
 }
 
-<<<<<<< HEAD
 /**
  * Admin formlarında görsel önizleme alanı (dosya veya URL).
  *
@@ -785,8 +544,6 @@ function adminImageFieldHtml(string $assetBase, ?string $currentPath, array $opt
   return $html;
 }
 
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 function adminFormatFileSize(int $bytes): string
 {
   if ($bytes >= 1048576) {
@@ -880,7 +637,6 @@ function documentIconClass(array $row): string
 function yardimciLinkLogoDefaults(): array
 {
   return [
-<<<<<<< HEAD
     "OMIS" => "../images/otomasyon/omis_7572.webp",
     "Ulakbel" => "../images/otomasyon/ulakbel_5496.webp",
     "İmar Yönetim Sistemi" => "../images/otomasyon/imar-yonetim-sistemi_8038.webp",
@@ -905,60 +661,24 @@ function yardimciLinkLogoDefaults(): array
     "Memurlar.Net" => "../images/yardimci_linkler/faydali_linkler/memurlar.webp",
     "İlan" => "../images/yardimci_linkler/faydali_linkler/ilan.webp",
     "Resmi Gazete" => "../images/yardimci_linkler/faydali_linkler/resmi.webp",
-=======
-    "OMIS" => "../images/otomasyon/omis_7572.png",
-    "Ulakbel" => "../images/otomasyon/ulakbel_5496.png",
-    "İmar Yönetim Sistemi" => "../images/otomasyon/imar-yonetim-sistemi_8038.png",
-    "Dijital Arşiv" => "../images/otomasyon/dijital-arsiv_415.png",
-    "Outlook" => "../images/otomasyon/outlook_4005.png",
-    "Sosyal Yardım" => "../images/otomasyon/sosyal-yardim_3767.png",
-    "Netcad" => "../images/otomasyon/netcad_3888.png",
-    "E-Belediye Sistemi" => "../images/otomasyon/ebys_8493.png",
-    "E-Belediye Evlendrme Modülü" => "../images/otomasyon/e-belediye-evlendirme-modulu_3993.png",
-    "E-Belediye Sosyal Yardım Modülü" =>
-      "../images/otomasyon/e-belediye-sosyal-yard-m-modulu_4432.png",
-    "Gebze Belediyesi" => "../images/yardimci_linkler/web_siteleri/gebze-belediyesi.png",
-    "Kocaeli Büyükşehir Belediyesi" =>
-      "../images/yardimci_linkler/web_siteleri/kocaeli-buyuksehir-belediyesi.png",
-    "Kocaeli Valiliği" => "../images/yardimci_linkler/web_siteleri/kocaeli-vali.jpg",
-    "Gebze Kaymakamlığı" => "../images/yardimci_linkler/web_siteleri/gebze-kaymakam.png",
-    "Türkiye Belediyeler Birliği" =>
-      "../images/yardimci_linkler/bilgi_portallari/turkiye-belediyeler-birligi_2430.png",
-    "Cumhurbaşkanlığı Uzaktan Eğitim Kapısı" =>
-      "../images/yardimci_linkler/bilgi_portallari/cumhur.jpg",
-    "BTK Akademi Eğitim Portalı" => "../images/yardimci_linkler/bilgi_portallari/btk-akademi.jpg",
-    "Memurlar.Net" => "../images/yardimci_linkler/faydali_linkler/memurlar.png",
-    "İlan" => "../images/yardimci_linkler/faydali_linkler/ilan.png",
-    "Resmi Gazete" => "../images/yardimci_linkler/faydali_linkler/resmi.png",
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
   ];
 }
 
 function yardimciLinkLogo(array $row): ?string
 {
   $url = trim((string) ($row["logo_url"] ?? ""));
-<<<<<<< HEAD
   $resolved = resolveExistingImageWebPath($url);
   if ($resolved !== "") {
     return $resolved;
-=======
-  if ($url !== "" && imageFileExists($url)) {
-    return normalizeImagePath($url);
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
   }
 
   $baslik = trim((string) ($row["baslik"] ?? ""));
   $defaults = yardimciLinkLogoDefaults();
-<<<<<<< HEAD
   if ($baslik !== "" && isset($defaults[$baslik])) {
     $resolved = resolveExistingImageWebPath($defaults[$baslik]);
     if ($resolved !== "") {
       return $resolved;
     }
-=======
-  if ($baslik !== "" && isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
-    return $defaults[$baslik];
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
   }
 
   return otomasyonLogoUrl($baslik, $url);
@@ -967,7 +687,6 @@ function yardimciLinkLogo(array $row): ?string
 function otomasyonLogoUrl(string $baslik, ?string $logoUrl = ""): ?string
 {
   $logoUrl = trim((string) $logoUrl);
-<<<<<<< HEAD
   $resolved = resolveExistingImageWebPath($logoUrl);
   if ($resolved !== "") {
     return $resolved;
@@ -979,15 +698,6 @@ function otomasyonLogoUrl(string $baslik, ?string $logoUrl = ""): ?string
     if ($resolved !== "") {
       return $resolved;
     }
-=======
-  if ($logoUrl !== "" && imageFileExists($logoUrl)) {
-    return normalizeImagePath($logoUrl);
-  }
-
-  $defaults = yardimciLinkLogoDefaults();
-  if (isset($defaults[$baslik]) && imageFileExists($defaults[$baslik])) {
-    return $defaults[$baslik];
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
   }
 
   return null;
@@ -1007,7 +717,6 @@ function normalizeImagePath(string $path): string
   return "../images/" . ltrim($path, "/");
 }
 
-<<<<<<< HEAD
 function imageAlternateExtensionsBaglan(): array
 {
   return ["webp", "png", "jpg", "jpeg", "gif", "svg"];
@@ -1048,9 +757,6 @@ function resolveExistingImageWebPath(string $webPath): string
 }
 
 function imageFileExistsExact(string $webPath): bool
-=======
-function imageFileExists(string $webPath): bool
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 {
   if ($webPath === "" || preg_match("#^https?://#i", $webPath)) {
     return true;
@@ -1063,14 +769,11 @@ function imageFileExists(string $webPath): bool
   return $root !== "" && is_file($root . "/" . str_replace("\\", "/", $rel));
 }
 
-<<<<<<< HEAD
 function imageFileExists(string $webPath): bool
 {
   return resolveExistingImageWebPath($webPath) !== "";
 }
 
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 function dbEnsureYardimciLinkLogos(PDO $db): void
 {
   static $done = false;
@@ -1157,11 +860,8 @@ function dbEnsurePersonellerRememberMe(PDO $db): void
   dbEnsureColumn($db, "personeller", "sicil_no", "VARCHAR(50) DEFAULT NULL");
   dbEnsureColumn($db, "personeller", "email", "VARCHAR(255) DEFAULT NULL");
   dbEnsureColumn($db, "personeller", "sifre", "VARCHAR(255) DEFAULT NULL");
-<<<<<<< HEAD
   dbEnsureColumn($db, "personeller", "tc_no", "VARCHAR(11) DEFAULT NULL");
   dbEnsureColumn($db, "personeller", "telefon", "VARCHAR(20) DEFAULT NULL");
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
   dbEnsureColumn($db, "personeller", "remember_token_hash", "VARCHAR(64) DEFAULT NULL");
   dbEnsureColumn($db, "personeller", "remember_token_expires", "DATETIME DEFAULT NULL");
@@ -1566,7 +1266,6 @@ function adminYetkiLabel(string $yetki): string
 /** Navbar profil küçük resmi — kurumsal Gebze logosu. */
 function portalProfileFotoUrl(): string
 {
-<<<<<<< HEAD
   $resolved = resolveExistingImageWebPath("../images/gebze-logo.webp");
   if ($resolved === "") {
     $resolved = resolveExistingImageWebPath("../images/gebze-logo.png");
@@ -1581,15 +1280,6 @@ function portalProfileFotoUrl(): string
     return $resolved . "?v=" . filemtime($file);
   }
   return $resolved;
-=======
-  $path = "../images/gebze-logo.webp";
-  $root = realpath(__DIR__ . "/..") ?: "";
-  $file = $root . "/images/gebze-logo.webp";
-  if ($root !== "" && is_file($file)) {
-    return $path . "?v=" . filemtime($file);
-  }
-  return $path;
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 }
 
 function portalOturumDurumEtiket(?string $cikis, ?string $tip, int $id, int $aktifId): array
@@ -2028,7 +1718,6 @@ function dbColumnExists(PDO $db, string $table, string $column): bool
   }
 }
 
-<<<<<<< HEAD
 function dbTableExists(PDO $db, string $table): bool
 {
   if (!preg_match('/^[A-Za-z0-9_]+$/', $table)) {
@@ -2042,8 +1731,6 @@ function dbTableExists(PDO $db, string $table): bool
   }
 }
 
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 /**
  * "Sizden Gelenler" sayfasının kategorilerini ayrı bir tabloya taşır.
  * Tablo adı bilinçli olarak "sizdengelenler_kategori" (sayfaya özel) seçildi;
@@ -2953,7 +2640,6 @@ function dbEnsureAnketlerKategori(PDO $db): void
 }
 
 /**
-<<<<<<< HEAD
  * Anket katılımı: her personel için bir satır (anket_id + personel_id unique).
  */
 function dbEnsureAnketKatilimlari(PDO $db): void
@@ -2999,8 +2685,6 @@ function dbEnsureAnketKatilimlari(PDO $db): void
 }
 
 /**
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
  * Verilen slug'a (durum) karşılık gelen kategori id'sini döndürür.
  * Tabloda yoksa otomatik oluşturur.
  */
@@ -3101,7 +2785,6 @@ function adminFetchAnket(PDO $db, int $id): ?array
   );
 }
 
-<<<<<<< HEAD
 /** Anketin cevap kaydı var mı? */
 function adminAnketHasCevap(PDO $db, int $anketId): bool
 {
@@ -3418,8 +3101,6 @@ function adminAnketKatilimSil(PDO $db, int $anketId, int $personelId): bool
   }
 }
 
-=======
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 /**
  * Bilinen yardımcı link kategori slug'ları için Türkçe görünen ad eşlemesi.
  * (yardimci_linkler.php içindeki sortSelect dropdown'ıyla aynı sırayı takip eder.)
@@ -4575,44 +4256,7 @@ function importPersonelDb(): void
     );
   }
 }
-<<<<<<< HEAD
 
 // Anket katılım tablosu (tüm fonksiyon tanımlarından sonra)
 dbEnsureAnketKatilimlari($db);
-=======
-function dbEnsureAnketSoruSistemi(PDO $db): void {
-  try {
-    $db->exec("CREATE TABLE IF NOT EXISTS `anket_sorulari` (
-      `id` INT AUTO_INCREMENT PRIMARY KEY,
-      `anket_id` INT NOT NULL,
-      `soru_metni` TEXT NOT NULL,
-      `soru_tipi` ENUM('coktan_secmeli', 'acik_uclu') NOT NULL DEFAULT 'coktan_secmeli',
-      `sira` INT NOT NULL DEFAULT 0,
-      FOREIGN KEY (`anket_id`) REFERENCES `anketler`(`id`) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
-
-    $db->exec("CREATE TABLE IF NOT EXISTS `anket_secenekleri` (
-      `id` INT AUTO_INCREMENT PRIMARY KEY,
-      `soru_id` INT NOT NULL,
-      `secenek_metni` VARCHAR(255) NOT NULL,
-      FOREIGN KEY (`soru_id`) REFERENCES `anket_sorulari`(`id`) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
-
-    $db->exec("CREATE TABLE IF NOT EXISTS `anket_cevaplari` (
-      `id` INT AUTO_INCREMENT PRIMARY KEY,
-      `anket_id` INT NOT NULL,
-      `personel_id` INT NOT NULL,
-      `soru_id` INT NOT NULL,
-      `secenek_id` INT DEFAULT NULL,
-      `cevap_metni` TEXT DEFAULT NULL,
-      `olusturma_tarihi` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (`anket_id`) REFERENCES `anketler`(`id`) ON DELETE CASCADE,
-      FOREIGN KEY (`personel_id`) REFERENCES `personeller`(`id`) ON DELETE CASCADE,
-      FOREIGN KEY (`soru_id`) REFERENCES `anket_sorulari`(`id`) ON DELETE CASCADE,
-      FOREIGN KEY (`secenek_id`) REFERENCES `anket_secenekleri`(`id`) ON DELETE CASCADE,
-      UNIQUE KEY `uq_personel_soru` (`personel_id`, `soru_id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;");
-  } catch (PDOException $e) {}
-}
->>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 ?>
