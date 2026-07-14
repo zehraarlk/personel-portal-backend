@@ -1,0 +1,320 @@
+/* Sizden Gelenler */
+
+.content-area {
+    flex: 1;
+    padding-block: 2rem 3rem;
+}
+
+.sizden-gelenler-page .sg-search-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+}
+
+.sizden-gelenler-page .sg-search-box {
+    position: relative;
+}
+
+.sizden-gelenler-page .sg-search-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 0.95rem 3.75rem 0.95rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--bg-card);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.sizden-gelenler-page .sg-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.1);
+}
+
+.sizden-gelenler-page .sg-search-btn {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.sizden-gelenler-page .sg-search-btn .icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.sizden-gelenler-page .sg-search-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.sizden-gelenler-page .sg-results-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.sizden-gelenler-page .sg-results-count {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.sizden-gelenler-page .sg-sort-select {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 0.85rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.sizden-gelenler-page .sg-sort-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.1);
+}
+
+.sizden-gelenler-page .news-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.sizden-gelenler-page .news-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.sizden-gelenler-page .news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.sizden-gelenler-page .news-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.sizden-gelenler-page .news-image-wrap {
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+}
+
+.sizden-gelenler-page .news-image {
+    width: 100%;
+    height: 100%;
+    object-fit: var(--content-photo-fit);
+    object-position: center;
+    background: var(--content-photo-bg);
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.sizden-gelenler-page .news-card:hover .news-image {
+    transform: scale(1.05);
+}
+
+.sizden-gelenler-page .news-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sizden-gelenler-page .news-department-name {
+    display: inline-block;
+    align-self: flex-start;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.sizden-gelenler-page .news-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.65rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color var(--transition);
+}
+
+.sizden-gelenler-page .news-card:hover .news-title {
+    color: var(--primary);
+}
+
+.sizden-gelenler-page .news-excerpt {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sizden-gelenler-page .news-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+.sizden-gelenler-page .news-date,
+.sizden-gelenler-page .news-views {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.sizden-gelenler-page .news-meta .icon svg {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.sizden-gelenler-page .sg-empty {
+    text-align: center;
+    padding: 3.5rem 1.25rem;
+    color: var(--text-muted);
+}
+
+.sizden-gelenler-page .sg-empty .icon svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    fill: var(--border);
+    margin-bottom: 1rem;
+}
+
+.sizden-gelenler-page .sg-empty h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.sizden-gelenler-page .sg-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 2.5rem;
+}
+
+.sizden-gelenler-page .sg-pagination button {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-weight: 500;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.sizden-gelenler-page .sg-pagination button:hover:not(:disabled):not(.is-active) {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.sizden-gelenler-page .sg-pagination button.is-active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.sizden-gelenler-page .sg-pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.sizden-gelenler-page .home-db-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #664d03;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 1200px) {
+    .sizden-gelenler-page .news-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .sizden-gelenler-page .news-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .sizden-gelenler-page .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sizden-gelenler-page .sg-search-section {
+        padding: 1rem;
+        border-radius: var(--radius-md);
+    }
+
+    .sizden-gelenler-page .sg-search-input {
+        padding: 0.85rem 3.25rem 0.85rem 1rem;
+        font-size: 0.9375rem;
+    }
+
+    .sizden-gelenler-page .sg-results-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sizden-gelenler-page .sg-sort-select {
+        width: 100%;
+    }
+}

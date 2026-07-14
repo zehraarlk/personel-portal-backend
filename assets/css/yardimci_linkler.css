@@ -1,0 +1,248 @@
+/* Yardımcı Linkler */
+
+.content-area {
+    flex: 1;
+    padding-block: 2rem 3rem;
+}
+
+.yardimci-linkler-page .yl-page-header {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: #f2f6fc;
+    border-left: 5px solid var(--secondary-heading);
+}
+
+.yardimci-linkler-page .yl-page-header h1 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--secondary-heading);
+}
+
+.yardimci-linkler-page .yl-page-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 46rem;
+}
+
+.yardimci-linkler-page .yl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.yardimci-linkler-page .yl-search-box {
+    position: relative;
+    flex: 1 1 18rem;
+    max-width: 42rem;
+}
+
+.yardimci-linkler-page .yl-search-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 0.95rem 3.75rem 0.95rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--bg-card);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.yardimci-linkler-page .yl-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.1);
+}
+
+.yardimci-linkler-page .yl-search-btn {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yardimci-linkler-page .yl-search-btn .icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.yardimci-linkler-page .yl-sort-select {
+    min-width: 14rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: var(--bg-card);
+}
+
+.yardimci-linkler-page .yl-results-count {
+    margin: 0 0 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.yardimci-linkler-page .yl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 16rem));
+    justify-content: start;
+    gap: 1.25rem;
+}
+
+.yardimci-linkler-page .yl-card {
+    background: var(--bg-card);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    min-width: 0;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.yardimci-linkler-page .yl-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.yardimci-linkler-page .yl-card-logo {
+    width: 6.5rem;
+    height: 6.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yardimci-linkler-page .yl-card-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.yardimci-linkler-page .yl-card-fallback {
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yardimci-linkler-page .yl-card-fallback .icon svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: currentColor;
+}
+
+.yardimci-linkler-page .yl-card-title {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.35;
+    min-height: 2.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.yardimci-linkler-page .yl-card-category {
+    display: inline-flex;
+    padding: 0.18rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: rgba(2, 40, 66, 0.08);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.yardimci-linkler-page .yl-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    width: min(100%, 11rem);
+    padding: 0.7rem 1rem;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.yardimci-linkler-page .yl-card-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(2, 40, 66, 0.18);
+    color: #fff;
+}
+
+.yardimci-linkler-page .yl-card-btn .icon svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: currentColor;
+}
+
+.yardimci-linkler-page .yl-empty {
+    text-align: center;
+    padding: 3.5rem 1.25rem;
+    color: var(--text-muted);
+}
+
+.yardimci-linkler-page .yl-empty .icon svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    fill: var(--border);
+    margin-bottom: 1rem;
+}
+
+.yardimci-linkler-page .yl-empty h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.yardimci-linkler-page .home-db-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #664d03;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 720px) {
+    .yardimci-linkler-page .yl-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .yardimci-linkler-page .yl-search-box {
+        max-width: none;
+    }
+}

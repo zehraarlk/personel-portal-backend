@@ -1,0 +1,47 @@
+/* Site geneli responsive düzenlemeler */
+
+html {
+    overflow-x: clip;
+}
+
+.content-area {
+    flex: 1;
+    min-width: 0;
+}
+
+img,
+video,
+iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 992px) {
+    :root {
+        --nav-height: 72px;
+    }
+
+    .content-area {
+        padding-block: 1.5rem 2.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .site-container {
+        width: min(94%, var(--site-max));
+    }
+
+    .content-area {
+        padding-block: 1.15rem 2rem;
+    }
+
+    .breadcrumb-list {
+        font-size: 0.8125rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .site-container {
+        width: min(96%, var(--site-max));
+    }
+}

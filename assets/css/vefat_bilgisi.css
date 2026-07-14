@@ -1,0 +1,373 @@
+/* Vefat Eden Bilgisi */
+
+.content-area {
+    flex: 1;
+    padding-block: 1.5rem 3rem;
+}
+
+.vefat-page {
+    --vf-ink: #1a2332;
+    --vf-mist: #e8edf3;
+    --vf-soft: #f4f6f9;
+    --vf-ribbon: #4a5568;
+    --vf-ribbon-deep: #2d3748;
+    --vf-line: rgba(26, 35, 50, 0.1);
+}
+
+.vefat-page .vf-page-header {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.vefat-page .vf-header-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 12px;
+    background: linear-gradient(145deg, var(--vf-ribbon) 0%, var(--vf-ribbon-deep) 100%);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px rgba(45, 55, 72, 0.22);
+}
+
+.vefat-page .vf-header-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: currentColor;
+}
+
+.vefat-page .vf-page-header h1 {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 1.95rem);
+    font-weight: 700;
+    color: var(--secondary-heading);
+    line-height: 1.2;
+}
+
+.vefat-page .vf-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem 1.25rem;
+    margin-bottom: 1.35rem;
+}
+
+.vefat-page .vf-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 22rem;
+    max-width: 40rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.vefat-page .vf-search-box:focus-within {
+    border-color: rgba(2, 40, 66, 0.35);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.08);
+}
+
+.vefat-page .vf-search-leading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.vefat-page .vf-search-leading svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: currentColor;
+}
+
+.vefat-page .vf-search-input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    padding: 0.95rem 0.5rem 0.95rem 0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: var(--text-main);
+}
+
+.vefat-page .vf-search-input:focus {
+    outline: none;
+}
+
+.vefat-page .vf-search-btn {
+    margin: 0.3rem;
+    padding: 0.65rem 1.15rem;
+    border: none;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.vefat-page .vf-search-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(2, 40, 66, 0.2);
+}
+
+.vefat-page .vf-results-count {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.vefat-page .vf-results-count strong {
+    color: var(--primary);
+}
+
+.vefat-page .vf-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.vefat-page .vf-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--vf-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    min-width: 0;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.vefat-page .vf-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(2, 40, 66, 0.18);
+    box-shadow: var(--shadow-md);
+}
+
+.vefat-page .vf-card-rail {
+    width: 4.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 1.35rem 0.65rem;
+    background: linear-gradient(180deg, var(--vf-soft) 0%, var(--vf-mist) 100%);
+    border-right: 1px solid var(--vf-line);
+}
+
+.vefat-page .vf-card-ribbon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(145deg, var(--vf-ribbon) 0%, var(--vf-ribbon-deep) 100%);
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(45, 55, 72, 0.28);
+}
+
+.vefat-page .vf-card-ribbon .icon svg {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: currentColor;
+}
+
+.vefat-page .vf-card-body {
+    padding: 1.25rem 1.35rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-width: 0;
+}
+
+.vefat-page .vf-card-name {
+    margin: 0;
+    font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.3;
+}
+
+.vefat-page .vf-card-position {
+    margin: 0;
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 0.28rem 0.7rem;
+    border-radius: var(--radius-pill);
+    background: rgba(2, 40, 66, 0.07);
+    color: var(--secondary-heading);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.vefat-page .vf-card-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.vefat-page .vf-card-date .icon svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    fill: currentColor;
+}
+
+.vefat-page .vf-card-message {
+    margin: 0.2rem 0 0;
+    padding: 0.9rem 0 0;
+    border-top: 1px solid var(--vf-line);
+    color: var(--vf-ink);
+    font-size: 0.92rem;
+    line-height: 1.65;
+    font-style: italic;
+    position: relative;
+}
+
+.vefat-page .vf-card-message::before {
+    content: '“';
+    position: absolute;
+    top: 0.55rem;
+    left: 0;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: rgba(74, 85, 104, 0.28);
+    font-style: normal;
+}
+
+.vefat-page .vf-card-message {
+    padding-left: 1.1rem;
+}
+
+.vefat-page .vf-empty {
+    text-align: center;
+    padding: 3.75rem 1.5rem;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.vefat-page .vf-empty-icon {
+    display: inline-flex;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background: var(--vf-mist);
+    color: var(--vf-ribbon);
+}
+
+.vefat-page .vf-empty-icon svg {
+    width: 1.85rem;
+    height: 1.85rem;
+    fill: currentColor;
+}
+
+.vefat-page .vf-empty h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin: 0 0 0.5rem;
+}
+
+.vefat-page .vf-empty p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.vefat-page .vf-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.vefat-page .vf-pagination button {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-weight: 500;
+    font-family: inherit;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.vefat-page .vf-pagination button:hover:not(:disabled):not(.is-active) {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.vefat-page .vf-pagination button.is-active {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.vefat-page .vf-pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.vefat-page .home-db-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #664d03;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+    .vefat-page .vf-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .vefat-page .vf-card {
+        grid-template-columns: 1fr;
+    }
+
+    .vefat-page .vf-card-rail {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 0.85rem 1.15rem;
+        border-right: none;
+        border-bottom: 1px solid var(--vf-line);
+    }
+
+    .vefat-page .vf-search-btn {
+        padding-inline: 0.9rem;
+    }
+}

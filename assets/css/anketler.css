@@ -1,0 +1,805 @@
+/* Anketler — portal liste sayfası */
+
+.content-area {
+    flex: 1;
+    padding-block: 2rem 3rem;
+}
+
+.anketler-page .ak-page-header {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    background: #f2f6fc;
+    border-left: 5px solid var(--secondary-heading);
+}
+
+.anketler-page .ak-page-header h1 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--secondary-heading);
+}
+
+.anketler-page .ak-page-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 46rem;
+}
+
+.anketler-page .ak-list-success {
+    margin: 0 0 1.25rem;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--radius-md);
+    background: #e8f5e9;
+    border-left: 4px solid #2e7d32;
+    color: #1b5e20;
+    font-size: 0.95rem;
+}
+
+.anketler-page .ak-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.anketler-page .ak-search-box {
+    position: relative;
+    flex: 1 1 18rem;
+    max-width: 42rem;
+}
+
+.anketler-page .ak-search-input {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 0.95rem 3.75rem 0.95rem 1.5rem;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--text-main);
+    background: var(--bg-card);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.anketler-page .ak-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.1);
+}
+
+.anketler-page .ak-search-btn {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.anketler-page .ak-search-btn .icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.anketler-page .ak-sort-select {
+    min-width: 11rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: var(--bg-card);
+}
+
+.anketler-page .ak-filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-bottom: 1.5rem;
+}
+
+.anketler-page .ak-filter-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.05rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 0.875rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.anketler-page .ak-filter-tab .icon svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+}
+
+.anketler-page .ak-filter-tab:hover,
+.anketler-page .ak-filter-tab.is-active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.anketler-page .ak-results-count {
+    margin: 0 0 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.anketler-page .ak-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.anketler-page .ak-card {
+    position: relative;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.anketler-page .ak-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.anketler-page .ak-status {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+}
+
+.anketler-page .ak-status .icon svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    fill: currentColor;
+}
+
+.anketler-page .ak-status.is-pending { background: #b8860b; }
+.anketler-page .ak-status.is-completed { background: #1f7a4d; }
+.anketler-page .ak-status.is-expired { background: #8a2f2f; }
+
+.anketler-page .ak-card-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: var(--content-photo-fit);
+    object-position: center;
+    background: var(--content-photo-bg);
+}
+
+.anketler-page .ak-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+}
+
+.anketler-page .ak-card-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.anketler-page .ak-card-desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+}
+
+.anketler-page .ak-card-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.anketler-page .ak-card-date .icon svg {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+.anketler-page .ak-progress {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.anketler-page .ak-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+}
+
+.anketler-page .ak-progress-track {
+    height: 6px;
+    border-radius: var(--radius-pill);
+    background: var(--border);
+    overflow: hidden;
+}
+
+.anketler-page .ak-progress-bar {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #1f7a4d, #2ea86a);
+    width: 0;
+}
+
+.anketler-page .ak-card-actions {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: auto;
+}
+
+.anketler-page .ak-btn {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-align: center;
+    font-family: inherit;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    transition: transform var(--transition), box-shadow var(--transition);
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    line-height: 1.2;
+}
+
+.anketler-page .ak-btn .icon {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+.anketler-page .ak-btn .icon svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+    display: block;
+}
+
+.anketler-page .ak-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(2, 40, 66, 0.18);
+    color: #fff;
+}
+
+.anketler-page .ak-btn.is-view {
+    background: #1e6f9f;
+}
+
+.anketler-page .ak-btn.is-muted {
+    background: var(--bg-body);
+    color: var(--primary);
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.anketler-page .ak-btn.is-muted:hover {
+    color: var(--primary);
+}
+
+.anketler-page .ak-btn.is-favorite {
+    background: var(--bg-card);
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+.anketler-page .ak-btn.is-favorite:hover {
+    color: var(--primary);
+}
+
+.anketler-page .ak-btn.is-favorite.is-on {
+    border-color: #d4a017;
+    color: #9a7200;
+    background: #fff8e6;
+}
+
+.anketler-page .ak-btn.is-favorite.is-on:hover {
+    color: #9a7200;
+}
+
+.anketler-page .ak-empty {
+    text-align: center;
+    padding: 3.5rem 1.25rem;
+    color: var(--text-muted);
+}
+
+.anketler-page .ak-empty .icon svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    fill: var(--border);
+    margin-bottom: 1rem;
+}
+
+.anketler-page .ak-empty h2 {
+    font-size: 1.25rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.anketler-page .home-db-error {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #664d03;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.ak-toast-host {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1200;
+    display: grid;
+    gap: 0.65rem;
+    width: min(22rem, calc(100vw - 2rem));
+}
+
+.ak-toast {
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    animation: ak-toast-in 0.25s ease;
+}
+
+.ak-toast.is-error {
+    background: #8a2f2f;
+}
+
+.ak-toast.is-warn {
+    background: #9a7200;
+}
+
+@keyframes ak-toast-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1100px) {
+    .anketler-page .ak-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    .anketler-page .ak-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .anketler-page .ak-search-box {
+        max-width: none;
+    }
+
+    .anketler-page .ak-filter-tab {
+        flex: 1 1 calc(50% - 0.65rem);
+        justify-content: center;
+    }
+
+    .anketler-page .ak-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Anket katılım */
+
+.anket-katil-page .ak-join-wrap {
+    max-width: 46rem;
+    margin: 0 auto;
+}
+
+.anket-katil-page .ak-join-alert,
+.anket-katil-page .ak-join-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin: 0 0 1.15rem;
+    padding: 0.95rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.anket-katil-page .ak-join-alert .icon,
+.anket-katil-page .ak-join-error .icon {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.anket-katil-page .ak-join-alert {
+    background: #fff8e6;
+    border: 1px solid #e6c35c;
+    color: #7a5b00;
+}
+
+.anket-katil-page .ak-join-error {
+    background: #fde8e8;
+    border: 1px solid #e2a0a0;
+    color: #7a1f1f;
+}
+
+.anket-katil-page .ak-join-hero {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 1.15rem;
+    align-items: center;
+    margin-bottom: 1.35rem;
+    padding: 1.35rem 1.5rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #1a2740 0%, var(--primary) 55%, #16324f 100%);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+}
+
+.anket-katil-page .ak-join-hero-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+}
+
+.anket-katil-page .ak-join-hero-icon .icon,
+.anket-katil-page .ak-join-hero-icon i {
+    font-size: 1.35rem;
+    color: #fff;
+}
+
+.anket-katil-page .ak-join-kicker {
+    margin: 0 0 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.anket-katil-page .ak-join-hero h1 {
+    margin: 0 0 0.4rem;
+    font-size: clamp(1.2rem, 2.8vw, 1.65rem);
+    line-height: 1.25;
+    color: #fff;
+}
+
+.anket-katil-page .ak-join-desc {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.86);
+}
+
+.anket-katil-page .ak-join-stat {
+    text-align: center;
+    min-width: 4.5rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.anket-katil-page .ak-join-stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.anket-katil-page .ak-join-stat-label {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.anket-katil-page .ak-join-progress {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.anket-katil-page .ak-join-progress-track {
+    height: 0.45rem;
+    border-radius: var(--radius-pill);
+    background: #e8eef5;
+    overflow: hidden;
+}
+
+.anket-katil-page .ak-join-progress-bar {
+    height: 100%;
+    width: var(--ak-progress, 0%);
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transition: width 0.25s ease;
+}
+
+.anket-katil-page .ak-question {
+    margin: 0 0 1rem;
+    padding: 1.2rem 1.3rem 1.3rem;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    min-width: 0;
+}
+
+.anket-katil-page .ak-question-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.anket-katil-page .ak-question-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.anket-katil-page .ak-question-type {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.55rem;
+    border-radius: var(--radius-pill);
+    background: rgba(2, 40, 66, 0.08);
+    color: var(--secondary-heading);
+}
+
+.anket-katil-page .ak-question-title {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.45;
+    float: none;
+    position: static;
+}
+
+.anket-katil-page .ak-choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    width: 100%;
+    min-width: 0;
+}
+
+.anket-katil-page .ak-choice {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.15rem minmax(0, 1fr);
+    align-items: start;
+    column-gap: 0.75rem;
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fafbfd;
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
+}
+
+.anket-katil-page .ak-choice:hover {
+    border-color: rgba(2, 40, 66, 0.28);
+    background: #fff;
+}
+
+.anket-katil-page .ak-choice.is-checked,
+.anket-katil-page .ak-choice:has(input:checked) {
+    border-color: var(--primary);
+    background: rgba(2, 40, 66, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(2, 40, 66, 0.08);
+}
+
+.anket-katil-page .ak-choice input[type="radio"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.anket-katil-page .ak-choice-box {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.15rem;
+    border-radius: 50%;
+    border: 2px solid #9aa8b8;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    grid-column: 1;
+    grid-row: 1;
+    pointer-events: none;
+}
+
+.anket-katil-page .ak-choice.is-checked .ak-choice-box,
+.anket-katil-page .ak-choice:has(input:checked) .ak-choice-box {
+    border-color: var(--primary);
+}
+
+.anket-katil-page .ak-choice.is-checked .ak-choice-box::after,
+.anket-katil-page .ak-choice:has(input:checked) .ak-choice-box::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.anket-katil-page .ak-choice-text {
+    grid-column: 2;
+    grid-row: 1;
+    line-height: 1.45;
+    color: var(--text-main);
+    font-size: 0.94rem;
+    word-break: break-word;
+    pointer-events: none;
+}
+
+.anket-katil-page textarea {
+    width: 100%;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: vertical;
+    background: #fff;
+    color: var(--text-main);
+}
+
+.anket-katil-page textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(2, 40, 66, 0.08);
+}
+
+.anket-katil-page .ak-join-form.is-readonly .ak-choice,
+.anket-katil-page .ak-join-form.is-readonly textarea {
+    opacity: 0.88;
+    cursor: default;
+}
+
+.anket-katil-page .ak-join-form.is-readonly .ak-choice input[type="radio"] {
+    cursor: default;
+}
+
+.anket-katil-page .ak-join-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.35rem;
+}
+
+.anket-katil-page .ak-join-actions .ak-btn {
+    width: auto;
+    min-width: 10rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.anket-katil-page .ak-empty .ak-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    width: auto;
+    padding-inline: 1.25rem;
+}
+
+@media (max-width: 640px) {
+    .anket-katil-page .ak-join-hero {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .anket-katil-page .ak-join-stat {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0.55rem;
+        width: fit-content;
+    }
+
+    .anket-katil-page .ak-join-stat-label {
+        margin-top: 0;
+    }
+
+    .anket-katil-page .ak-join-actions {
+        flex-direction: column-reverse;
+    }
+
+    .anket-katil-page .ak-join-actions .ak-btn {
+        width: 100%;
+    }
+}
