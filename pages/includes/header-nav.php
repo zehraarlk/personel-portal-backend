@@ -140,7 +140,7 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
             <i class="fas fa-bars"></i>
           </button>
           <a href="ana_sayfa.php" class="logo-container">
-            <img src="../images/logo(2).png" alt="Gebze Belediyesi Logosu" class="logo-img" />
+            <img src="../images/logo(2).webp" alt="Gebze Belediyesi Logosu" class="logo-img" />
 
           </a>
         </div>

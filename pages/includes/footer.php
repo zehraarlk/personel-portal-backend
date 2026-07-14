@@ -1,7 +1,7 @@
     <footer>
       <div class="container">
         <div class="footer-content">
-          <img src="../images/logo(2).png" class="footer-logo" alt="Gebze Belediyesi" />
+          <img src="../images/logo(2).webp" class="footer-logo" alt="Gebze Belediyesi" />
 
           <div class="footer-contact">
             <p><i class="fas fa-phone"></i> (0262) 123 45 67</p>

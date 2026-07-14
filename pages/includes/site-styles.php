@@ -7,9 +7,9 @@
 $pageCss = $pageCss ?? "";
 $useDetailLayout = !empty($useDetailLayout);
 ?>
-    <link rel="icon" type="image/png" href="../images/favicon.png" />
-    <link rel="shortcut icon" type="image/png" href="../images/favicon.png" />
-    <link rel="apple-touch-icon" href="../images/favicon.png" />
+    <link rel="icon" type="image/png" href="../images/favicon.webp" />
+    <link rel="shortcut icon" type="image/png" href="../images/favicon.webp" />
+    <link rel="apple-touch-icon" href="../images/favicon.webp" />
 <?php if ($pageCss !== ""): ?>
     <link rel="stylesheet" href="../CSS/<?= htmlspecialchars(
       basename($pageCss),
