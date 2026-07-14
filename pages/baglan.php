@@ -1338,9 +1338,9 @@ function adminYetkiLabel(string $yetki): string
 /** Navbar profil küçük resmi — kurumsal Gebze logosu. */
 function portalProfileFotoUrl(): string
 {
-  $path = "../images/gebze-logo.png";
+  $path = "../images/gebze-logo.webp";
   $root = realpath(__DIR__ . "/..") ?: "";
-  $file = $root . "/images/gebze-logo.png";
+  $file = $root . "/images/gebze-logo.webp";
   if ($root !== "" && is_file($file)) {
     return $path . "?v=" . filemtime($file);
   }
