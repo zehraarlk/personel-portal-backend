@@ -67,12 +67,15 @@ $menuItems = [
     "icon" => "fa-folder-open",
     "href" => $adminBase . "kaynaklar/index.php",
   ],
+<<<<<<< HEAD
   [
     "id" => "ikonlar",
     "label" => "Site İkonları",
     "icon" => "fa-icons",
     "href" => $adminBase . "site_ikonlari/index.php",
   ],
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 ];
 ?>
 <aside class="admin-sidebar" id="adminSidebar">
@@ -82,7 +85,11 @@ $menuItems = [
   <a href="<?= htmlspecialchars($adminBase . "index.php", ENT_QUOTES, "UTF-8") ?>" class="admin-brand-link">
   <div class="admin-brand">
     <img src="<?= htmlspecialchars(
+<<<<<<< HEAD
       adminImgUrl($assetBase, "images/logo(2).webp"),
+=======
+      adminImgUrl($assetBase, "images/logo(2).png"),
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
       ENT_QUOTES,
       "UTF-8",
     ) ?>" alt="Gebze Belediyesi" />
@@ -125,9 +132,17 @@ $menuItems = [
   </nav>
 
   <div class="admin-sidebar-footer">
+<<<<<<< HEAD
     <a href="<?= htmlspecialchars($siteBase . 'ana_sayfa.php', ENT_QUOTES, 'UTF-8') ?>">
       <i class="fas fa-external-link-alt"></i> Siteyi Görüntüle
     </a>
+=======
+    <a href="<?= htmlspecialchars(
+      $siteBase,
+      ENT_QUOTES,
+      "UTF-8",
+    ) ?>ana_sayfa.php" target="_blank"><i class="fas fa-external-link-alt"></i> Siteyi Görüntüle</a>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
     <a href="<?= htmlspecialchars(
       $adminBase,
       ENT_QUOTES,

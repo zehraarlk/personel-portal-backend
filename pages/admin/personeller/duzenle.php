@@ -95,6 +95,20 @@ include __DIR__ . "/../includes/header.php";
       <div class="admin-alert admin-alert-danger"><?= htmlspecialchars($hata, ENT_QUOTES, "UTF-8") ?></div>
     <?php endif; ?>
 
+<<<<<<< HEAD
+=======
+    <?php if (!empty($row["foto_url"])): ?>
+      <div class="mb-3 text-center">
+        <img
+          src="<?= htmlspecialchars(adminImgUrl($assetBase, $row["foto_url"]), ENT_QUOTES, "UTF-8") ?>"
+          class="rounded-circle"
+          style="width:96px;height:96px;object-fit:cover"
+          alt=""
+        />
+      </div>
+    <?php endif; ?>
+
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
     <form method="post" enctype="multipart/form-data" class="admin-form">
       <input type="hidden" name="csrf" value="<?= htmlspecialchars(adminCsrfToken(), ENT_QUOTES, "UTF-8") ?>" />
 
@@ -151,11 +165,18 @@ include __DIR__ . "/../includes/header.php";
         <div class="admin-form-hint">Boş bırakılırsa mevcut şifre korunur.</div>
       </div>
 
+<<<<<<< HEAD
       <?= adminImageFieldHtml($assetBase, $row["foto_url"] ?? null, [
         "name" => "foto",
         "label" => "Fotoğraf",
         "hint" => "Yeni dosya seçerseniz mevcut fotoğraf değişir.",
       ]) ?>
+=======
+      <div class="mb-4">
+        <label class="form-label">Yeni Fotoğraf</label>
+        <input type="file" name="foto" class="form-control" accept="image/*" />
+      </div>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
       <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Güncelle</button>
     </form>

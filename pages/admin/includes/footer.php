@@ -2,10 +2,13 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<<<<<<< HEAD
     <script src="<?= htmlspecialchars($assetBase, ENT_QUOTES, 'UTF-8') ?>assets/js/photo-fit.js"></script>
     <script src="<?= htmlspecialchars($assetBase, ENT_QUOTES, 'UTF-8') ?>assets/js/admin-image-preview.js?v=<?= (int) @filemtime(
       __DIR__ . '/../../../assets/js/admin-image-preview.js',
     ) ?>"></script>
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
     <script>
       (function () {
         var sidebar = document.getElementById("adminSidebar");

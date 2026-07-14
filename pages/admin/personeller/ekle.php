@@ -130,11 +130,17 @@ include __DIR__ . "/../includes/header.php";
       </div>
 
       <div class="mb-4">
+<<<<<<< HEAD
         <?= adminImageFieldHtml($assetBase, null, [
           "name" => "foto",
           "label" => "Fotoğraf",
           "hint" => "Boş bırakılırsa varsayılan profil fotoğrafı atanır.",
         ]) ?>
+=======
+        <label class="form-label">Fotoğraf</label>
+        <input type="file" name="foto" class="form-control" accept="image/*" />
+        <div class="admin-form-hint">Boş bırakılırsa varsayılan profil fotoğrafı atanır.</div>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
       </div>
 
       <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Kaydet</button>

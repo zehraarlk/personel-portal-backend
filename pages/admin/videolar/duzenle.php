@@ -97,6 +97,7 @@ include __DIR__ . "/../includes/header.php";
           ) ?></div>
         <?php endif; ?>
 
+<<<<<<< HEAD
         <div class="admin-img-field mb-4">
           <div class="admin-img-preview">
             <img
@@ -110,6 +111,19 @@ include __DIR__ . "/../includes/header.php";
               alt=""
             />
           </div>
+=======
+        <div class="mb-4 text-center">
+          <img
+            src="https://img.youtube.com/vi/<?= htmlspecialchars(
+              $video["youtube_id"],
+              ENT_QUOTES,
+              "UTF-8",
+            ) ?>/hqdefault.jpg"
+            alt=""
+            class="rounded"
+            style="max-width: 320px; width: 100%;"
+          />
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
         </div>
 
         <form method="post" class="admin-form">
@@ -121,12 +135,19 @@ include __DIR__ . "/../includes/header.php";
 
           <div class="mb-3">
             <label for="youtube_id" class="form-label">YouTube ID veya URL</label>
+<<<<<<< HEAD
             <input type="text" class="form-control" id="youtube_id" name="youtube_id" data-youtube-input value="<?= htmlspecialchars(
+=======
+            <input type="text" class="form-control" id="youtube_id" name="youtube_id" value="<?= htmlspecialchars(
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
               $video["youtube_id"],
               ENT_QUOTES,
               "UTF-8",
             ) ?>" required />
+<<<<<<< HEAD
             <div class="admin-form-hint">ID değişince üstteki önizleme güncellenir.</div>
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
           </div>
 
           <div class="row">

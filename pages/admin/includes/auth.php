@@ -4,7 +4,10 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 require_once __DIR__ . "/../../baglan.php";
+<<<<<<< HEAD
 require_once __DIR__ . "/../../../includes/site-settings.php";
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
 adminRequireLogin();
 

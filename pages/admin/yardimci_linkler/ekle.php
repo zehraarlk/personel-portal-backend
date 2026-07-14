@@ -58,10 +58,14 @@ include __DIR__ . "/../includes/header.php";
   "UTF-8",
 ) ?></option><?php endforeach; ?></select></div>
       <div class="mb-3"><label class="form-label">Hedef URL *</label><input type="url" name="hedef_url" class="form-control" required placeholder="https://..." /></div>
+<<<<<<< HEAD
       <div class="mb-4"><?= adminImageFieldHtml($assetBase, null, [
         "name" => "logo",
         "label" => "Logo",
       ]) ?></div>
+=======
+      <div class="mb-4"><label class="form-label">Logo</label><input type="file" name="logo" class="form-control" accept="image/*" /></div>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
       <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Kaydet</button>
     </form>
   </div>

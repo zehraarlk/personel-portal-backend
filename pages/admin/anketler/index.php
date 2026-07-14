@@ -6,7 +6,10 @@ $pageTitle = "Anketler";
 
 $kayitlar = adminFetchAnketler($db);
 $durumlar = dbAnketlerKategoriAdiEslemesi();
+<<<<<<< HEAD
 $soruSayilari = adminAnketSoruSayilari($db);
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
 include __DIR__ . "/../includes/header.php";
 ?>
@@ -45,7 +48,10 @@ include __DIR__ . "/../includes/header.php";
               <th>Başlık</th>
               <th>Durum</th>
               <th>Tarih Aralığı</th>
+<<<<<<< HEAD
               <th>Soru</th>
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
               <th>Katılım</th>
 
               <th class="text-center align-middle">
@@ -97,11 +103,14 @@ include __DIR__ . "/../includes/header.php";
                   ) ?>
                 </td>
 
+<<<<<<< HEAD
                 <!-- Soru sayısı -->
                 <td>
                   <?= (int) ($soruSayilari[(int) $row["id"]] ?? 0) ?>
                 </td>
 
+=======
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
                 <!-- Katılım -->
                 <td>
                   <?= (int) ($row["katilim_sayisi"] ?? 0) ?>
@@ -126,6 +135,7 @@ include __DIR__ . "/../includes/header.php";
                     </button>
 
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm text-start">
+<<<<<<< HEAD
 
                       <!-- Düzenle -->
                       <li>
@@ -196,6 +206,39 @@ include __DIR__ . "/../includes/header.php";
                       </li>
 
                     </ul>
+=======
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="sorular.php?anket_id=<?= (int)$row["id"] ?>">
+      <i class="fas fa-list-check text-primary"></i>
+      Soruları Yönet
+    </a>
+  </li>
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="sonuclar.php?anket_id=<?= (int)$row["id"] ?>">
+      <i class="fas fa-chart-pie text-success"></i>
+      Anket Sonuçları
+    </a>
+  </li>
+  <li><hr class="dropdown-divider"></li>
+  <li>
+    <a class="dropdown-item d-flex align-items-center gap-2" href="duzenle.php?id=<?= (int) $row["id"] ?>">
+      <i class="fas fa-pen"></i>
+      Düzenle
+    </a>
+  </li>
+  <li><hr class="dropdown-divider"></li>
+  <li>
+    <form method="post" action="sil.php" class="m-0" onsubmit="return confirm('Bu anketi silmek istediğinize emin misiniz?');">
+      <input type="hidden" name="id" value="<?= (int) $row["id"] ?>">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(adminCsrfToken(), ENT_QUOTES, "UTF-8") ?>">
+      <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
+        <i class="fas fa-trash"></i>
+        Sil
+      </button>
+    </form>
+  </li>
+</ul>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
 
                   </div>
 

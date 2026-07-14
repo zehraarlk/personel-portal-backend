@@ -93,6 +93,16 @@ include __DIR__ . "/../includes/header.php";
   ENT_QUOTES,
   "UTF-8",
 ) ?></div><?php endif; ?>
+<<<<<<< HEAD
+=======
+        <?php if (!empty($row["resim_url"])): ?>
+          <div class="mb-3 text-center"><img src="<?= htmlspecialchars(
+            adminImgUrl($assetBase, $row["resim_url"]),
+            ENT_QUOTES,
+            "UTF-8",
+          ) ?>" class="rounded" style="max-height:160px" alt="" /></div>
+        <?php endif; ?>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
         <form method="post" enctype="multipart/form-data" class="admin-form">
           <input type="hidden" name="csrf" value="<?= htmlspecialchars(
             adminCsrfToken(),
@@ -139,11 +149,15 @@ include __DIR__ . "/../includes/header.php";
             ENT_QUOTES,
             "UTF-8",
           ) ?>" /></div>
+<<<<<<< HEAD
           <?= adminImageFieldHtml($assetBase, $row["resim_url"] ?? null, [
             "name" => "resim",
             "label" => "Görsel",
             "hint" => "Yeni dosya seçerseniz mevcut görsel değişir.",
           ]) ?>
+=======
+          <div class="mb-4"><label class="form-label">Yeni Görsel</label><input type="file" name="resim" class="form-control" accept="image/*" /></div>
+>>>>>>> da0ab1ce9c2e683fa29c9cbbff849780f358e71f
           <button type="submit" class="admin-btn admin-btn-primary"><i class="fas fa-save"></i> Güncelle</button>
         </form>
       </div>
