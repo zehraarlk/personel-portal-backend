@@ -40,7 +40,7 @@ include "includes/site-styles.php";
       <!-- Kontroller -->
       <div class="controls-section">
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
+          <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> search-icon"></i>
           <input
             type="text"
             class="search-input"
@@ -67,7 +67,7 @@ include "includes/site-styles.php";
   $k["baslik"],
 ) ?>" class="system-logo" />
 <?php else: ?>
-              <i class="fas fa-external-link-alt link-fallback-icon" aria-hidden="true"></i>
+              <i class="<?= portalSiteIconClass($db, "harici_baglanti", "fas fa-external-link-alt") ?> link-fallback-icon" aria-hidden="true"></i>
 <?php endif; ?>
             </div>
             <h3 class="link-title"><?= htmlspecialchars($k["baslik"]) ?></h3>

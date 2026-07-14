@@ -72,7 +72,7 @@ include "includes/site-styles.php";
                 <!-- Haberler Başlığı -->
                 <div class="d-flex align-items-center mb-3" style="width: 100%; max-width: 1600px">
                   <div class="title-v1">
-                    <h2 class="title-v2"><i class="fas fa-bullhorn"></i> Haberler & Etkinlikler</h2>
+                    <h2 class="title-v2"><i class="<?= portalSiteIconClass($db, "anasayfa_haberler", "fas fa-bullhorn") ?>"></i> Haberler & Etkinlikler</h2>
                   </div>
                 </div>
                 <!-- Ana Haber Resmi ve Başlığı -->
@@ -97,10 +97,10 @@ include "includes/site-styles.php";
                 <!-- Galeri Container -->
                 <div id="gallery-container" class="mb-4">
                   <button id="gallery-prev-btn" class="gallery-nav-arrow prev" title="Önceki">
-                    <i class="fas fa-chevron-left"></i>
+                    <i class="<?= portalSiteIconClass($db, "onceki", "fas fa-chevron-left") ?>"></i>
                   </button>
                   <button id="gallery-next-btn" class="gallery-nav-arrow next" title="Sonraki">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="<?= portalSiteIconClass($db, "sonraki", "fas fa-chevron-right") ?>"></i>
                   </button>
                   <div class="gallery-wrapper">
                     <div id="gallery-track" class="d-flex gap-2"></div>
@@ -113,18 +113,18 @@ include "includes/site-styles.php";
             <div class="col-12 col-lg-4 d-flex">
               <div class="card shadow-lg border-0 rounded-4 p-3 p-sm-4 w-100 duyurular-card">
                 <div class="duyurular-header">
-                  <h2 class="duyurular-baslik"><i class="fas fa-bell me-2"></i>Duyurular</h2>
+                  <h2 class="duyurular-baslik"><i class="<?= portalSiteIconClass($db, "duyuru_zili", "fas fa-bell") ?> me-2"></i>Duyurular</h2>
                 </div>
                 <hr class="duyurular-divider" />
                 <div id="duyurular-listesi" class="duyurular-govde"></div>
 
                 <div id="pagination-controls" class="pagination-controls">
                   <button id="prev-page" class="pagination-arrow" title="Önceki Sayfa">
-                    <i class="fas fa-chevron-left"></i>
+                    <i class="<?= portalSiteIconClass($db, "onceki", "fas fa-chevron-left") ?>"></i>
                   </button>
                   <span id="sayfa-bilgisi" class="sayfa-bilgisi">Sayfa 1 / 1</span>
                   <button id="next-page" class="pagination-arrow" title="Sonraki Sayfa">
-                    <i class="fas fa-chevron-right"></i>
+                    <i class="<?= portalSiteIconClass($db, "sonraki", "fas fa-chevron-right") ?>"></i>
                   </button>
                 </div>
               </div>
@@ -137,7 +137,7 @@ include "includes/site-styles.php";
         <div class="container-fluid px-4 py-4">
           <div class="page-header-container">
             <div class="header-icon-wrapper">
-              <i class="fa-solid fa-cake-candles"></i>
+              <i class="<?= portalSiteIconClass($db, "dogum_sayfa", "fa-solid fa-cake-candles") ?>"></i>
             </div>
             <div class="header-text-wrapper">
               <h2 class="header-title-main">Mutlu Yıllar !</h2>
@@ -185,14 +185,14 @@ include "includes/site-styles.php";
   $link["baslik"],
 ) ?>" class="otomasyon-icon" />
                       <?php else: ?>
-                      <div class="otomasyon-icon-fallback" aria-hidden="true"><i class="fas fa-desktop"></i></div>
+                      <div class="otomasyon-icon-fallback" aria-hidden="true"><i class="<?= portalSiteIconClass($db, "otomasyon_sistem", "fas fa-desktop") ?>"></i></div>
                       <?php endif; ?>
                     </div>
                     <h3 class="otomasyon-isim"><?= htmlspecialchars($link["baslik"]) ?></h3>
                     <a href="<?= htmlspecialchars(
                       $link["hedef_url"] ?? "#",
                     ) ?>" target="_blank" rel="noopener" class="otomasyon-btn">
-                      <i class="fas fa-external-link-alt me-2"></i>Sisteme Git
+                      <i class="<?= portalSiteIconClass($db, "harici_baglanti", "fas fa-external-link-alt") ?> me-2"></i>Sisteme Git
                     </a>
                   </div>
 <?php

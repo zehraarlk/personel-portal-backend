@@ -50,7 +50,7 @@ $bugunTarih =
       <div class="container-fluid px-4 py-4">
         <div class="page-header-container">
           <div class="header-icon-wrapper">
-            <i class="fa-solid fa-cake-candles"></i>
+            <i class="<?= portalSiteIconClass($db, "dogum_sayfa", "fa-solid fa-cake-candles") ?>"></i>
           </div>
           <div class="header-text-wrapper">
             <h2 class="header-title-main">Bugün Doğum Günü Olan Personeller</h2>

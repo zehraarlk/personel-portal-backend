@@ -47,7 +47,7 @@ include "includes/site-styles.php";
 
       <div class="controls-section">
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
+          <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> search-icon"></i>
           <input type="text" class="search-input" placeholder="Eğitim ara..." id="searchInput" />
         </div>
         <div class="filter-buttons">
@@ -75,23 +75,23 @@ include "includes/site-styles.php";
           <p class="document-description"><?= htmlspecialchars($row["aciklama"]) ?></p>
           <div class="document-meta">
             <div class="document-size">
-              <i class="fas fa-file-pdf"></i>
+              <i class="<?= portalSiteIconClass($db, "pdf_dosyasi", "fas fa-file-pdf") ?>"></i>
               PDF • <?= htmlspecialchars($row["boyut"]) ?>
             </div>
             <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
+              <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
               <?= $tarihFormat ?>
             </div>
           </div>
           <div class="download-section">
             <button class="preview-btn" onclick="previewYouTubeVideo('<?= $video ?>')">
-              <i class="fas fa-video"></i> Video
+              <i class="<?= portalSiteIconClass($db, "egitim_video", "fas fa-video") ?>"></i> Video
             </button>
             <button class="preview-btn" onclick="previewYouTubeVideo('<?= $video ?>')">
-              <i class="fas fa-file-alt"></i> Belge
+              <i class="<?= portalSiteIconClass($db, "dosya_belge", "fas fa-file-alt") ?>"></i> Belge
             </button>
             <button class="preview-btn" onclick="previewYouTubeVideo('<?= $video ?>')">
-              <i class="fas fa-file"></i> Döküman
+              <i class="<?= portalSiteIconClass($db, "dosya_genel", "fas fa-file") ?>"></i> Döküman
             </button>
           </div>
         </div>

@@ -63,7 +63,7 @@ include "includes/site-styles.php";
 
         <div class="card profil-card">
           <div class="card-header">
-            <i class="fas fa-envelope"></i>Email Değiştir
+            <i class="<?= portalSiteIconClass($db, "email_degistir", "fas fa-envelope") ?>"></i>Email Değiştir
           </div>
           <div class="card-body p-4">
             <form action="email_degistir.php" method="POST">
@@ -74,7 +74,7 @@ include "includes/site-styles.php";
                 ); ?>" required>
               </div>
               <button type="submit" name="email_guncelle" class="btn btn-navy w-100">
-                <i class="fas fa-save me-1"></i> Email Kaydet
+                <i class="<?= portalSiteIconClass($db, "kaydet", "fas fa-save") ?> me-1"></i> Email Kaydet
               </button>
             </form>
           </div>

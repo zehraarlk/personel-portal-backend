@@ -73,20 +73,20 @@ include "includes/site-styles.php";
                 </h1>
                 <div class="article-meta">
                   <div class="meta-item">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
                     <span id="articleDate"><?php echo date(
                       "d.m.Y",
                       strtotime($kayit["tarih"]),
                     ); ?></span>
                   </div>
                   <div class="meta-item">
-                    <i class="fas fa-eye"></i>
+                    <i class="<?= portalSiteIconClass($db, "goruntulenme", "fas fa-eye") ?>"></i>
                     <span id="articleViews"><?php echo (int) $kayit[
                       "goruntulenme"
                     ]; ?></span> görüntülenme
                   </div>
                   <div class="meta-item">
-                    <i class="fas fa-user"></i>
+                    <i class="<?= portalSiteIconClass($db, "kullanici", "fas fa-user") ?>"></i>
                     <span>Gebze Belediyesi</span>
                   </div>
                 </div>
@@ -112,7 +112,7 @@ include "includes/site-styles.php";
               <div class="article-actions">
                 <div class="back-button">
                   <a href="sizden_gelenler.php" class="btn-back">
-                    <i class="fas fa-arrow-left"></i>
+                    <i class="<?= portalSiteIconClass($db, "geri_don", "fas fa-arrow-left") ?>"></i>
                     Geri Dön
                   </a>
                 </div>
@@ -124,7 +124,7 @@ include "includes/site-styles.php";
             <div class="other-departments-card">
               <div class="departments-header">
                 <h3 class="departments-title">
-                  <i class="fas fa-comments"></i>
+                  <i class="<?= portalSiteIconClass($db, "sizden_gelenler", "fas fa-comments") ?>"></i>
                   Diğer Paylaşımlar
                 </h3>
               </div>
@@ -170,11 +170,11 @@ include "includes/site-styles.php";
 
               <div class="departments-pagination">
                 <button class="pagination-btn prev-btn" id="prevDeptBtn" title="Önceki sayfa" type="button">
-                  <i class="fas fa-chevron-left"></i>
+                  <i class="<?= portalSiteIconClass($db, "onceki", "fas fa-chevron-left") ?>"></i>
                 </button>
                 <span class="dept-page-info" id="deptPageInfo">Sayfa 1 / 1</span>
                 <button class="pagination-btn next-btn" id="nextDeptBtn" title="Sonraki sayfa" type="button">
-                  <i class="fas fa-chevron-right"></i>
+                  <i class="<?= portalSiteIconClass($db, "sonraki", "fas fa-chevron-right") ?>"></i>
                 </button>
               </div>
               <div class="pagination-dots" id="paginationDots" hidden></div>

@@ -236,7 +236,7 @@ if (
         <div class="logo-wrap">
           <img src="https://personel.gebze.bel.tr/public/img/logo/logo1.png" alt="Gebze Belediyesi İnsan Kaynakları" />
         </div>
-        <div class="badge-panel"><i class="bi bi-shield-lock-fill"></i> YÖNETİM PANELİ</div>
+        <div class="badge-panel"><i class="<?= portalSiteIconClass($db, "yonetim_guvenlik_bi", "bi bi-shield-lock-fill") ?>"></i> YÖNETİM PANELİ</div>
         <div class="login-subtitle">YÖNETİCİ GİRİŞ EKRANI</div>
         <p class="text-muted small mb-3">Yönetim paneli girişi personel girişinden ayrıdır.</p>
 
@@ -254,17 +254,17 @@ if (
             <div class="password-container">
               <input type="password" class="form-control" id="password" name="sifre" placeholder="Şifreniz" autocomplete="current-password" />
               <button type="button" class="password-toggle" id="togglePassword" aria-label="Şifreyi göster/gizle">
-                <i class="bi bi-eye" id="toggleIcon"></i>
+                <i class="<?= portalSiteIconClass($db, "sifre_goster_bi", "bi bi-eye") ?>" id="toggleIcon"></i>
               </button>
             </div>
             <div class="invalid-feedback">Şifre boş bırakılamaz.</div>
           </div>
 
           <button type="submit" class="btn btn-login mt-3 mb-2">
-            <i class="bi bi-box-arrow-in-right me-2"></i>GİRİŞ YAP
+            <i class="<?= portalSiteIconClass($db, "giris_yap_bi", "bi bi-box-arrow-in-right") ?> me-2"></i>GİRİŞ YAP
           </button>
 
-          <a href="login.php" class="back-link"><i class="bi bi-arrow-left"></i> Personel Girişine Dön</a>
+          <a href="login.php" class="back-link"><i class="<?= portalSiteIconClass($db, "geri_don_bi", "bi bi-arrow-left") ?>"></i> Personel Girişine Dön</a>
         </form>
       </div>
     </div>
@@ -275,10 +275,10 @@ if (
         const toggleIcon = document.getElementById("toggleIcon");
         if (passwordField.type === "password") {
           passwordField.type = "text";
-          toggleIcon.className = "bi bi-eye-slash";
+          toggleIcon.className = <?= json_encode(portalSiteIconClass($db, "sifre_gizle_bi", "bi bi-eye-slash")) ?>;
         } else {
           passwordField.type = "password";
-          toggleIcon.className = "bi bi-eye";
+          toggleIcon.className = <?= json_encode(portalSiteIconClass($db, "sifre_goster_bi", "bi bi-eye")) ?>;
         }
       });
 
@@ -306,7 +306,7 @@ if (
 
         if (isValid) {
           const submitBtn = document.querySelector(".btn-login");
-          submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>GİRİŞ YAPILIYOR...';
+          submitBtn.innerHTML = '<i class="<?= portalSiteIconClass($db, "islem_yukleniyor_bi", "bi bi-arrow-clockwise") ?> me-2"></i>GİRİŞ YAPILIYOR...';
           submitBtn.disabled = true;
 
           let formData = new FormData();
@@ -321,14 +321,14 @@ if (
               } else {
                 errorDiv.innerText = data.message;
                 errorDiv.classList.remove("d-none");
-                submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>GİRİŞ YAP';
+                submitBtn.innerHTML = '<i class="<?= portalSiteIconClass($db, "giris_yap_bi", "bi bi-box-arrow-in-right") ?> me-2"></i>GİRİŞ YAP';
                 submitBtn.disabled = false;
               }
             })
             .catch(() => {
               errorDiv.innerText = "Sunucu bağlantı hatası oluştu.";
               errorDiv.classList.remove("d-none");
-              submitBtn.innerHTML = '<i class="bi bi-box-arrow-in-right me-2"></i>GİRİŞ YAP';
+              submitBtn.innerHTML = '<i class="<?= portalSiteIconClass($db, "giris_yap_bi", "bi bi-box-arrow-in-right") ?> me-2"></i>GİRİŞ YAP';
               submitBtn.disabled = false;
             });
         }

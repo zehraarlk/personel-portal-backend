@@ -33,7 +33,7 @@ include "includes/site-styles.php";
 <!-- Breadcrumb Section - Logo ve başlık ile aynı hizada --><!-- Page Header - Logo ve breadcrumb ile aynı hizada -->
     <div class="page-header">
       <div class="nav-container">
-        <h2><i class="fa-solid fa-calendar-days"></i> Etkinlikler & Aktiviteler</h2>
+        <h2><i class="<?= portalSiteIconClass($db, "etkinlik_sayfa", "fa-solid fa-calendar-days") ?>"></i> Etkinlikler & Aktiviteler</h2>
       </div>
     </div>
 
@@ -50,7 +50,7 @@ include "includes/site-styles.php";
               placeholder="Haber başlığı veya açıklama ara..."
             />
             <button class="search-btn" id="searchBtn">
-              <i class="fas fa-search"></i>
+              <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?>"></i>
             </button>
           </div>
         </div>
@@ -82,7 +82,7 @@ include "includes/site-styles.php";
 
           <!-- No Results -->
           <div class="no-results d-none" id="noResults">
-            <i class="fas fa-search"></i>
+            <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?>"></i>
             <h4>Sonuç Bulunamadı</h4>
             <p>
               Arama kriterlerinize uygun içerik bulunamadı. Lütfen farklı anahtar kelimeler deneyin.

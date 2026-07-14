@@ -260,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["sicil_no"]) && isset($
             <div class="password-container">
               <input type="password" class="form-control" id="password" name="sifre" placeholder="Şifreniz" autocomplete="current-password" />
               <button type="button" class="password-toggle" id="togglePassword" aria-label="Şifreyi göster/gizle">
-                <i class="bi bi-eye" id="toggleIcon"></i>
+                <i class="<?= portalSiteIconClass($db, "sifre_goster_bi", "bi bi-eye") ?>" id="toggleIcon"></i>
               </button>
             </div>
             <div class="invalid-feedback">Şifre boş bırakılamaz.</div>
@@ -282,10 +282,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["sicil_no"]) && isset($
         const toggleIcon = document.getElementById("toggleIcon");
         if (passwordField.type === "password") {
           passwordField.type = "text";
-          toggleIcon.className = "bi bi-eye-slash";
+          toggleIcon.className = <?= json_encode(portalSiteIconClass($db, "sifre_gizle_bi", "bi bi-eye-slash")) ?>;
         } else {
           passwordField.type = "password";
-          toggleIcon.className = "bi bi-eye";
+          toggleIcon.className = <?= json_encode(portalSiteIconClass($db, "sifre_goster_bi", "bi bi-eye")) ?>;
         }
       });
 
@@ -313,7 +313,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["sicil_no"]) && isset($
 
         if (isValid) {
           const submitBtn = document.querySelector(".btn-login");
-          submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>GİRİŞ YAPILIYOR...';
+          submitBtn.innerHTML = '<i class="<?= portalSiteIconClass($db, "islem_yukleniyor_bi", "bi bi-arrow-clockwise") ?> me-2"></i>GİRİŞ YAPILIYOR...';
           submitBtn.disabled = true;
 
           let formData = new FormData();

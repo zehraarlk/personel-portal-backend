@@ -34,6 +34,196 @@ if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
 
+
+/* =========================================================
+ * ORTAK SİTE İKONLARI
+ * site_ikonlari tablosunu doldurur ve ikonları tek sorguda okur.
+ * ========================================================= */
+if (!function_exists("dbEnsureSiteIcons")) {
+  function dbEnsureSiteIcons(PDO $db): void
+  {
+    static $done = false;
+    if ($done) {
+      return;
+    }
+    $done = true;
+
+    $varsayilanIkonlar = [
+      ["menu_ac", "Mobil Menüyü Aç", "arayuz", "fas fa-bars", null, 10],
+      ["anasayfa", "Anasayfa", "navigasyon", "fas fa-home", null, 20],
+      ["videolar", "Videolar", "navigasyon", "fas fa-video", null, 30],
+      ["etkinlikler", "Etkinlikler", "navigasyon", "fas fa-newspaper", null, 40],
+      ["sizden_gelenler", "Sizden Gelenler", "navigasyon", "fas fa-comments", null, 50],
+      ["etkinlik_takvimi", "Etkinlik Takvimi", "navigasyon", "fas fa-calendar-check", null, 60],
+      ["duyurular", "Duyurular", "navigasyon", "fas fa-bullhorn", null, 70],
+      ["kaynaklar", "Kaynaklar", "navigasyon", "fas fa-landmark", null, 80],
+      ["protokoller", "Protokoller", "navigasyon", "fas fa-file-signature", null, 90],
+      ["dokumanlar", "Dokümanlar", "navigasyon", "fas fa-file-alt", null, 100],
+      ["mevzuatlar", "Mevzuatlar", "navigasyon", "fas fa-balance-scale", null, 110],
+      ["egitimler", "Eğitimler", "navigasyon", "fas fa-graduation-cap", null, 120],
+      ["diger", "Diğer", "navigasyon", "fas fa-file-alt", null, 130],
+      ["anketler", "Anketler", "navigasyon", "fas fa-poll", null, 140],
+      ["yardimci_linkler", "Yardımcı Linkler", "navigasyon", "fas fa-link", null, 150],
+      ["vefat_bilgisi", "Vefat Eden Bilgisi", "navigasyon", "fas fa-ribbon", "#222222", 160],
+      ["dogum_gunu", "Doğum Günü Bilgisi", "navigasyon", "fas fa-birthday-cake", null, 170],
+      ["yonetim_paneli", "Yönetim Paneli", "profil", "fas fa-cog", null, 180],
+      ["oturum_bilgileri", "Oturum Bilgileri", "profil", "fas fa-history", null, 190],
+      ["email_degistir", "E-posta Değiştir", "profil", "fas fa-envelope", null, 200],
+      ["sifre_degistir", "Şifre Değiştir", "profil", "fas fa-key", null, 210],
+      ["cikis_yap", "Çıkış Yap", "profil", "fas fa-sign-out-alt", null, 220],
+      ["telefon", "Telefon", "iletisim", "fas fa-phone", null, 230],
+      ["eposta", "E-posta", "iletisim", "fas fa-envelope", null, 240],
+      ["facebook", "Facebook", "sosyal", "fab fa-facebook-f", null, 250],
+      ["twitter", "Twitter / X", "sosyal", "fab fa-twitter", null, 260],
+      ["instagram", "Instagram", "sosyal", "fab fa-instagram", null, 270],
+      ["youtube", "YouTube", "sosyal", "fab fa-youtube", null, 280],
+      ["linkedin", "LinkedIn", "sosyal", "fab fa-linkedin-in", null, 290],
+      ["arama", "Arama", "arayuz", "fas fa-search", null, 300],
+      ["tarih", "Tarih", "bilgi", "fas fa-calendar-alt", null, 310],
+      ["goruntulenme", "Görüntülenme", "bilgi", "fas fa-eye", null, 320],
+      ["kullanici", "Kullanıcı / Yazar", "bilgi", "fas fa-user", null, 330],
+      ["geri_don", "Geri Dön", "arayuz", "fas fa-arrow-left", null, 340],
+      ["onceki", "Önceki", "arayuz", "fas fa-chevron-left", null, 350],
+      ["sonraki", "Sonraki", "arayuz", "fas fa-chevron-right", null, 360],
+      ["pdf_dosyasi", "PDF Dosyası", "dosya", "fas fa-file-pdf", null, 370],
+      ["kaydet", "Kaydet", "form", "fas fa-save", null, 380],
+      ["video_oynat", "Videoyu Oynat", "video", "fas fa-play", null, 390],
+      ["harici_baglanti", "Harici Bağlantı", "baglanti", "fas fa-external-link-alt", null, 400],
+      ["etkinlik_sayfa", "Etkinlik Sayfası", "sayfa", "fa-solid fa-calendar-days", null, 410],
+      ["oturum_saati", "Oturum Saati", "oturum", "far fa-clock", null, 420],
+      ["yonetim_guvenlik_bi", "Yönetim Güvenliği", "giris", "bi bi-shield-lock-fill", null, 430],
+      ["sifre_goster_bi", "Şifreyi Göster", "giris", "bi bi-eye", null, 440],
+      ["sifre_gizle_bi", "Şifreyi Gizle", "giris", "bi bi-eye-slash", null, 450],
+      ["giris_yap_bi", "Giriş Yap", "giris", "bi bi-box-arrow-in-right", null, 460],
+      ["geri_don_bi", "Geri Dön", "giris", "bi bi-arrow-left", null, 470],
+      ["islem_yukleniyor_bi", "İşlem Yapılıyor", "arayuz", "bi bi-arrow-clockwise", null, 480],
+      ["personel_kayit_bi", "Personel Kaydı", "giris", "bi bi-person-plus-fill", null, 490],
+      ["islem_basarili_bi", "İşlem Başarılı", "durum", "bi bi-check-circle", null, 500],
+      ["anasayfa_haberler", "Ana Sayfa Haberler Başlığı", "anasayfa", "fas fa-bullhorn", null, 510],
+      ["duyuru_zili", "Duyuru Zili", "duyuru", "fas fa-bell", null, 520],
+      ["dogum_sayfa", "Doğum Günü Sayfa İkonu", "dogum", "fa-solid fa-cake-candles", null, 530],
+      ["otomasyon_sistem", "Otomasyon Sistemi", "anasayfa", "fas fa-desktop", null, 540],
+      ["anket_kilit_acik", "Anket Cevapları Açık", "anket", "fas fa-lock-open", null, 550],
+      ["anket_gonder", "Anketi Gönder", "anket", "fas fa-paper-plane", null, 560],
+      ["anket_durum_aktif", "Aktif Anket", "anket", "fas fa-play-circle", null, 570],
+      ["anket_durum_beklemede", "Bekleyen Anket", "anket", "fas fa-clock", null, 580],
+      ["anket_durum_tamamlandi", "Tamamlanan Anket", "anket", "fas fa-check-circle", null, 590],
+      ["anket_durum_suresi_doldu", "Süresi Dolan Anket", "anket", "fas fa-times-circle", null, 600],
+      ["anket_tarih", "Anket Tarihi", "anket", "fas fa-calendar", null, 610],
+      ["anket_giris", "Ankete Giriş", "anket", "fas fa-sign-in-alt", null, 620],
+      ["anket_duzenle", "Ankete Katıl / Düzenle", "anket", "fas fa-edit", null, 630],
+      ["anket_favori_dolu", "Favorideki Anket", "anket", "fas fa-star", null, 640],
+      ["anket_favori_bos", "Favoride Olmayan Anket", "anket", "far fa-star", null, 650],
+      ["anket_liste", "Anket Listesi", "anket", "fas fa-list", null, 660],
+      ["indir", "Dosya İndir", "dosya", "fas fa-download", null, 670],
+      ["dosya_word", "Word Dosyası", "dosya", "fas fa-file-word", null, 680],
+      ["dosya_excel", "Excel Dosyası", "dosya", "fas fa-file-excel", null, 690],
+      ["dosya_belge", "Belge Dosyası", "dosya", "fas fa-file-alt", null, 700],
+      ["dosya_genel", "Genel Dosya", "dosya", "fas fa-file", null, 710],
+      ["egitim_video", "Eğitim Videosu", "egitim", "fas fa-video", null, 720],
+    ];
+
+    try {
+      // Tablo yoksa bu bölüm sessizce atlanır.
+      $mevcutAnahtarlar = $db
+        ->query("SELECT anahtar FROM site_ikonlari")
+        ->fetchAll(PDO::FETCH_COLUMN);
+
+      $mevcut = [];
+      foreach ($mevcutAnahtarlar as $anahtar) {
+        $mevcut[(string) $anahtar] = true;
+      }
+
+      $ekle = $db->prepare(
+        "INSERT INTO site_ikonlari
+          (anahtar, ad, kategori, ikon_sinifi, renk, sira, aktif)
+         VALUES (?, ?, ?, ?, ?, ?, 1)",
+      );
+
+      foreach ($varsayilanIkonlar as $ikon) {
+        if (isset($mevcut[$ikon[0]])) {
+          continue;
+        }
+
+        $ekle->execute($ikon);
+      }
+    } catch (Throwable $e) {
+      error_log("site_ikonlari doldurma hatası: " . $e->getMessage());
+    }
+  }
+}
+
+if (!function_exists("portalSiteIcons")) {
+  function portalSiteIcons(PDO $db): array
+  {
+    static $cache = [];
+    $cacheKey = spl_object_id($db);
+
+    if (isset($cache[$cacheKey])) {
+      return $cache[$cacheKey];
+    }
+
+    $cache[$cacheKey] = [];
+
+    try {
+      $stmt = $db->query(
+        "SELECT anahtar, ikon_sinifi, renk
+         FROM site_ikonlari
+         WHERE aktif = 1
+         ORDER BY sira ASC, id ASC",
+      );
+
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $satir) {
+        $anahtar = trim((string) ($satir["anahtar"] ?? ""));
+        if ($anahtar === "") {
+          continue;
+        }
+
+        $cache[$cacheKey][$anahtar] = [
+          "ikon_sinifi" => trim((string) ($satir["ikon_sinifi"] ?? "")),
+          "renk" => trim((string) ($satir["renk"] ?? "")),
+        ];
+      }
+    } catch (Throwable $e) {
+      error_log("site_ikonlari okuma hatası: " . $e->getMessage());
+    }
+
+    return $cache[$cacheKey];
+  }
+}
+
+if (!function_exists("portalSiteIconClass")) {
+  function portalSiteIconClass(PDO $db, string $anahtar, string $varsayilan): string
+  {
+    $ikonlar = portalSiteIcons($db);
+    $sinif = trim((string) ($ikonlar[$anahtar]["ikon_sinifi"] ?? ""));
+
+    // class alanında yalnızca harf, sayı, boşluk, alt çizgi ve tire kabul edilir.
+    if ($sinif === "" || !preg_match('/^[a-zA-Z0-9 _-]+$/', $sinif)) {
+      $sinif = $varsayilan;
+    }
+
+    return htmlspecialchars($sinif, ENT_QUOTES, "UTF-8");
+  }
+}
+
+if (!function_exists("portalSiteIconStyle")) {
+  function portalSiteIconStyle(PDO $db, string $anahtar): string
+  {
+    $ikonlar = portalSiteIcons($db);
+    $renk = trim((string) ($ikonlar[$anahtar]["renk"] ?? ""));
+
+    if ($renk === "" || !preg_match('/^#[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/', $renk)) {
+      return "";
+    }
+
+    return 'style="color: ' . htmlspecialchars($renk, ENT_QUOTES, "UTF-8") . ';"';
+  }
+}
+
+// Her sayfa baglan.php dosyasını çağırdığı için eksik ikonlar otomatik eklenir.
+dbEnsureSiteIcons($db);
+
 // Anasayfa linkleri tablosu: yoksa oluştur + ilk kurulumda doldur
 dbEnsureAnasayfaLinkler($db);
 // Kalıcı oturum (remember-me) alanları: yoksa ekle

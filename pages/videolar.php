@@ -69,7 +69,7 @@ include "includes/site-styles.php";
         class="img-fluid rounded-3 w-100 h-100"
         style="object-fit: cover"
       />
-      <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+      <div class="play-icon-overlay"><i class="<?= portalSiteIconClass($db, "video_oynat", "fas fa-play") ?>"></i></div>
     </div>
   </div>
   
@@ -121,7 +121,7 @@ include "includes/site-styles.php";
               placeholder="Video ara..."
               aria-label="Video ara"
             />
-            <span class="input-group-text"><i class="fas fa-search"></i></span>
+            <span class="input-group-text"><i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?>"></i></span>
           </div>
         </div>
       </section>
@@ -129,7 +129,7 @@ include "includes/site-styles.php";
       <section id="video-grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4"></section>
 
       <div id="no-results-message" class="text-center py-5" style="display: none">
-        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> fa-3x text-muted mb-3"></i>
         <h3 class="text-muted">Aradığınız kritere uygun video bulunamadı.</h3>
       </div>
 

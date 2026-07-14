@@ -47,7 +47,7 @@ include "includes/site-styles.php";
 
       <div class="controls-section">
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
+          <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> search-icon"></i>
           <input type="text" class="search-input" placeholder="Protokol ara..." id="searchInput" />
         </div>
         <div class="filter-buttons">
@@ -79,11 +79,11 @@ include "includes/site-styles.php";
           <p class="document-description"><?= nl2br(htmlspecialchars($row["aciklama"])) ?></p>
           <div class="document-meta">
             <div class="document-size">
-              <i class="fas fa-file-pdf"></i>
+              <i class="<?= portalSiteIconClass($db, "pdf_dosyasi", "fas fa-file-pdf") ?>"></i>
               <?= strtoupper($uzanti ?: "PDF") ?> • <?= htmlspecialchars($row["boyut"]) ?>
             </div>
             <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
+              <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
               <?= $tarihFormat ?>
             </div>
           </div>

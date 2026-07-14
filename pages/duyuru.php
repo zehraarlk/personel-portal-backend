@@ -41,7 +41,7 @@ include "includes/site-styles.php";
       <!-- Kontroller -->
       <div class="controls-section">
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
+          <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> search-icon"></i>
           <input type="text" class="search-input" placeholder="Duyuru ara..." id="searchInput" />
         </div>
 
@@ -90,7 +90,7 @@ include "includes/site-styles.php";
             <?php if (!empty($k["tarih"])): ?>
             <div class="document-meta news-meta">
               <span class="document-date news-date">
-                <i class="fas fa-calendar-alt"></i>
+                <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
                 <?= date("d.m.Y", strtotime($k["tarih"])) ?>
               </span>
             </div>
@@ -135,7 +135,7 @@ endforeach; ?>
             <span id="duyuruModalCategory" class="document-category news-department-name d-none"></span>
             <h4 id="duyuruModalTitle" class="duyuru-modal-title"></h4>
             <p id="duyuruModalDate" class="duyuru-modal-date d-none">
-              <i class="fas fa-calendar-alt"></i>
+              <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
               <span></span>
             </p>
             <p id="duyuruModalDescription" class="duyuru-modal-description"></p>

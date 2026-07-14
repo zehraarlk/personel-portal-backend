@@ -33,7 +33,7 @@ include "includes/site-styles.php";
       <div class="container">
         <div class="page-header">
           <div class="header-content">
-            <i class="fas fa-ribbon header-icon"></i>
+            <i class="<?= portalSiteIconClass($db, "vefat_bilgisi", "fas fa-ribbon") ?> header-icon"></i>
             <h1>VEFAT EDEN BİLGİSİ</h1>
           </div>
         </div>
@@ -45,7 +45,7 @@ include "includes/site-styles.php";
             <ul class="pagination">
               <li class="page-item disabled" id="prevPageItem">
                 <a class="page-link" href="#" aria-label="Önceki" id="prevPage">
-                  <i class="fas fa-chevron-left"></i>
+                  <i class="<?= portalSiteIconClass($db, "onceki", "fas fa-chevron-left") ?>"></i>
                   Önceki
                 </a>
               </li>
@@ -61,7 +61,7 @@ include "includes/site-styles.php";
               <li class="page-item" id="nextPageItem">
                 <a class="page-link" href="#" aria-label="Sonraki" id="nextPage">
                   Sonraki
-                  <i class="fas fa-chevron-right"></i>
+                  <i class="<?= portalSiteIconClass($db, "sonraki", "fas fa-chevron-right") ?>"></i>
                 </a>
               </li>
             </ul>

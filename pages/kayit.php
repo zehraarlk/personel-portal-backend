@@ -96,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
       <div class="login-box">
         <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #6368a3, #363958); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 3px solid white;">
-          <i class="bi bi-person-plus-fill text-white" style="font-size: 2rem"></i>
+          <i class="<?= portalSiteIconClass($db, "personel_kayit_bi", "bi bi-person-plus-fill") ?> text-white" style="font-size: 2rem"></i>
         </div>
         <h2 class="login-title">Yeni Personel Kaydı</h2>
         
@@ -140,11 +140,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           </div>
 
           <button type="submit" class="btn btn-register w-100 mb-3">
-            <i class="bi bi-check-circle me-2"></i>KAYDI TAMAMLA
+            <i class="<?= portalSiteIconClass($db, "islem_basarili_bi", "bi bi-check-circle") ?> me-2"></i>KAYDI TAMAMLA
           </button>
           
           <div class="d-flex justify-content-center">
-            <a href="login.php"><i class="bi bi-arrow-left me-1"></i> Giriş Sayfasına Dön</a>
+            <a href="login.php"><i class="<?= portalSiteIconClass($db, "geri_don_bi", "bi bi-arrow-left") ?> me-1"></i> Giriş Sayfasına Dön</a>
           </div>
         </form>
       </div>

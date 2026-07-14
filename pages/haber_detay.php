@@ -101,15 +101,15 @@ include "includes/site-styles.php";
                   "
                 >
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
-                    <i class="fas fa-calendar-alt"></i>
+                    <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
                     <span id="articleDate">Tarih</span>
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
-                    <i class="fas fa-eye"></i>
+                    <i class="<?= portalSiteIconClass($db, "goruntulenme", "fas fa-eye") ?>"></i>
                     <span id="articleViews"><?= (int) ($haber["view"] ?? 0) ?></span> görüntülenme
                   </div>
                   <div class="meta-item" style="display: flex; align-items: center; gap: 5px">
-                    <i class="fas fa-user"></i>
+                    <i class="<?= portalSiteIconClass($db, "kullanici", "fas fa-user") ?>"></i>
                     <span>Gebze Belediyesi</span>
                   </div>
                 </div>
@@ -152,7 +152,7 @@ include "includes/site-styles.php";
         </div>
         <div>
           <aside class="other-news-box" style="border-left: 5px solid #344e75">
-            <h4 class="other-news-title"><i class="fas fa-bullhorn"></i> Diğer Haberler</h4>
+            <h4 class="other-news-title"><i class="<?= portalSiteIconClass($db, "duyurular", "fas fa-bullhorn") ?>"></i> Diğer Haberler</h4>
             <div id="other-news-list" class="other-news-list">
 <?php foreach ($digerHaberler as $h): ?>
               <a href="haber_detay.php?id=<?= (int) $h["id"] ?>" class="other-news-item">

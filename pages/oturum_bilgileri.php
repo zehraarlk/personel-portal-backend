@@ -67,11 +67,11 @@ include "includes/site-styles.php";
       <div class="container profil-form-wide">
         <div class="card profil-card">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <span><i class="fas fa-history"></i>Oturum Bilgileri<?= $yoneticiModu
+            <span><i class="<?= portalSiteIconClass($db, "oturum_bilgileri", "fas fa-history") ?>"></i>Oturum Bilgileri<?= $yoneticiModu
               ? " (Yönetici)"
               : "" ?></span>
             <a href="<?= htmlspecialchars($cikisUrl, ENT_QUOTES, "UTF-8") ?>" class="btn btn-cikis btn-sm" onclick="return confirm('Çıkış yapmak istediğinizden emin misiniz?');">
-              <i class="fas fa-sign-out-alt me-1"></i>Çıkış Yap
+              <i class="<?= portalSiteIconClass($db, "cikis_yap", "fas fa-sign-out-alt") ?> me-1"></i>Çıkış Yap
             </a>
           </div>
           <div class="card-body p-4">
@@ -98,7 +98,7 @@ include "includes/site-styles.php";
                       ); ?>
                       <tr>
                         <td>
-                          <i class="far fa-clock text-success me-2"></i>
+                          <i class="<?= portalSiteIconClass($db, "oturum_saati", "far fa-clock") ?> text-success me-2"></i>
                           <?= htmlspecialchars(
                             date("d.m.Y H:i:s", strtotime($oturum["giris_zamani"])),
                             ENT_QUOTES,
@@ -107,7 +107,7 @@ include "includes/site-styles.php";
                         </td>
                         <td>
                           <?php if (!empty($oturum["cikis_zamani"])): ?>
-                            <i class="far fa-clock text-danger me-2"></i>
+                            <i class="<?= portalSiteIconClass($db, "oturum_saati", "far fa-clock") ?> text-danger me-2"></i>
                             <?= htmlspecialchars(
                               date("d.m.Y H:i:s", strtotime($oturum["cikis_zamani"])),
                               ENT_QUOTES,

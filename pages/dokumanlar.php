@@ -47,7 +47,7 @@ include "includes/site-styles.php";
 
       <div class="controls-section">
         <div class="search-box">
-          <i class="fas fa-search search-icon"></i>
+          <i class="<?= portalSiteIconClass($db, "arama", "fas fa-search") ?> search-icon"></i>
           <input type="text" class="search-input" placeholder="Döküman ara..." id="searchInput" />
         </div>
         <div class="filter-buttons">
@@ -63,21 +63,31 @@ include "includes/site-styles.php";
 <?php foreach ($dokumanlar as $row):
 
   $uzanti = strtolower(pathinfo($row["dosya_yolu"], PATHINFO_EXTENSION));
-  $extIcon = "fa-file-alt";
+  $extIconKey = "dosya_belge";
+  $extIconDefault = "fas fa-file-alt";
+
   if ($uzanti === "pdf") {
-    $extIcon = "fa-file-pdf";
+    $extIconKey = "pdf_dosyasi";
+    $extIconDefault = "fas fa-file-pdf";
   } elseif (in_array($uzanti, ["doc", "docx"], true)) {
-    $extIcon = "fa-file-word";
+    $extIconKey = "dosya_word";
+    $extIconDefault = "fas fa-file-word";
   } elseif (in_array($uzanti, ["xls", "xlsx"], true)) {
-    $extIcon = "fa-file-excel";
+    $extIconKey = "dosya_excel";
+    $extIconDefault = "fas fa-file-excel";
   }
-  $icon = !empty($row["ikon"]) ? $row["ikon"] : $extIcon;
+
+  $kayitIkonu = trim((string) ($row["ikon"] ?? ""));
   $tarihFormat = !empty($row["tarih"]) ? date("d.m.Y", strtotime($row["tarih"])) : "";
   ?>
         <div class="document-card" data-category="document">
           <div class="document-header">
             <div class="document-icon">
-              <i class="fas <?= htmlspecialchars($icon) ?>"></i>
+              <?php if ($kayitIkonu !== ""): ?>
+              <i class="fas <?= htmlspecialchars($kayitIkonu, ENT_QUOTES, "UTF-8") ?>"></i>
+              <?php else: ?>
+              <i class="<?= portalSiteIconClass($db, $extIconKey, $extIconDefault) ?>"></i>
+              <?php endif; ?>
             </div>
             <div class="document-info">
               <h3 class="document-title"><?= htmlspecialchars($row["baslik"]) ?></h3>
@@ -87,23 +97,23 @@ include "includes/site-styles.php";
           <p class="document-description"><?= nl2br(htmlspecialchars($row["aciklama"])) ?></p>
           <div class="document-meta">
             <div class="document-size">
-              <i class="fas <?= $extIcon ?>"></i>
+              <i class="<?= portalSiteIconClass($db, $extIconKey, $extIconDefault) ?>"></i>
               <?= strtoupper($uzanti) ?> • <?= htmlspecialchars($row["boyut"]) ?>
             </div>
             <div class="document-date">
-              <i class="fas fa-calendar-alt"></i>
+              <i class="<?= portalSiteIconClass($db, "tarih", "fas fa-calendar-alt") ?>"></i>
               <?= $tarihFormat ?>
             </div>
           </div>
           <div class="download-section">
             <a href="<?= htmlspecialchars($row["dosya_yolu"]) ?>" download class="download-btn">
-              <i class="fas fa-download"></i> İndir
+              <i class="<?= portalSiteIconClass($db, "indir", "fas fa-download") ?>"></i> İndir
             </a>
             <button
               class="preview-btn"
               onclick="previewDocument('<?= htmlspecialchars($row["dosya_yolu"], ENT_QUOTES) ?>')"
             >
-              <i class="fas fa-eye"></i>
+              <i class="<?= portalSiteIconClass($db, "goruntulenme", "fas fa-eye") ?>"></i>
             </button>
           </div>
         </div>

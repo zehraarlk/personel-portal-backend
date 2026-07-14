@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     <?php if ($dahaOnceKatildi): ?>
         <div class="alert alert-warning shadow-sm border-0 d-flex align-items-center gap-3 mb-4">
-            <i class="fas fa-lock-open fa-lg text-warning"></i>
+            <i class="<?= portalSiteIconClass($db, "anket_kilit_acik", "fas fa-lock-open") ?> fa-lg text-warning"></i>
             <div>
                 <strong>Sayın Personelimiz;</strong> Bu ankete daha önce katılım sağladınız. Aşağıda vermiş olduğunuz yanıtlar **salt okunur** olarak listelenmektedir, üzerinde değişiklik yapılamaz.
             </div>
@@ -146,9 +146,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endforeach; ?>
 
         <div class="d-flex justify-content-between my-4">
-            <a href="anketler.php" class="btn btn-outline-secondary px-4"><i class="fas fa-arrow-left me-2"></i> Geri Dön</a>
+            <a href="anketler.php" class="btn btn-outline-secondary px-4"><i class="<?= portalSiteIconClass($db, "geri_don", "fas fa-arrow-left") ?> me-2"></i> Geri Dön</a>
             <?php if (!$dahaOnceKatildi): ?>
-                <button type="submit" class="btn btn-success px-5 fw-bold"><i class="fas fa-paper-plane me-2"></i>Anketi Tamamla</button>
+                <button type="submit" class="btn btn-success px-5 fw-bold"><i class="<?= portalSiteIconClass($db, "anket_gonder", "fas fa-paper-plane") ?> me-2"></i>Anketi Tamamla</button>
             <?php endif; ?>
         </div>
     </form>

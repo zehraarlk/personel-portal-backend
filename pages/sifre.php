@@ -285,7 +285,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["tc_no"]) && isset($_PO
         if (isValid) {
           const submitBtn = document.querySelector(".btn-reset");
           const originalText = submitBtn.innerHTML;
-          submitBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>İŞLENİYOR...';
+          submitBtn.innerHTML = '<i class="<?= portalSiteIconClass($db, "islem_yukleniyor_bi", "bi bi-arrow-clockwise") ?> me-2"></i>İŞLENİYOR...';
           submitBtn.disabled = true;
 
           let formData = new FormData();

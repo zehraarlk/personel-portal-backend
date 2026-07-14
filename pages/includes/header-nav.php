@@ -137,7 +137,7 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
       <div class="nav-container">
         <div class="nav-left">
           <button class="mobile-menu-toggle" aria-label="Menüyü aç">
-            <i class="fas fa-bars"></i>
+            <i class="<?= portalSiteIconClass($db, "menu_ac", "fas fa-bars") ?>"></i>
           </button>
           <a href="ana_sayfa.php" class="logo-container">
             <img src="../images/logo(2).webp" alt="Gebze Belediyesi Logosu" class="logo-img" />
@@ -147,35 +147,35 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
 
         <ul class="nav-links">
           <li class="nav-dropdown">
-            <a href="ana_sayfa.php"><i class="fas fa-home"></i> Anasayfa</a>
+            <a href="ana_sayfa.php"><i class="<?= portalSiteIconClass($db, "anasayfa", "fas fa-home") ?>"></i> Anasayfa</a>
           </li>
           <li>
-            <a href="videolar.php"><i class="fas fa-video"></i> Videolar</a>
+            <a href="videolar.php"><i class="<?= portalSiteIconClass($db, "videolar", "fas fa-video") ?>"></i> Videolar</a>
           </li>
           <li class="nav-dropdown dd-safe">
             <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-newspaper"></i>
+              <i class="<?= portalSiteIconClass($db, "etkinlikler", "fas fa-newspaper") ?>"></i>
               Etkinlikler
             </a>
             <div class="nav-dropdown-menu pull-left">
               <div class="dropdown-content">
                 <div class="dropdown-grid">
                   <a href="sizden_gelenler.php" class="dropdown-item">
-                    <i class="fas fa-comments"></i>
+                    <i class="<?= portalSiteIconClass($db, "sizden_gelenler", "fas fa-comments") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">SİZDEN GELENLER</div>
                       <div class="dropdown-description">Öneri ve geri bildirimleriniz</div>
                     </div>
                   </a>
                   <a href="etkinlikler.php" class="dropdown-item">
-                    <i class="fas fa-calendar-check"></i>
+                    <i class="<?= portalSiteIconClass($db, "etkinlik_takvimi", "fas fa-calendar-check") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">ETKİNLİKLER</div>
                       <div class="dropdown-description">Güncel kurumsal etkinlik bilgileri</div>
                     </div>
                   </a>
                   <a href="duyuru.php" class="dropdown-item">
-                    <i class="fas fa-bullhorn"></i>
+                    <i class="<?= portalSiteIconClass($db, "duyurular", "fas fa-bullhorn") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">DUYURULAR</div>
                       <div class="dropdown-description">Resmi güncel duyuru paylaşımları</div>
@@ -187,35 +187,35 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
           </li>
           <li class="nav-dropdown dd-safe">
             <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-landmark"></i>
+              <i class="<?= portalSiteIconClass($db, "kaynaklar", "fas fa-landmark") ?>"></i>
               Kaynaklar
             </a>
             <div class="nav-dropdown-menu pull-left">
               <div class="dropdown-content">
                 <div class="dropdown-grid">
                   <a href="protokol.php" class="dropdown-item">
-                    <i class="fas fa-file-signature"></i>
+                    <i class="<?= portalSiteIconClass($db, "protokoller", "fas fa-file-signature") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">PROTOKOLLER</div>
                       <div class="dropdown-description">Resmi protokol kayıtları.</div>
                     </div>
                   </a>
                   <a href="dokumanlar.php" class="dropdown-item">
-                    <i class="fas fa-file-alt"></i>
+                    <i class="<?= portalSiteIconClass($db, "dokumanlar", "fas fa-file-alt") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">DOKÜMANLAR</div>
                       <div class="dropdown-description">Kurumsal doküman arşivi.</div>
                     </div>
                   </a>
                   <a href="mevzuat.php" class="dropdown-item">
-                    <i class="fas fa-balance-scale"></i>
+                    <i class="<?= portalSiteIconClass($db, "mevzuatlar", "fas fa-balance-scale") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">MEVZUATLAR</div>
                       <div class="dropdown-description">Güncel mevzuat bilgileri.</div>
                     </div>
                   </a>
                   <a href="egitim.php" class="dropdown-item">
-                    <i class="fas fa-graduation-cap"></i>
+                    <i class="<?= portalSiteIconClass($db, "egitimler", "fas fa-graduation-cap") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">EĞİTİMLER</div>
                       <div class="dropdown-description">Personel eğitim içerikleri.</div>
@@ -227,35 +227,35 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
           </li>
           <li class="nav-dropdown dd-safe">
             <a href="#" class="nav-dropdown-toggle">
-              <i class="fas fa-file-alt"></i>
+              <i class="<?= portalSiteIconClass($db, "diger", "fas fa-file-alt") ?>"></i>
               Diğer
             </a>
             <div class="nav-dropdown-menu pull-left">
               <div class="dropdown-content">
                 <div class="dropdown-grid">
                   <a href="anketler.php" class="dropdown-item">
-                    <i class="fas fa-poll"></i>
+                    <i class="<?= portalSiteIconClass($db, "anketler", "fas fa-poll") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">ANKETLER</div>
                       <div class="dropdown-description">Katılabileceğiniz güncel anketler</div>
                     </div>
                   </a>
                   <a href="yardimci_linkler.php" class="dropdown-item">
-                    <i class="fas fa-link"></i>
+                    <i class="<?= portalSiteIconClass($db, "yardimci_linkler", "fas fa-link") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">YARDIMCI LİNKLER</div>
                       <div class="dropdown-description">İş akışı için önemli bağlantılar</div>
                     </div>
                   </a>
                   <a href="vefat_bilgisi.php" class="dropdown-item">
-                    <i class="fas fa-ribbon" style="color: #222"></i>
+                    <i class="<?= portalSiteIconClass($db, "vefat_bilgisi", "fas fa-ribbon") ?>" <?= portalSiteIconStyle($db, "vefat_bilgisi") ?>></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">VEFAT EDEN BİLGİSİ</div>
                       <div class="dropdown-description">Vefat eden değerli çalışanlarımız</div>
                     </div>
                   </a>
                   <a href="dogum.php" class="dropdown-item">
-                    <i class="fas fa-birthday-cake"></i>
+                    <i class="<?= portalSiteIconClass($db, "dogum_gunu", "fas fa-birthday-cake") ?>"></i>
                     <div class="dropdown-text">
                       <div class="dropdown-title">DOĞUM GÜNÜ BİLGİSİ</div>
                       <div class="dropdown-description">Bugün doğum günü olan personeller</div>
@@ -292,28 +292,28 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
 <?php if ($session_tip === "yonetici"): ?>
   <li>
     <a href="admin/index.php" class="profile-menu-item">
-      <i class="fas fa-cog"></i><span>Yönetim Paneli</span>
+      <i class="<?= portalSiteIconClass($db, "yonetim_paneli", "fas fa-cog") ?>"></i><span>Yönetim Paneli</span>
     </a>
   </li>
   <li>
     <a href="oturum_bilgileri.php" class="profile-menu-item">
-      <i class="fas fa-history"></i><span>Oturum Bilgileri</span>
+      <i class="<?= portalSiteIconClass($db, "oturum_bilgileri", "fas fa-history") ?>"></i><span>Oturum Bilgileri</span>
     </a>
   </li>
 <?php else: ?>
   <li>
     <a href="email_degistir.php" class="profile-menu-item">
-      <i class="fas fa-envelope"></i><span>Email Değiştir</span>
+      <i class="<?= portalSiteIconClass($db, "email_degistir", "fas fa-envelope") ?>"></i><span>Email Değiştir</span>
     </a>
   </li>
   <li>
     <a href="sifre_degistir.php" class="profile-menu-item">
-      <i class="fas fa-key"></i><span>Şifre Değiştir</span>
+      <i class="<?= portalSiteIconClass($db, "sifre_degistir", "fas fa-key") ?>"></i><span>Şifre Değiştir</span>
     </a>
   </li>
   <li>
     <a href="oturum_bilgileri.php" class="profile-menu-item">
-      <i class="fas fa-history"></i><span>Oturum Bilgileri</span>
+      <i class="<?= portalSiteIconClass($db, "oturum_bilgileri", "fas fa-history") ?>"></i><span>Oturum Bilgileri</span>
     </a>
   </li>
 <?php endif; ?>
@@ -323,7 +323,7 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
       ENT_QUOTES,
       "UTF-8",
     ); ?>" class="profile-menu-item logout">
-      <i class="fas fa-sign-out-alt"></i><span>Çıkış Yap</span>
+      <i class="<?= portalSiteIconClass($db, "cikis_yap", "fas fa-sign-out-alt") ?>"></i><span>Çıkış Yap</span>
     </a>
   </li>
 </ul>
@@ -355,33 +355,33 @@ if ($session_oturum_aktif && isset($db) && $db instanceof PDO) {
         <button class="close-menu-btn" type="button" aria-label="Menüyü kapat">&times;</button>
       </div>
       <ul class="side-menu-links">
-        <li><a href="ana_sayfa.php"><i class="fas fa-home"></i> Anasayfa</a></li>
-        <li><a href="sizden_gelenler.php"><i class="fas fa-comments"></i> Sizden Gelenler</a></li>
-        <li><a href="etkinlikler.php"><i class="fas fa-calendar-check"></i> Etkinlikler</a></li>
-        <li><a href="duyuru.php"><i class="fas fa-bullhorn"></i> Duyurular</a></li>
-        <li><a href="protokol.php"><i class="fas fa-file-signature"></i> Protokoller</a></li>
-        <li><a href="dokumanlar.php"><i class="fas fa-file-alt"></i> Dokümanlar</a></li>
-        <li><a href="mevzuat.php"><i class="fas fa-balance-scale"></i> Mevzuatlar</a></li>
-        <li><a href="egitim.php"><i class="fas fa-graduation-cap"></i> Eğitimler</a></li>
-        <li><a href="videolar.php"><i class="fas fa-video"></i> Videolar</a></li>
-        <li><a href="anketler.php"><i class="fas fa-poll"></i> Anketler</a></li>
-        <li><a href="yardimci_linkler.php"><i class="fas fa-link"></i> Yardımcı Linkler</a></li>
-        <li><a href="vefat_bilgisi.php"><i class="fas fa-ribbon"></i> Vefat Eden Bilgisi</a></li>
-        <li><a href="dogum.php"><i class="fas fa-birthday-cake"></i> Doğum Günü Bilgisi</a></li>
+        <li><a href="ana_sayfa.php"><i class="<?= portalSiteIconClass($db, "anasayfa", "fas fa-home") ?>"></i> Anasayfa</a></li>
+        <li><a href="sizden_gelenler.php"><i class="<?= portalSiteIconClass($db, "sizden_gelenler", "fas fa-comments") ?>"></i> Sizden Gelenler</a></li>
+        <li><a href="etkinlikler.php"><i class="<?= portalSiteIconClass($db, "etkinlik_takvimi", "fas fa-calendar-check") ?>"></i> Etkinlikler</a></li>
+        <li><a href="duyuru.php"><i class="<?= portalSiteIconClass($db, "duyurular", "fas fa-bullhorn") ?>"></i> Duyurular</a></li>
+        <li><a href="protokol.php"><i class="<?= portalSiteIconClass($db, "protokoller", "fas fa-file-signature") ?>"></i> Protokoller</a></li>
+        <li><a href="dokumanlar.php"><i class="<?= portalSiteIconClass($db, "dokumanlar", "fas fa-file-alt") ?>"></i> Dokümanlar</a></li>
+        <li><a href="mevzuat.php"><i class="<?= portalSiteIconClass($db, "mevzuatlar", "fas fa-balance-scale") ?>"></i> Mevzuatlar</a></li>
+        <li><a href="egitim.php"><i class="<?= portalSiteIconClass($db, "egitimler", "fas fa-graduation-cap") ?>"></i> Eğitimler</a></li>
+        <li><a href="videolar.php"><i class="<?= portalSiteIconClass($db, "videolar", "fas fa-video") ?>"></i> Videolar</a></li>
+        <li><a href="anketler.php"><i class="<?= portalSiteIconClass($db, "anketler", "fas fa-poll") ?>"></i> Anketler</a></li>
+        <li><a href="yardimci_linkler.php"><i class="<?= portalSiteIconClass($db, "yardimci_linkler", "fas fa-link") ?>"></i> Yardımcı Linkler</a></li>
+        <li><a href="vefat_bilgisi.php"><i class="<?= portalSiteIconClass($db, "vefat_bilgisi", "fas fa-ribbon") ?>" <?= portalSiteIconStyle($db, "vefat_bilgisi") ?>></i> Vefat Eden Bilgisi</a></li>
+        <li><a href="dogum.php"><i class="<?= portalSiteIconClass($db, "dogum_gunu", "fas fa-birthday-cake") ?>"></i> Doğum Günü Bilgisi</a></li>
         <hr class="my-2 bg-secondary opacity-25">
 <?php if ($session_tip !== "yonetici"): ?>
-       <li><a href="email_degistir.php"><i class="fas fa-envelope"></i> Email Değiştir</a></li>
-<li><a href="sifre_degistir.php"><i class="fas fa-key"></i> Şifre Değiştir</a></li>
-<li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
+       <li><a href="email_degistir.php"><i class="<?= portalSiteIconClass($db, "email_degistir", "fas fa-envelope") ?>"></i> Email Değiştir</a></li>
+<li><a href="sifre_degistir.php"><i class="<?= portalSiteIconClass($db, "sifre_degistir", "fas fa-key") ?>"></i> Şifre Değiştir</a></li>
+<li><a href="oturum_bilgileri.php"><i class="<?= portalSiteIconClass($db, "oturum_bilgileri", "fas fa-history") ?>"></i> Oturum Bilgileri</a></li>
 <?php endif; ?>
 <?php if ($session_tip === "yonetici"): ?>
-        <li><a href="admin/index.php"><i class="fas fa-cog"></i> Yönetim Paneli</a></li>
-        <li><a href="oturum_bilgileri.php"><i class="fas fa-history"></i> Oturum Bilgileri</a></li>
+        <li><a href="admin/index.php"><i class="<?= portalSiteIconClass($db, "yonetim_paneli", "fas fa-cog") ?>"></i> Yönetim Paneli</a></li>
+        <li><a href="oturum_bilgileri.php"><i class="<?= portalSiteIconClass($db, "oturum_bilgileri", "fas fa-history") ?>"></i> Oturum Bilgileri</a></li>
 <?php endif; ?>
         <li><a href="<?php echo htmlspecialchars(
           $session_cikis_url,
           ENT_QUOTES,
           "UTF-8",
-        ); ?>" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav',String(Date.now()))}catch(e){}"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</a></li>
+        ); ?>" class="text-danger" onclick="try{sessionStorage.setItem('pp_internal_nav',String(Date.now()))}catch(e){}"><i class="<?= portalSiteIconClass($db, "cikis_yap", "fas fa-sign-out-alt") ?>"></i> Çıkış Yap</a></li>
       </ul>
     </div>
