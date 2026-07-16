@@ -650,6 +650,12 @@ function fetchKaynaklarBySlug(PDO $pdo, string $slug): array
     }
 
     $queries = [
+        'SELECT r.id, r.baslik, r.aciklama, r.ikon, r.dosya_yolu, r.resmi_sayfa, r.onizleme, r.boyut, r.tarih,
+                k.slug AS kategori_slug, k.ad AS kategori_adi
+         FROM kaynaklar r
+         JOIN kaynaklar_kategori k ON r.kategori_id = k.id
+         WHERE k.slug = ?
+         ORDER BY r.tarih DESC, r.id DESC',
         'SELECT r.id, r.baslik, r.aciklama, r.ikon, r.dosya_yolu, r.resmi_sayfa, r.boyut, r.tarih,
                 k.slug AS kategori_slug, k.ad AS kategori_adi
          FROM kaynaklar r
@@ -684,6 +690,7 @@ function mapKaynaklarListForJs(array $rows, string $assetBase, string $fallbackC
         $kategoriSlug = (string) ($row['kategori_slug'] ?? $fallbackCategory);
         $kategoriAdi = (string) ($row['kategori_adi'] ?? $fallbackCategory);
         $resmiSayfa = trim((string) ($row['resmi_sayfa'] ?? ''));
+        $onizlemeYolu = trim((string) ($row['onizleme'] ?? ''));
 
         return [
             'id'          => (int) ($row['id'] ?? 0),
@@ -696,6 +703,7 @@ function mapKaynaklarListForJs(array $rows, string $assetBase, string $fallbackC
             'date'        => kaynakDateLabel((string) ($row['tarih'] ?? '')),
             'ext'         => strtoupper($ext === 'youtube' ? 'VIDEO' : ($ext !== 'file' ? $ext : 'PDF')),
             'fileUrl'     => $fileUrl,
+            'previewUrl'  => $onizlemeYolu !== '' ? kaynakFileUrl($onizlemeYolu, $assetBase) : '',
             'officialUrl' => $resmiSayfa !== '' ? kaynakFileUrl($resmiSayfa, $assetBase) : '',
             'icon'        => kaynakIconName($kategoriSlug, $ext),
         ];
