@@ -46,6 +46,18 @@ require __DIR__ . '/../includes/breadcrumb.php';
             </div>
         </section>
 
+        <nav class="et-filter-tabs" aria-label="Durum filtreleri" role="tablist">
+            <button type="button" class="et-filter-tab is-active" data-status="all" role="tab" aria-selected="true">
+                Tümü
+            </button>
+            <button type="button" class="et-filter-tab" data-status="aktif" role="tab" aria-selected="false">
+                Aktif
+            </button>
+            <button type="button" class="et-filter-tab" data-status="pasif" role="tab" aria-selected="false">
+                Pasif
+            </button>
+        </nav>
+
         <section class="et-results-section" aria-label="Sonuçlar">
             <div class="et-results-header">
                 <p class="et-results-count" id="resultsCount">
