@@ -38,6 +38,13 @@ foreach ($kategoriler as $k) {
     break;
   }
 }
+$dokumanId = null;
+foreach ($kategoriler as $k) {
+  if ($k["slug"] === "Dökümanlar") {
+    $dokumanId = (int) $k["id"];
+    break;
+  }
+}
 $altKategoriler = $mevzuatId ? dbKaynaklarAltKategoriler($db, $mevzuatId) : [];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -51,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $ikon = trim($_POST["ikon"] ?? "fas fa-file");
     $dosyaUrl = trim($_POST["dosya_url"] ?? "");
     $resmiSayfa = trim($_POST["resmi_sayfa"] ?? "") ?: null;
+    $onizleme = trim($_POST["onizleme"] ?? "") ?: null;
     $boyut = trim($_POST["boyut"] ?? "");
     $tarih = trim($_POST["tarih"] ?? "") ?: date("d.m.Y");
 
@@ -93,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
           }
           $db
             ->prepare(
-              "UPDATE kaynaklar SET baslik=?, aciklama=?, kategori_id=?, alt_kategori_id=?, ikon=?, dosya_yolu=?, resmi_sayfa=?, boyut=?, tarih=? WHERE id=?",
+              "UPDATE kaynaklar SET baslik=?, aciklama=?, kategori_id=?, alt_kategori_id=?, ikon=?, dosya_yolu=?, resmi_sayfa=?, onizleme=?, boyut=?, tarih=? WHERE id=?",
             )
             ->execute([
               $baslik,
@@ -103,6 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
               $ikon,
               $dosyaYolu,
               $resmiSayfa,
+              $onizleme,
               $boyut,
               $tarih,
               $id,
@@ -215,6 +224,17 @@ $cls
         ENT_QUOTES,
         "UTF-8",
       ) ?>" /></div>
+      <div class="mb-3" id="onizlemeWrap" style="<?= (int) $row["kategori_id"] === $dokumanId
+        ? ""
+        : "display:none" ?>">
+        <label class="form-label">Önizleme Linki (Dökümanlar)</label>
+        <input type="url" name="onizleme" class="form-control" placeholder="https://docs.google.com/viewer?url=... veya alternatif önizleme linki" value="<?= htmlspecialchars(
+          $row["onizleme"] ?? "",
+          ENT_QUOTES,
+          "UTF-8",
+        ) ?>" />
+        <div class="admin-form-hint">Boş bırakılırsa, sitede önizleme için doğrudan dosya kullanılır.</div>
+      </div>
       <div class="row">
         <div class="col-md-6 mb-3"><label class="form-label">Boyut</label><input type="text" name="boyut" class="form-control" value="<?= htmlspecialchars(
           $row["boyut"] ?? "",
@@ -237,8 +257,9 @@ $cls
 document.getElementById("kategori_id")?.addEventListener("change", function () {
   const opt = this.options[this.selectedIndex];
   const wrap = document.getElementById("altKategoriWrap");
-  if (!wrap) return;
-  wrap.style.display = opt?.dataset?.slug === "Mevzuatlar" ? "" : "none";
+  if (wrap) wrap.style.display = opt?.dataset?.slug === "Mevzuatlar" ? "" : "none";
+  const onizlemeWrap = document.getElementById("onizlemeWrap");
+  if (onizlemeWrap) onizlemeWrap.style.display = opt?.dataset?.slug === "Dökümanlar" ? "" : "none";
 });
 </script>
 
