@@ -1393,6 +1393,134 @@ function adminFlashGet(): ?array
   return $flash;
 }
 
+/**
+ * Contiguous 1-based `sira` ordering (index) for supported tables.
+ * Moving an item to N shifts others: e.g. 10→1 makes old 1→2, 2→3, …
+ *
+ * @return array{scope:?string}
+ */
+function adminSiraTableMeta(string $table): array
+{
+  static $tables = [
+    "site_ikonlari" => ["scope" => null],
+    "anket_sorulari" => ["scope" => "anket_id"],
+    "haber_galeri" => ["scope" => "haber_id"],
+  ];
+
+  if (!isset($tables[$table]) || !preg_match('/^[A-Za-z0-9_]+$/', $table)) {
+    throw new InvalidArgumentException("Sıra desteklenmeyen tablo: " . $table);
+  }
+
+  return $tables[$table];
+}
+
+/** @return list<int> */
+function adminSiraFetchIds(PDO $db, string $table, $scopeValue = null): array
+{
+  $meta = adminSiraTableMeta($table);
+  $scopeCol = $meta["scope"];
+
+  if ($scopeCol !== null) {
+    if (!preg_match('/^[A-Za-z0-9_]+$/', $scopeCol)) {
+      return [];
+    }
+    $rows = dbFetchAll(
+      $db,
+      "SELECT id FROM `{$table}` WHERE `{$scopeCol}` = ? ORDER BY sira ASC, id ASC",
+      [$scopeValue],
+    );
+  } else {
+    $rows = dbFetchAll(
+      $db,
+      "SELECT id FROM `{$table}` ORDER BY sira ASC, id ASC",
+    );
+  }
+
+  return array_map(static fn(array $row): int => (int) $row["id"], $rows);
+}
+
+/** @param list<int> $ids */
+function adminSiraWritePositions(PDO $db, string $table, array $ids): void
+{
+  adminSiraTableMeta($table);
+  $stmt = $db->prepare("UPDATE `{$table}` SET sira = ? WHERE id = ?");
+  $pos = 1;
+  foreach ($ids as $id) {
+    $stmt->execute([$pos, (int) $id]);
+    $pos++;
+  }
+}
+
+/** Renumber scope to 1..n without changing relative order. */
+function adminSiraNormalize(PDO $db, string $table, $scopeValue = null): void
+{
+  if (!dbTableExists($db, $table) || !dbColumnExists($db, $table, "sira")) {
+    return;
+  }
+  adminSiraWritePositions(
+    $db,
+    $table,
+    adminSiraFetchIds($db, $table, $scopeValue),
+  );
+}
+
+/** Default next index (count + 1). */
+function adminSiraNext(PDO $db, string $table, $scopeValue = null): int
+{
+  if (!dbTableExists($db, $table) || !dbColumnExists($db, $table, "sira")) {
+    return 1;
+  }
+  return count(adminSiraFetchIds($db, $table, $scopeValue)) + 1;
+}
+
+/**
+ * Place row at 1-based index and shift the rest.
+ * Returns the final assigned sira.
+ */
+function adminSiraPlace(
+  PDO $db,
+  string $table,
+  int $id,
+  int $targetSira,
+  $scopeValue = null,
+): int {
+  if ($id <= 0 || !dbTableExists($db, $table) || !dbColumnExists($db, $table, "sira")) {
+    return max(1, $targetSira);
+  }
+
+  $ids = adminSiraFetchIds($db, $table, $scopeValue);
+  $ids = array_values(
+    array_filter($ids, static fn(int $rowId): bool => $rowId !== $id),
+  );
+  $target = max(1, min($targetSira, count($ids) + 1));
+  array_splice($ids, $target - 1, 0, [$id]);
+  adminSiraWritePositions($db, $table, $ids);
+
+  return $target;
+}
+
+/**
+ * Normalize every supported sira table (optionally all anket/haber scopes).
+ */
+function adminSiraNormalizeAll(PDO $db): void
+{
+  if (dbTableExists($db, "site_ikonlari")) {
+    adminSiraNormalize($db, "site_ikonlari");
+  }
+
+  if (dbTableExists($db, "anket_sorulari") && dbColumnExists($db, "anket_sorulari", "anket_id")) {
+    foreach (dbFetchAll($db, "SELECT DISTINCT anket_id FROM anket_sorulari") as $row) {
+      adminSiraNormalize($db, "anket_sorulari", (int) ($row["anket_id"] ?? 0));
+    }
+  }
+
+  if (dbTableExists($db, "haber_galeri") && dbColumnExists($db, "haber_galeri", "haber_id")) {
+    foreach (dbFetchAll($db, "SELECT DISTINCT haber_id FROM haber_galeri") as $row) {
+      adminSiraNormalize($db, "haber_galeri", (int) ($row["haber_id"] ?? 0));
+    }
+  }
+}
+
 function adminPersonelHashPassword(string $plain): string
 {
   return md5(trim($plain));

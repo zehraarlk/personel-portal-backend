@@ -95,6 +95,27 @@ require __DIR__ . '/../includes/breadcrumb.php';
     window.kaynakData = <?= jsonData($kayitlar) ?>;
     window.kaynakEmptyText = <?= json_encode($kaynakEmptyText, JSON_UNESCAPED_UNICODE) ?>;
     window.kaynakActiveKey = <?= json_encode($kaynakActiveKey, JSON_UNESCAPED_UNICODE) ?>;
+    window.kaynakPreviewBase = <?= json_encode($assetBase . 'pages/kaynak_onizleme.php?id=', JSON_UNESCAPED_UNICODE) ?>;
+    window.kaynakDownloadBase = <?= json_encode($assetBase . 'pages/kaynak_dosya.php?id=', JSON_UNESCAPED_UNICODE) ?>;
+    window.kaynakIcons = <?= jsonData([
+        'protokoller' => '<span class="icon" aria-hidden="true">' . icon('protokoller') . '</span>',
+        'dokumanlar' => '<span class="icon" aria-hidden="true">' . icon('dokumanlar') . '</span>',
+        'mevzuatlar' => '<span class="icon" aria-hidden="true">' . icon('mevzuatlar') . '</span>',
+        'egitimler' => '<span class="icon" aria-hidden="true">' . icon('egitimler') . '</span>',
+        'videolar' => '<span class="icon" aria-hidden="true">' . icon('videolar') . '</span>',
+        'tarih' => '<span class="icon" aria-hidden="true">' . icon('tarih') . '</span>',
+        'search' => '<span class="icon" aria-hidden="true">' . icon('search') . '</span>',
+        'eye' => '<span class="icon" aria-hidden="true">' . icon('eye') . '</span>',
+        'protocol' => '<span class="icon" aria-hidden="true">' . icon('protokoller') . '</span>',
+        'document' => '<span class="icon" aria-hidden="true">' . icon('dokumanlar') . '</span>',
+        'law' => '<span class="icon" aria-hidden="true">' . icon('mevzuatlar') . '</span>',
+        'education' => '<span class="icon" aria-hidden="true">' . icon('egitimler') . '</span>',
+        'video' => '<span class="icon" aria-hidden="true">' . icon('videolar') . '</span>',
+        'calendar' => '<span class="icon" aria-hidden="true">' . icon('tarih') . '</span>',
+        'documentMeta' => '<span class="icon" aria-hidden="true">' . icon('dokumanlar') . '</span>',
+        'preview' => '<span class="icon" aria-hidden="true">' . icon('eye') . '</span>',
+        'download' => '<span class="icon" aria-hidden="true"><i class="fas fa-download" aria-hidden="true"></i></span>',
+    ]) ?>;
 </script>
 <script src="<?= e($assetBase) ?>assets/js/kaynaklar.js" defer></script>
 <script src="<?= e($assetBase) ?>assets/js/navbar.js" defer></script>

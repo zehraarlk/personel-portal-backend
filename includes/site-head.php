@@ -17,7 +17,6 @@ $showBreadcrumb = $showBreadcrumb ?? false;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/variables.css">
-    <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/responsive.css">
     <?php if ($pageCss !== ''): ?>
     <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/<?= e($pageCss) ?>">
     <?php endif; ?>
@@ -29,6 +28,7 @@ $showBreadcrumb = $showBreadcrumb ?? false;
     <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/breadcrumb.css">
     <?php endif; ?>
     <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/footer.css">
+    <link rel="stylesheet" href="<?= e($assetBase) ?>assets/css/responsive.css">
 </head>
 <body<?= !empty($useDetailLayout) ? ' class="detail-page"' : '' ?><?= !empty($portalSessionGuard) ? ' data-portal-session="1" data-oturum-kapat="' . e($portalOturumKapatUrl) . '"' : '' ?>>
 <?php if (!empty($portalSessionGuard)): ?>

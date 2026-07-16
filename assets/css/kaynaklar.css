@@ -34,12 +34,16 @@
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.75rem;
+    min-width: 0;
+    width: 100%;
 }
 
 .kaynaklar-page .kr-search-box {
     position: relative;
     flex: 1 1 18rem;
-    max-width: 42rem;
+    min-width: 0;
+    width: 100%;
+    max-width: min(42rem, 100%);
 }
 
 .kaynaklar-page .kr-search-input {
@@ -73,11 +77,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.kaynaklar-page .kr-search-btn .icon svg {
-    width: 1.1rem;
-    height: 1.1rem;
 }
 
 .kaynaklar-page .kr-filter-tabs {
@@ -150,11 +149,65 @@
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    line-height: 1;
 }
 
-.kaynaklar-page .kr-card-icon .icon svg {
+.kaynaklar-page .kr-card-icon .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 1.35rem;
     height: 1.35rem;
+    line-height: 1;
+}
+
+.kaynaklar-page .kr-card-icon .icon svg,
+.kaynaklar-page .kr-card-icon .icon i {
+    width: 1.35rem;
+    height: 1.35rem;
+    font-size: 1.35rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kaynaklar-page .kr-search-btn .icon,
+.kaynaklar-page .kr-empty .icon,
+.kaynaklar-page .kr-card-meta .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.kaynaklar-page .kr-search-btn .icon svg,
+.kaynaklar-page .kr-search-btn .icon i {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 1.1rem;
+}
+
+.kaynaklar-page .kr-empty .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--border);
+}
+
+.kaynaklar-page .kr-empty .icon svg,
+.kaynaklar-page .kr-empty .icon i {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 3.5rem;
+}
+
+.kaynaklar-page .kr-card-meta .icon svg,
+.kaynaklar-page .kr-card-meta .icon i {
+    width: 0.9rem;
+    height: 0.9rem;
+    font-size: 0.9rem;
 }
 
 .kaynaklar-page .kr-card-info {
@@ -213,11 +266,6 @@
     gap: 0.35rem;
 }
 
-.kaynaklar-page .kr-card-meta .icon svg {
-    width: 0.9rem;
-    height: 0.9rem;
-}
-
 .kaynaklar-page .kr-card-actions {
     display: grid;
     gap: 0.55rem;
@@ -225,6 +273,10 @@
 
 .kaynaklar-page .kr-card-actions.is-split {
     grid-template-columns: 1fr 1fr;
+}
+
+.kaynaklar-page .kr-card-actions.is-split .kr-card-btn {
+    min-width: 0;
 }
 
 .kaynaklar-page .kr-card-btn {
@@ -243,9 +295,14 @@
     gap: 0.4rem;
 }
 
-.kaynaklar-page .kr-card-btn .icon svg {
+.kaynaklar-page .kr-card-btn .icon svg,
+.kaynaklar-page .kr-card-btn .icon i {
     width: 1rem;
     height: 1rem;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .kaynaklar-page .kr-card-btn.is-full {
@@ -268,13 +325,6 @@
     text-align: center;
     padding: 3.5rem 1.25rem;
     color: var(--text-muted);
-}
-
-.kaynaklar-page .kr-empty .icon svg {
-    width: 3.5rem;
-    height: 3.5rem;
-    fill: var(--border);
-    margin-bottom: 1rem;
 }
 
 .kaynaklar-page .kr-empty h2 {
@@ -300,19 +350,6 @@
 }
 
 @media (max-width: 720px) {
-    .kaynaklar-page .kr-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .kaynaklar-page .kr-search-box {
-        max-width: none;
-    }
-
-    .kaynaklar-page .kr-filter-tabs {
-        width: 100%;
-    }
-
     .kaynaklar-page .kr-filter-tab {
         flex: 1 1 calc(50% - 0.65rem);
         text-align: center;

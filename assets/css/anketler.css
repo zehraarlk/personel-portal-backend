@@ -44,12 +44,16 @@
     justify-content: space-between;
     gap: 1rem;
     margin-bottom: 1.25rem;
+    min-width: 0;
+    width: 100%;
 }
 
 .anketler-page .ak-search-box {
     position: relative;
     flex: 1 1 18rem;
-    max-width: 42rem;
+    min-width: 0;
+    width: 100%;
+    max-width: min(42rem, 100%);
 }
 
 .anketler-page .ak-search-input {
@@ -425,15 +429,6 @@
 }
 
 @media (max-width: 720px) {
-    .anketler-page .ak-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .anketler-page .ak-search-box {
-        max-width: none;
-    }
-
     .anketler-page .ak-filter-tab {
         flex: 1 1 calc(50% - 0.65rem);
         justify-content: center;
@@ -648,9 +643,8 @@
 }
 
 .anket-katil-page .ak-choice {
-    position: relative;
     display: grid;
-    grid-template-columns: 1.15rem minmax(0, 1fr);
+    grid-template-columns: 1.35rem minmax(0, 1fr);
     align-items: start;
     column-gap: 0.75rem;
     margin: 0;
@@ -675,42 +669,31 @@
 }
 
 .anket-katil-page .ak-choice input[type="radio"] {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 2;
-}
-
-.anket-katil-page .ak-choice-box {
-    width: 1.15rem;
-    height: 1.15rem;
-    margin-top: 0.15rem;
-    border-radius: 50%;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.35rem;
+    height: 1.35rem;
+    margin: 0.1rem 0 0;
+    padding: 0;
     border: 2px solid #9aa8b8;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
     flex-shrink: 0;
-    position: relative;
-    z-index: 1;
     grid-column: 1;
     grid-row: 1;
-    pointer-events: none;
+    transition: border-color var(--transition), background var(--transition), box-shadow var(--transition);
 }
 
-.anket-katil-page .ak-choice.is-checked .ak-choice-box,
-.anket-katil-page .ak-choice:has(input:checked) .ak-choice-box {
+.anket-katil-page .ak-choice input[type="radio"]:checked {
     border-color: var(--primary);
+    background: var(--primary);
+    box-shadow: inset 0 0 0 3px #fff;
 }
 
-.anket-katil-page .ak-choice.is-checked .ak-choice-box::after,
-.anket-katil-page .ak-choice:has(input:checked) .ak-choice-box::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: var(--primary);
+.anket-katil-page .ak-choice input[type="radio"]:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .anket-katil-page .ak-choice-text {
@@ -720,7 +703,6 @@
     color: var(--text-main);
     font-size: 0.94rem;
     word-break: break-word;
-    pointer-events: none;
 }
 
 .anket-katil-page textarea {

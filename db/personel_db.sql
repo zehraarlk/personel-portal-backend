@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 14 Tem 2026, 14:15:10
+-- Üretim Zamanı: 16 Tem 2026, 15:52:41
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -542,7 +542,9 @@ INSERT INTO `icerik_izlemeleri` (`id`, `tablo`, `kayit_id`, `izleyici`, `olustur
 (57, 'sizden_gelenler', 9, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 14:03:51'),
 (58, 'sizden_gelenler', 3, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 14:03:54'),
 (59, 'sizden_gelenler', 4, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 14:04:04'),
-(62, 'anasayfa_duyurular', 13, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 15:03:48');
+(62, 'anasayfa_duyurular', 13, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 15:03:48'),
+(65, 'sizden_gelenler', 2, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 15:37:29'),
+(73, 'etkinlikler_duyurular', 5, 'personel:1', '2026-07-16 10:23:32');
 
 -- --------------------------------------------------------
 
@@ -569,7 +571,7 @@ CREATE TABLE `kaynaklar` (
 
 INSERT INTO `kaynaklar` (`id`, `baslik`, `aciklama`, `ikon`, `dosya_yolu`, `resmi_sayfa`, `boyut`, `tarih`, `kategori_id`, `alt_kategori_id`) VALUES
 (1, 'Aile Bildirim Formu', 'Personelin medeni durumu, eş, çocuk ve bakmakla yükümlü olduğu aile bireylerine ilişkin bilgileri bildirmek veya güncellemek amacıyla kullanılan resmi form.', 'fas fa-user-friends', '../images/dokumanlar/a-le-durum-b-ld-r-r-formu_7664 (1).xlsx', NULL, '2.3 MB', '04.10.2023', 2, NULL),
-(2, 'Mal Bildirim Formu', 'Kamu görevlilerinin kendileri, eşleri ve velayetleri altındaki çocuklarına ait taşınır ve taşınmaz mallar ile diğer mal varlığı unsurlarını 3628 sayılı Kanun gereğince beyan etmek amacıyla kullanılan form.', 'fas fa-briefcase', '../images/dokumanlar/mal-b-ld-r-m-formu_501.doc', NULL, '845 KB', '08.01.2025', 2, NULL),
+(2, 'Mal Bildirim Formu', 'Kamu görevlilerinin kendileri, eşleri ve velayetleri altındaki çocuklarına ait taşınır ve taşınmaz mallar ile diğer mal varlığı unsurlarını 3628 sayılı Kanun gereğince beyan etmek amacıyla kullanılan form.', 'fas fa-briefcase', '../images/dokumanlar/mal-b-ld-r-m-formu_501.docx', NULL, '29 KB', '08.01.2025', 2, NULL),
 (3, 'Personel İlişki Kesme Formu', 'Kurumdan ayrılan personelin zimmetli eşyalarının teslimi ve ilgili birimlerle ilişiğinin resmi olarak kesilmesi amacıyla kullanılan form.', 'fas fa-sign-out-alt', '../images/dokumanlar/personel-l-k-kesme-formu_9657.docx', NULL, '1.7 MB', '20.12.2024', 2, NULL),
 (4, 'Gebze Merkez Prime Hastanesi', 'Gebze Merkez Prime Hastanesi İle Gebze Belediyesi Personelleri Ve Birinci Derece Yakınlarına Yönelik % 20 Oranında İndirim Anlaşması İmzalanmıştır.', 'fas fa-hospital', 'https://personel.gebze.bel.tr/upload/antlasma/gebze-merkez-pr-me-hastanes/gebze-merkez-pr-me-hastanes_2019.pdf', NULL, '2.3 MB', '04.10.2023', 1, NULL),
 (5, 'Gebze MedicalPark Hastanesi', 'Gebze Medıcalpark Hastanesi İle Gebze Belediyesi Personelleri Ve Birinci Derece\r\nYakınlarına Yönelik % 20 Oranında İndirim Anlaşması İmzalanmıştır.', 'fas fa-hospital', 'https://personel.gebze.bel.tr/upload/antlasma/gebze-medicalpark-hastanes/gebze-medicalpark-hastanes_3836.pdf', NULL, '845 KB', '04.10.2023', 1, NULL),
@@ -758,7 +760,29 @@ INSERT INTO `oturum_kayitlari` (`id`, `personel_id`, `giris_zamani`, `cikis_zama
 (87, 1, '2026-07-14 14:50:53', '2026-07-14 14:51:34', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 14:51:34'),
 (88, 1, '2026-07-14 14:52:29', '2026-07-14 14:55:23', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-14 14:54:51'),
 (89, 1, '2026-07-14 14:59:00', '2026-07-14 14:59:52', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 14:59:05'),
-(90, 1, '2026-07-14 15:09:36', '2026-07-14 15:09:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-14 15:09:36');
+(90, 1, '2026-07-14 15:09:36', '2026-07-14 15:09:40', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-14 15:09:36'),
+(91, 1, '2026-07-14 15:16:43', '2026-07-14 15:17:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 15:17:28'),
+(92, 1, '2026-07-14 15:27:29', '2026-07-14 15:34:41', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 15:34:41'),
+(93, 1, '2026-07-14 15:35:56', '2026-07-14 15:36:18', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 15:36:18'),
+(94, 1, '2026-07-14 15:55:25', '2026-07-14 15:58:50', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-14 15:56:01'),
+(95, 1, '2026-07-14 15:59:01', '2026-07-14 16:04:33', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 16:04:33'),
+(96, 1, '2026-07-14 16:05:05', '2026-07-16 08:36:05', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 17:14:08'),
+(97, 1, '2026-07-16 08:36:05', '2026-07-16 09:10:13', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 09:10:08'),
+(98, 1, '2026-07-16 09:10:26', '2026-07-16 09:20:26', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 09:20:26'),
+(99, 1, '2026-07-16 09:20:38', '2026-07-16 09:59:54', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 09:59:52'),
+(100, 1, '2026-07-16 10:00:12', '2026-07-16 10:14:44', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 10:02:00'),
+(101, 1, '2026-07-16 10:14:49', '2026-07-16 10:22:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 10:18:23'),
+(102, 1, '2026-07-16 10:22:38', '2026-07-16 10:23:09', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 10:22:57'),
+(103, 1, '2026-07-16 10:23:15', '2026-07-16 10:40:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 10:40:11'),
+(104, 1, '2026-07-16 12:22:51', '2026-07-16 12:24:37', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 12:24:37'),
+(105, 1, '2026-07-16 14:20:11', '2026-07-16 14:47:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 14:27:55'),
+(106, 1, '2026-07-16 14:47:35', '2026-07-16 15:04:46', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 15:01:15'),
+(107, 1, '2026-07-16 15:04:53', '2026-07-16 15:23:28', '::1', 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36', 'sekme', '2026-07-16 15:23:23'),
+(108, 1, '2026-07-16 15:25:39', '2026-07-16 15:34:20', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 15:33:44'),
+(109, 1, '2026-07-16 15:34:28', '2026-07-16 15:39:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 15:39:24'),
+(110, 1, '2026-07-16 15:41:06', '2026-07-16 15:42:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 15:42:36'),
+(111, 1, '2026-07-16 16:25:48', '2026-07-16 16:50:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 16:50:23'),
+(112, 1, '2026-07-16 16:52:32', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-16 16:52:32');
 
 -- --------------------------------------------------------
 
@@ -812,78 +836,78 @@ CREATE TABLE `site_ikonlari` (
 --
 
 INSERT INTO `site_ikonlari` (`id`, `anahtar`, `ad`, `kategori`, `ikon_sinifi`, `renk`, `sira`, `aktif`, `olusturma_tarihi`) VALUES
-(1, 'menu_ac', 'Mobil Menüyü Aç', 'arayuz', 'fas fa-bars', NULL, 10, 1, '2026-07-14 08:46:13'),
-(2, 'anasayfa', 'Anasayfa', 'navigasyon', 'fas fa-home', NULL, 20, 1, '2026-07-14 08:46:13'),
-(3, 'videolar', 'Videolar', 'navigasyon', 'fas fa-video', NULL, 30, 1, '2026-07-14 08:46:14'),
-(4, 'etkinlikler', 'Etkinlikler', 'navigasyon', 'fas fa-newspaper', NULL, 40, 1, '2026-07-14 08:46:14'),
-(5, 'sizden_gelenler', 'Sizden Gelenler', 'navigasyon', 'fas fa-comments', NULL, 50, 1, '2026-07-14 08:46:14'),
-(6, 'etkinlik_takvimi', 'Etkinlik Takvimi', 'navigasyon', 'fas fa-calendar-check', NULL, 60, 1, '2026-07-14 08:46:14'),
-(7, 'duyurular', 'Duyurular', 'navigasyon', 'fas fa-bullhorn', NULL, 70, 1, '2026-07-14 08:46:14'),
-(8, 'kaynaklar', 'Kaynaklar', 'navigasyon', 'fas fa-landmark', NULL, 80, 1, '2026-07-14 08:46:14'),
-(9, 'protokoller', 'Protokoller', 'navigasyon', 'fas fa-file-signature', NULL, 90, 1, '2026-07-14 08:46:14'),
-(10, 'dokumanlar', 'Dokümanlar', 'navigasyon', 'fas fa-file-alt', NULL, 100, 1, '2026-07-14 08:46:14'),
-(11, 'mevzuatlar', 'Mevzuatlar', 'navigasyon', 'fas fa-balance-scale', NULL, 110, 1, '2026-07-14 08:46:14'),
-(12, 'egitimler', 'Eğitimler', 'navigasyon', 'fas fa-graduation-cap', NULL, 120, 1, '2026-07-14 08:46:14'),
-(13, 'diger', 'Diğer', 'navigasyon', 'fas fa-file-alt', NULL, 130, 1, '2026-07-14 08:46:14'),
-(14, 'anketler', 'Anketler', 'navigasyon', 'fas fa-poll', NULL, 140, 1, '2026-07-14 08:46:14'),
-(15, 'yardimci_linkler', 'Yardımcı Linkler', 'navigasyon', 'fas fa-link', NULL, 150, 1, '2026-07-14 08:46:14'),
-(16, 'vefat_bilgisi', 'Vefat Eden Bilgisi', 'navigasyon', 'fas fa-ribbon', '#222222', 160, 1, '2026-07-14 08:46:14'),
-(17, 'dogum_gunu', 'Doğum Günü Bilgisi', 'navigasyon', 'fas fa-birthday-cake', NULL, 170, 1, '2026-07-14 08:46:14'),
-(18, 'yonetim_paneli', 'Yönetim Paneli', 'profil', 'fas fa-cog', NULL, 180, 1, '2026-07-14 08:46:14'),
-(19, 'oturum_bilgileri', 'Oturum Bilgileri', 'profil', 'fas fa-history', NULL, 190, 1, '2026-07-14 08:46:14'),
-(20, 'email_degistir', 'E-posta Değiştir', 'profil', 'fas fa-envelope', NULL, 200, 1, '2026-07-14 08:46:14'),
-(21, 'sifre_degistir', 'Şifre Değiştir', 'profil', 'fas fa-key', NULL, 210, 1, '2026-07-14 08:46:14'),
-(22, 'cikis_yap', 'Çıkış Yap', 'profil', 'fas fa-sign-out-alt', NULL, 220, 1, '2026-07-14 08:46:14'),
-(23, 'telefon', 'Telefon', 'iletisim', 'fas fa-phone', NULL, 230, 1, '2026-07-14 08:46:14'),
-(24, 'eposta', 'E-posta', 'iletisim', 'fas fa-envelope', NULL, 240, 1, '2026-07-14 08:46:14'),
-(25, 'facebook', 'Facebook', 'sosyal', 'fab fa-facebook-f', NULL, 250, 1, '2026-07-14 08:46:14'),
-(26, 'twitter', 'Twitter / X', 'sosyal', 'fab fa-twitter', NULL, 260, 1, '2026-07-14 08:46:14'),
-(27, 'instagram', 'Instagram', 'sosyal', 'fab fa-instagram', NULL, 270, 1, '2026-07-14 08:46:14'),
-(28, 'youtube', 'YouTube', 'sosyal', 'fab fa-youtube', NULL, 280, 1, '2026-07-14 08:46:14'),
-(29, 'linkedin', 'LinkedIn', 'sosyal', 'fab fa-linkedin-in', NULL, 290, 1, '2026-07-14 08:46:14'),
-(30, 'arama', 'Arama', 'arayuz', 'fas fa-search', NULL, 300, 1, '2026-07-14 08:56:15'),
-(31, 'tarih', 'Tarih', 'bilgi', 'fas fa-calendar-alt', NULL, 310, 1, '2026-07-14 08:56:15'),
-(32, 'goruntulenme', 'Görüntülenme', 'bilgi', 'fas fa-eye', NULL, 320, 1, '2026-07-14 08:56:15'),
-(33, 'kullanici', 'Kullanıcı / Yazar', 'bilgi', 'fas fa-user', NULL, 330, 1, '2026-07-14 08:56:15'),
-(34, 'geri_don', 'Geri Dön', 'arayuz', 'fas fa-arrow-left', NULL, 340, 1, '2026-07-14 08:56:15'),
-(35, 'onceki', 'Önceki', 'arayuz', 'fas fa-chevron-left', NULL, 350, 1, '2026-07-14 08:56:15'),
-(36, 'sonraki', 'Sonraki', 'arayuz', 'fas fa-chevron-right', NULL, 360, 1, '2026-07-14 08:56:15'),
-(37, 'pdf_dosyasi', 'PDF Dosyası', 'dosya', 'fas fa-file-pdf', NULL, 370, 1, '2026-07-14 08:56:15'),
-(38, 'kaydet', 'Kaydet', 'form', 'fas fa-save', NULL, 380, 1, '2026-07-14 08:56:16'),
-(39, 'video_oynat', 'Videoyu Oynat', 'video', 'fas fa-play', NULL, 390, 1, '2026-07-14 08:56:16'),
-(40, 'harici_baglanti', 'Harici Bağlantı', 'baglanti', 'fas fa-external-link-alt', NULL, 400, 1, '2026-07-14 08:56:16'),
-(41, 'etkinlik_sayfa', 'Etkinlik Sayfası', 'sayfa', 'fa-solid fa-calendar-days', NULL, 410, 1, '2026-07-14 08:56:16'),
-(42, 'oturum_saati', 'Oturum Saati', 'oturum', 'far fa-clock', NULL, 420, 1, '2026-07-14 08:56:16'),
-(43, 'yonetim_guvenlik_bi', 'Yönetim Güvenliği', 'giris', 'fas fa-shield-halved', NULL, 430, 1, '2026-07-14 08:56:16'),
-(44, 'sifre_goster_bi', 'Şifreyi Göster', 'giris', 'fas fa-eye', NULL, 440, 1, '2026-07-14 08:56:16'),
-(45, 'sifre_gizle_bi', 'Şifreyi Gizle', 'giris', 'fas fa-eye-slash', NULL, 450, 1, '2026-07-14 08:56:16'),
-(46, 'giris_yap_bi', 'Giriş Yap', 'giris', 'fas fa-right-to-bracket', NULL, 460, 1, '2026-07-14 08:56:16'),
-(47, 'geri_don_bi', 'Geri Dön', 'giris', 'fas fa-arrow-left', NULL, 470, 1, '2026-07-14 08:56:16'),
-(48, 'islem_yukleniyor_bi', 'İşlem Yapılıyor', 'arayuz', 'fas fa-arrows-rotate', NULL, 480, 1, '2026-07-14 08:56:16'),
-(49, 'personel_kayit_bi', 'Personel Kaydı', 'giris', 'fas fa-user-plus', NULL, 490, 1, '2026-07-14 08:56:16'),
-(50, 'islem_basarili_bi', 'İşlem Başarılı', 'durum', 'fas fa-circle-check', NULL, 500, 1, '2026-07-14 08:56:16'),
-(51, 'anasayfa_haberler', 'Ana Sayfa Haberler Başlığı', 'anasayfa', 'fas fa-bullhorn', NULL, 510, 1, '2026-07-14 09:11:28'),
-(52, 'duyuru_zili', 'Duyuru Zili', 'duyuru', 'fas fa-bell', NULL, 520, 1, '2026-07-14 09:11:28'),
-(53, 'dogum_sayfa', 'Doğum Günü Sayfa İkonu', 'dogum', 'fa-solid fa-cake-candles', NULL, 530, 1, '2026-07-14 09:11:28'),
-(54, 'otomasyon_sistem', 'Otomasyon Sistemi', 'anasayfa', 'fas fa-desktop', NULL, 540, 1, '2026-07-14 09:11:28'),
-(55, 'anket_kilit_acik', 'Anket Cevapları Açık', 'anket', 'fas fa-lock-open', NULL, 550, 1, '2026-07-14 09:11:28'),
-(56, 'anket_gonder', 'Anketi Gönder', 'anket', 'fas fa-paper-plane', NULL, 560, 1, '2026-07-14 09:11:28'),
-(57, 'anket_durum_aktif', 'Aktif Anket', 'anket', 'fas fa-play-circle', NULL, 570, 1, '2026-07-14 09:11:28'),
-(58, 'anket_durum_beklemede', 'Bekleyen Anket', 'anket', 'fas fa-clock', NULL, 580, 1, '2026-07-14 09:11:28'),
-(59, 'anket_durum_tamamlandi', 'Tamamlanan Anket', 'anket', 'fas fa-check-circle', NULL, 590, 1, '2026-07-14 09:11:28'),
-(60, 'anket_durum_suresi_doldu', 'Süresi Dolan Anket', 'anket', 'fas fa-times-circle', NULL, 600, 1, '2026-07-14 09:11:29'),
-(61, 'anket_tarih', 'Anket Tarihi', 'anket', 'fas fa-calendar', NULL, 610, 1, '2026-07-14 09:11:29'),
-(62, 'anket_giris', 'Ankete Giriş', 'anket', 'fas fa-sign-in-alt', NULL, 620, 1, '2026-07-14 09:11:29'),
-(63, 'anket_duzenle', 'Ankete Katıl / Düzenle', 'anket', 'fas fa-edit', NULL, 630, 1, '2026-07-14 09:11:29'),
-(64, 'anket_favori_dolu', 'Favorideki Anket', 'anket', 'fas fa-star', NULL, 640, 1, '2026-07-14 09:11:29'),
-(65, 'anket_favori_bos', 'Favoride Olmayan Anket', 'anket', 'far fa-star', NULL, 650, 1, '2026-07-14 09:11:29'),
-(66, 'anket_liste', 'Anket Listesi', 'anket', 'fas fa-list', NULL, 660, 1, '2026-07-14 09:11:29'),
-(67, 'indir', 'Dosya İndir', 'dosya', 'fas fa-download', NULL, 670, 1, '2026-07-14 09:11:29'),
-(68, 'dosya_word', 'Word Dosyası', 'dosya', 'fas fa-file-word', NULL, 680, 1, '2026-07-14 09:11:29'),
-(69, 'dosya_excel', 'Excel Dosyası', 'dosya', 'fas fa-file-excel', NULL, 690, 1, '2026-07-14 09:11:29'),
-(70, 'dosya_belge', 'Belge Dosyası', 'dosya', 'fas fa-file-alt', NULL, 700, 1, '2026-07-14 09:11:29'),
-(71, 'dosya_genel', 'Genel Dosya', 'dosya', 'fas fa-file', NULL, 710, 1, '2026-07-14 09:11:29'),
-(72, 'egitim_video', 'Eğitim Videosu', 'egitim', 'fas fa-video', NULL, 720, 1, '2026-07-14 09:11:29');
+(1, 'menu_ac', 'Mobil Menüyü Aç', 'arayuz', 'fas fa-bars', NULL, 1, 1, '2026-07-14 08:46:13'),
+(2, 'anasayfa', 'Anasayfa', 'navigasyon', 'fas fa-home', NULL, 2, 1, '2026-07-14 08:46:13'),
+(3, 'videolar', 'Videolar', 'navigasyon', 'fas fa-video', NULL, 3, 1, '2026-07-14 08:46:14'),
+(4, 'etkinlikler', 'Etkinlikler', 'navigasyon', 'fas fa-newspaper', NULL, 4, 1, '2026-07-14 08:46:14'),
+(5, 'sizden_gelenler', 'Sizden Gelenler', 'navigasyon', 'fas fa-comments', NULL, 5, 1, '2026-07-14 08:46:14'),
+(6, 'etkinlik_takvimi', 'Etkinlik Takvimi', 'navigasyon', 'fas fa-calendar-check', NULL, 6, 1, '2026-07-14 08:46:14'),
+(7, 'duyurular', 'Duyurular', 'navigasyon', 'fas fa-bullhorn', NULL, 7, 1, '2026-07-14 08:46:14'),
+(8, 'kaynaklar', 'Kaynaklar', 'navigasyon', 'fas fa-landmark', NULL, 8, 1, '2026-07-14 08:46:14'),
+(9, 'protokoller', 'Protokoller', 'navigasyon', 'fas fa-file-signature', NULL, 9, 1, '2026-07-14 08:46:14'),
+(10, 'dokumanlar', 'Dokümanlar', 'navigasyon', 'fas fa-file-alt', NULL, 10, 1, '2026-07-14 08:46:14'),
+(11, 'mevzuatlar', 'Mevzuatlar', 'navigasyon', 'fas fa-balance-scale', NULL, 11, 1, '2026-07-14 08:46:14'),
+(12, 'egitimler', 'Eğitimler', 'navigasyon', 'fas fa-graduation-cap', NULL, 12, 1, '2026-07-14 08:46:14'),
+(13, 'diger', 'Diğer', 'navigasyon', 'fas fa-file-alt', NULL, 13, 1, '2026-07-14 08:46:14'),
+(14, 'anketler', 'Anketler', 'navigasyon', 'fas fa-poll', NULL, 14, 1, '2026-07-14 08:46:14'),
+(15, 'yardimci_linkler', 'Yardımcı Linkler', 'navigasyon', 'fas fa-link', NULL, 15, 1, '2026-07-14 08:46:14'),
+(16, 'vefat_bilgisi', 'Vefat Eden Bilgisi', 'navigasyon', 'fas fa-ribbon', '#222222', 16, 1, '2026-07-14 08:46:14'),
+(17, 'dogum_gunu', 'Doğum Günü Bilgisi', 'navigasyon', 'fas fa-birthday-cake', NULL, 17, 1, '2026-07-14 08:46:14'),
+(18, 'yonetim_paneli', 'Yönetim Paneli', 'profil', 'fas fa-cog', NULL, 18, 1, '2026-07-14 08:46:14'),
+(19, 'oturum_bilgileri', 'Oturum Bilgileri', 'profil', 'fas fa-history', NULL, 19, 1, '2026-07-14 08:46:14'),
+(20, 'email_degistir', 'E-posta Değiştir', 'profil', 'fas fa-envelope', NULL, 20, 1, '2026-07-14 08:46:14'),
+(21, 'sifre_degistir', 'Şifre Değiştir', 'profil', 'fas fa-key', NULL, 21, 1, '2026-07-14 08:46:14'),
+(22, 'cikis_yap', 'Çıkış Yap', 'profil', 'fas fa-sign-out-alt', NULL, 22, 1, '2026-07-14 08:46:14'),
+(23, 'telefon', 'Telefon', 'iletisim', 'fas fa-phone', NULL, 23, 1, '2026-07-14 08:46:14'),
+(24, 'eposta', 'E-posta', 'iletisim', 'fas fa-envelope', NULL, 24, 1, '2026-07-14 08:46:14'),
+(25, 'facebook', 'Facebook', 'sosyal', 'fab fa-facebook-f', NULL, 25, 1, '2026-07-14 08:46:14'),
+(26, 'twitter', 'Twitter / X', 'sosyal', 'fab fa-twitter', NULL, 26, 1, '2026-07-14 08:46:14'),
+(27, 'instagram', 'Instagram', 'sosyal', 'fab fa-instagram', NULL, 27, 1, '2026-07-14 08:46:14'),
+(28, 'youtube', 'YouTube', 'sosyal', 'fab fa-youtube', NULL, 28, 1, '2026-07-14 08:46:14'),
+(29, 'linkedin', 'LinkedIn', 'sosyal', 'fab fa-linkedin-in', NULL, 29, 1, '2026-07-14 08:46:14'),
+(30, 'arama', 'Arama', 'arayuz', 'fas fa-search', NULL, 30, 1, '2026-07-14 08:56:15'),
+(31, 'tarih', 'Tarih', 'bilgi', 'fas fa-calendar-alt', NULL, 31, 1, '2026-07-14 08:56:15'),
+(32, 'goruntulenme', 'Görüntülenme', 'bilgi', 'fas fa-eye', NULL, 32, 1, '2026-07-14 08:56:15'),
+(33, 'kullanici', 'Kullanıcı / Yazar', 'bilgi', 'fas fa-user', NULL, 33, 1, '2026-07-14 08:56:15'),
+(34, 'geri_don', 'Geri Dön', 'arayuz', 'fas fa-arrow-left', NULL, 34, 1, '2026-07-14 08:56:15'),
+(35, 'onceki', 'Önceki', 'arayuz', 'fas fa-chevron-left', NULL, 35, 1, '2026-07-14 08:56:15'),
+(36, 'sonraki', 'Sonraki', 'arayuz', 'fas fa-chevron-right', NULL, 36, 1, '2026-07-14 08:56:15'),
+(37, 'pdf_dosyasi', 'PDF Dosyası', 'dosya', 'fas fa-file-pdf', NULL, 37, 1, '2026-07-14 08:56:15'),
+(38, 'kaydet', 'Kaydet', 'form', 'fas fa-save', NULL, 38, 1, '2026-07-14 08:56:16'),
+(39, 'video_oynat', 'Videoyu Oynat', 'video', 'fas fa-play', NULL, 39, 1, '2026-07-14 08:56:16'),
+(40, 'harici_baglanti', 'Harici Bağlantı', 'baglanti', 'fas fa-external-link-alt', NULL, 40, 1, '2026-07-14 08:56:16'),
+(41, 'etkinlik_sayfa', 'Etkinlik Sayfası', 'sayfa', 'fa-solid fa-calendar-days', NULL, 41, 1, '2026-07-14 08:56:16'),
+(42, 'oturum_saati', 'Oturum Saati', 'oturum', 'far fa-clock', NULL, 42, 1, '2026-07-14 08:56:16'),
+(43, 'yonetim_guvenlik_bi', 'Yönetim Güvenliği', 'giris', 'fas fa-shield-halved', NULL, 43, 1, '2026-07-14 08:56:16'),
+(44, 'sifre_goster_bi', 'Şifreyi Göster', 'giris', 'fas fa-eye', NULL, 44, 1, '2026-07-14 08:56:16'),
+(45, 'sifre_gizle_bi', 'Şifreyi Gizle', 'giris', 'fas fa-eye-slash', NULL, 45, 1, '2026-07-14 08:56:16'),
+(46, 'giris_yap_bi', 'Giriş Yap', 'giris', 'fas fa-right-to-bracket', NULL, 46, 1, '2026-07-14 08:56:16'),
+(47, 'geri_don_bi', 'Geri Dön', 'giris', 'fas fa-arrow-left', NULL, 47, 1, '2026-07-14 08:56:16'),
+(48, 'islem_yukleniyor_bi', 'İşlem Yapılıyor', 'arayuz', 'fas fa-arrows-rotate', NULL, 48, 1, '2026-07-14 08:56:16'),
+(49, 'personel_kayit_bi', 'Personel Kaydı', 'giris', 'fas fa-user-plus', NULL, 49, 1, '2026-07-14 08:56:16'),
+(50, 'islem_basarili_bi', 'İşlem Başarılı', 'durum', 'fas fa-circle-check', NULL, 50, 1, '2026-07-14 08:56:16'),
+(51, 'anasayfa_haberler', 'Ana Sayfa Haberler Başlığı', 'anasayfa', 'fas fa-bullhorn', NULL, 51, 1, '2026-07-14 09:11:28'),
+(52, 'duyuru_zili', 'Duyuru Zili', 'duyuru', 'fas fa-bell', NULL, 52, 1, '2026-07-14 09:11:28'),
+(53, 'dogum_sayfa', 'Doğum Günü Sayfa İkonu', 'dogum', 'fa-solid fa-cake-candles', NULL, 53, 1, '2026-07-14 09:11:28'),
+(54, 'otomasyon_sistem', 'Otomasyon Sistemi', 'anasayfa', 'fas fa-desktop', NULL, 54, 1, '2026-07-14 09:11:28'),
+(55, 'anket_kilit_acik', 'Anket Cevapları Açık', 'anket', 'fas fa-lock-open', NULL, 55, 1, '2026-07-14 09:11:28'),
+(56, 'anket_gonder', 'Anketi Gönder', 'anket', 'fas fa-paper-plane', NULL, 56, 1, '2026-07-14 09:11:28'),
+(57, 'anket_durum_aktif', 'Aktif Anket', 'anket', 'fas fa-play-circle', NULL, 57, 1, '2026-07-14 09:11:28'),
+(58, 'anket_durum_beklemede', 'Bekleyen Anket', 'anket', 'fas fa-clock', NULL, 58, 1, '2026-07-14 09:11:28'),
+(59, 'anket_durum_tamamlandi', 'Tamamlanan Anket', 'anket', 'fas fa-check-circle', NULL, 59, 1, '2026-07-14 09:11:28'),
+(60, 'anket_durum_suresi_doldu', 'Süresi Dolan Anket', 'anket', 'fas fa-times-circle', NULL, 60, 1, '2026-07-14 09:11:29'),
+(61, 'anket_tarih', 'Anket Tarihi', 'anket', 'fas fa-calendar', NULL, 61, 1, '2026-07-14 09:11:29'),
+(62, 'anket_giris', 'Ankete Giriş', 'anket', 'fas fa-sign-in-alt', NULL, 62, 1, '2026-07-14 09:11:29'),
+(63, 'anket_duzenle', 'Ankete Katıl / Düzenle', 'anket', 'fas fa-edit', NULL, 63, 1, '2026-07-14 09:11:29'),
+(64, 'anket_favori_dolu', 'Favorideki Anket', 'anket', 'fas fa-star', NULL, 64, 1, '2026-07-14 09:11:29'),
+(65, 'anket_favori_bos', 'Favoride Olmayan Anket', 'anket', 'far fa-star', NULL, 65, 1, '2026-07-14 09:11:29'),
+(66, 'anket_liste', 'Anket Listesi', 'anket', 'fas fa-list', NULL, 66, 1, '2026-07-14 09:11:29'),
+(67, 'indir', 'Dosya İndir', 'dosya', 'fas fa-download', NULL, 67, 1, '2026-07-14 09:11:29'),
+(68, 'dosya_word', 'Word Dosyası', 'dosya', 'fas fa-file-word', NULL, 68, 1, '2026-07-14 09:11:29'),
+(69, 'dosya_excel', 'Excel Dosyası', 'dosya', 'fas fa-file-excel', NULL, 69, 1, '2026-07-14 09:11:29'),
+(70, 'dosya_belge', 'Belge Dosyası', 'dosya', 'fas fa-file-alt', NULL, 70, 1, '2026-07-14 09:11:29'),
+(71, 'dosya_genel', 'Genel Dosya', 'dosya', 'fas fa-file', NULL, 71, 1, '2026-07-14 09:11:29'),
+(72, 'egitim_video', 'Eğitim Videosu', 'egitim', 'fas fa-video', NULL, 72, 1, '2026-07-14 09:11:29');
 
 -- --------------------------------------------------------
 
@@ -932,7 +956,7 @@ CREATE TABLE `sizden_gelenler` (
 
 INSERT INTO `sizden_gelenler` (`id`, `baslik`, `ozet`, `tarih`, `goruntulenme`, `gorsel_yolu`, `olusturma_tarihi`, `kategori_id`) VALUES
 (1, 'İnsan Kaynakları ve Eğitim Müdürlüğü', '6734 ve 6735 Sayılı Kanun Eğitimi - Biyomedikal Eğitimi - Üniversite Eğitimi - Oryantasyon Eğitimi - Fen Programlama Eğitimi - Mevzuat Eğitimi - Teknoloji Çalışma Eğitimi...', '2023-11-06', 106, '../images/sizden_gelenler/insan_kaynaklari/nsan-kaynaklar-ve-e-itim-mudurlu-u_1547.webP', '2026-07-02 12:20:03', 1),
-(2, 'Fen İşleri Müdürlüğü', 'Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...', '2023-10-19', 147, '../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.webp', '2026-07-02 12:20:03', 2),
+(2, 'Fen İşleri Müdürlüğü', 'Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...Köprülü Geçmis Mahallesi, 503 Sokak\'taki çalışmalar...', '2023-10-19', 148, '../images/sizden_gelenler/fen_isleri/fen-leri-mudurlu-u_3604.webp', '2026-07-02 12:20:03', 2),
 (3, 'Temizlik İşleri Müdürlüğü', 'Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...Kül, katkısız ve tüm güzelleştirme organlarından şeye çeşit kurtarıcılar...', '2023-10-19', 80, '../images/sizden_gelenler/temizlik_isleri/temizlik-leri-mudurlu-u_2142.webp', '2026-07-02 12:20:03', 3),
 (4, 'Veteriner İşleri Müdürlüğü', '4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...4 Ekim Dünya Hayvanları Koruma Günü nedeniyle 4 Ekim boyunca...', '2023-10-17', 236, '../images/sizden_gelenler/veteriner_isleri/veteriner-leri-mudurlu-u_547.webp', '2026-07-02 12:20:03', 4),
 (5, 'Park ve Bahçeler Müdürlüğü', 'Bağışlanmış günlük programı göbildirinde park ve yeşil alanlarımızda...', '2023-10-17', 157, '../images/sizden_gelenler/park_bahce/park-ve-bahceler-mudurlu-u_357.webp', '2026-07-02 12:20:03', 5),
@@ -1214,7 +1238,15 @@ INSERT INTO `yonetici_oturum_kayitlari` (`id`, `yonetici_id`, `giris_zamani`, `c
 (39, 1, '2026-07-14 14:55:38', '2026-07-14 14:59:00', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 14:58:47'),
 (40, 1, '2026-07-14 14:59:52', '2026-07-14 15:07:45', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'manuel', '2026-07-14 15:07:42'),
 (41, 1, '2026-07-14 15:07:52', '2026-07-14 15:09:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 15:09:22'),
-(42, 1, '2026-07-14 15:09:54', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-14 15:14:17');
+(42, 1, '2026-07-14 15:09:54', '2026-07-14 15:16:43', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 15:16:36'),
+(43, 1, '2026-07-14 15:17:35', '2026-07-14 15:27:23', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-14 15:27:23'),
+(44, 1, '2026-07-14 15:34:49', '2026-07-14 15:35:56', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 15:35:51'),
+(45, 1, '2026-07-14 15:36:29', '2026-07-14 15:55:25', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 15:55:14'),
+(46, 1, '2026-07-14 16:04:40', '2026-07-14 16:05:05', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-14 16:04:53'),
+(47, 1, '2026-07-16 10:40:23', '2026-07-16 12:22:51', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 12:22:45'),
+(48, 1, '2026-07-16 12:24:46', '2026-07-16 14:20:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 14:20:06'),
+(49, 1, '2026-07-16 15:39:40', '2026-07-16 15:41:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 15:41:00'),
+(50, 1, '2026-07-16 15:42:47', '2026-07-16 16:25:39', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 16:25:39');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -1477,13 +1509,13 @@ ALTER TABLE `anketler_kategori`
 -- Tablo için AUTO_INCREMENT değeri `anket_cevaplari`
 --
 ALTER TABLE `anket_cevaplari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `anket_katilimlari`
 --
 ALTER TABLE `anket_katilimlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=417;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `anket_secenekleri`
@@ -1543,7 +1575,7 @@ ALTER TABLE `haber_galeri`
 -- Tablo için AUTO_INCREMENT değeri `icerik_izlemeleri`
 --
 ALTER TABLE `icerik_izlemeleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar`
@@ -1555,19 +1587,19 @@ ALTER TABLE `kaynaklar`
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_alt_kategori`
 --
 ALTER TABLE `kaynaklar_alt_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3349;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4213;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_kategori`
 --
 ALTER TABLE `kaynaklar_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3349;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4213;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `oturum_kayitlari`
 --
 ALTER TABLE `oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `personeller`
@@ -1633,7 +1665,7 @@ ALTER TABLE `yoneticiler`
 -- Tablo için AUTO_INCREMENT değeri `yonetici_oturum_kayitlari`
 --
 ALTER TABLE `yonetici_oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar

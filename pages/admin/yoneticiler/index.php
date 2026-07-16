@@ -54,23 +54,38 @@ include __DIR__ . "/../includes/header.php";
               <?php endif; ?>
             </td>
             <td>
-              <div class="admin-actions">
-                <a href="duzenle.php?id=<?= (int) $row["id"] ?>" class="admin-btn admin-btn-secondary admin-btn-sm">
-                  <i class="fas fa-pen"></i>
-                </a>
-                <?php if ((int) $row["id"] !== (int) ($_SESSION["yonetici_id"] ?? 0)): ?>
-                <form method="post" action="sil.php" class="d-inline" onsubmit="return confirm('Bu yöneticiyi silmek istediğinize emin misiniz?');">
-                  <input type="hidden" name="id" value="<?= (int) $row["id"] ?>" />
-                  <input type="hidden" name="csrf" value="<?= htmlspecialchars(
-                    adminCsrfToken(),
-                    ENT_QUOTES,
-                    "UTF-8",
-                  ) ?>" />
-                  <button type="submit" class="admin-btn admin-btn-danger admin-btn-sm">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </form>
-                <?php endif; ?>
+              <div class="dropdown d-inline-block position-static">
+                <button
+                  type="button"
+                  class="admin-btn admin-btn-secondary admin-btn-sm dropdown-toggle text-nowrap"
+                  data-bs-toggle="dropdown"
+                  data-bs-boundary="viewport"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-gear"></i>
+                  İşlem Yap
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm text-start">
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2" href="duzenle.php?id=<?= (int) $row["id"] ?>">
+                      <i class="fas fa-pen"></i>
+                      Düzenle
+                    </a>
+                  </li>
+                  <?php if ((int) $row["id"] !== (int) ($_SESSION["yonetici_id"] ?? 0)): ?>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <form method="post" action="sil.php" class="m-0" onsubmit="return confirm('Bu yöneticiyi silmek istediğinize emin misiniz?');">
+                      <input type="hidden" name="id" value="<?= (int) $row["id"] ?>" />
+                      <input type="hidden" name="csrf" value="<?= htmlspecialchars(adminCsrfToken(), ENT_QUOTES, "UTF-8") ?>" />
+                      <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-2">
+                        <i class="fas fa-trash"></i>
+                        Sil
+                      </button>
+                    </form>
+                  </li>
+                  <?php endif; ?>
+                </ul>
               </div>
             </td>
           </tr>

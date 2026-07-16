@@ -4,6 +4,9 @@
     const kaynakData = window.kaynakData || [];
     const emptyText = window.kaynakEmptyText || 'Kayıt bulunamadı.';
     const isDokumanlarPage = window.kaynakActiveKey === 'document';
+    const kaynakIcons = window.kaynakIcons || {};
+    const previewBase = window.kaynakPreviewBase || 'kaynak_onizleme.php?id=';
+    const downloadBase = window.kaynakDownloadBase || 'kaynak_dosya.php?id=';
 
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
@@ -11,27 +14,16 @@
     const resultsCount = document.getElementById('resultsCount');
     const noResults = document.getElementById('noResults');
 
-    const ICON_PATHS = {
-        protocol: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 2l5 5h-5V4zM8 12h8v2H8v-2zm0 4h5v2H8v-2z',
-        document: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z',
-        law: 'M12 3l-7 4v2h14V7l-7-4zm-8 8v2h16v-2H4zm2 4v4h12v-4H6zm2 2h8v2H8v-2z',
-        education: 'M12 3 1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z',
-        video: 'M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z',
-        calendar: 'M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z',
-        documentMeta: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z',
-        download: 'M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z',
-        preview: 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z',
-    };
-
     function esc(text) {
         const el = document.createElement('div');
         el.textContent = text ?? '';
         return el.innerHTML;
     }
 
-    function iconSvg(name) {
-        const path = ICON_PATHS[name] || ICON_PATHS.protocol;
-        return `<span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="${path}"/></svg></span>`;
+    function iconHtml(name) {
+        return kaynakIcons[name]
+            || kaynakIcons.protokoller
+            || '<span class="icon" aria-hidden="true"></span>';
     }
 
     function debounce(fn, wait) {
@@ -42,30 +34,35 @@
         };
     }
 
-    function previewDocument(url) {
+    function toAbsoluteUrl(url) {
+        if (!url) {
+            return '';
+        }
+
+        try {
+            return new URL(String(url), window.location.href).href;
+        } catch (e) {
+            return String(url);
+        }
+    }
+
+    function openPreview(itemOrUrl, maybeId) {
+        const id = typeof itemOrUrl === 'object' && itemOrUrl
+            ? Number(itemOrUrl.id || 0)
+            : Number(maybeId || 0);
+
+        if (id > 0) {
+            window.open(`${previewBase}${encodeURIComponent(String(id))}`, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
+        const url = typeof itemOrUrl === 'string' ? itemOrUrl : '';
         if (!url) {
             window.alert('Dosya yolu bulunamadı.');
             return;
         }
 
-        const path = String(url).split('?')[0];
-        const ext = (path.split('.').pop() || '').toLowerCase();
-
-        if (ext === 'pdf' || /youtube\.com|youtu\.be/i.test(url)) {
-            window.open(url, '_blank', 'noopener,noreferrer');
-            return;
-        }
-
-        if (['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'].includes(ext)) {
-            window.open(
-                `https://docs.google.com/viewer?url=${encodeURIComponent(url)}&embedded=true`,
-                '_blank',
-                'noopener,noreferrer'
-            );
-            return;
-        }
-
-        window.open(url, '_blank', 'noopener,noreferrer');
+        window.open(toAbsoluteUrl(url), '_blank', 'noopener,noreferrer');
     }
 
     function fileNameFromUrl(url) {
@@ -124,7 +121,7 @@
             if (item.ext || item.size) {
                 metaBits.push(`
                     <span>
-                        ${iconSvg('documentMeta')}
+                        ${iconHtml('dokumanlar')}
                         ${esc([item.ext, item.size].filter(Boolean).join(' • '))}
                     </span>
                 `);
@@ -132,7 +129,7 @@
             if (item.date) {
                 metaBits.push(`
                     <span>
-                        ${iconSvg('calendar')}
+                        ${iconHtml('tarih')}
                         ${esc(item.date)}
                     </span>
                 `);
@@ -144,12 +141,12 @@
 
             const actions = isDokumanlarPage
                 ? `
-                    <button type="button" class="kr-card-btn" data-preview-url="${esc(item.previewUrl || item.fileUrl)}">
-                        ${iconSvg('preview')}
+                    <button type="button" class="kr-card-btn" data-preview-id="${esc(String(item.id || ''))}">
+                        ${iconHtml('preview')}
                         Önizle
                     </button>
-                    <a class="kr-card-btn is-secondary kr-download-btn" href="${esc(item.fileUrl)}" download="${esc(fileNameFromUrl(item.fileUrl))}">
-                        ${iconSvg('download')}
+                    <a class="kr-card-btn is-secondary kr-download-btn" href="${esc(downloadBase + encodeURIComponent(String(item.id || '')))}">
+                        ${iconHtml('download')}
                         İndir
                     </a>
                     ${official}
@@ -164,7 +161,7 @@
             return `
                 <article class="kr-card">
                     <div class="kr-card-header">
-                        <div class="kr-card-icon">${iconSvg(item.icon || 'protocol')}</div>
+                        <div class="kr-card-icon">${iconHtml(item.icon || 'protokoller')}</div>
                         <div class="kr-card-info">
                             <h2 class="kr-card-title">${esc(item.title)}</h2>
                             ${item.categoryName ? `<span class="kr-card-category">${esc(item.categoryName)}</span>` : ''}
@@ -188,9 +185,15 @@
     });
 
     grid?.addEventListener('click', (event) => {
+        const previewIdBtn = event.target.closest('[data-preview-id]');
+        if (previewIdBtn) {
+            openPreview(null, previewIdBtn.getAttribute('data-preview-id') || '0');
+            return;
+        }
+
         const previewBtn = event.target.closest('[data-preview-url]');
         if (previewBtn) {
-            previewDocument(previewBtn.getAttribute('data-preview-url') || '');
+            openPreview(previewBtn.getAttribute('data-preview-url') || '');
             return;
         }
 

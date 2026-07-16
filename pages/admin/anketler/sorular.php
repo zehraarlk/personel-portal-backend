@@ -25,8 +25,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["action"]) && $_POST["
         if ($soru_metni === "") {
             $hata = "Soru metni boş bırakılamaz.";
         } else {
-            $stmt = $db->prepare("INSERT INTO anket_sorulari (anket_id, soru_metni, soru_tipi) VALUES (?, ?, ?)");
-            $stmt->execute([$anket_id, $soru_metni, $soru_tipi]);
+            $nextSira = adminSiraNext($db, "anket_sorulari", $anket_id);
+            $stmt = $db->prepare("INSERT INTO anket_sorulari (anket_id, soru_metni, soru_tipi, sira) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$anket_id, $soru_metni, $soru_tipi, 0]);
+            $newId = (int) $db->lastInsertId();
+            adminSiraPlace($db, "anket_sorulari", $newId, $nextSira, $anket_id);
             adminFlashSet("success", "Soru başarıyla eklendi.");
             header("Location: sorular.php?anket_id=" . $anket_id);
             exit();
@@ -59,6 +62,7 @@ if (isset($_GET["sil_soru"])) {
     $sil_soru_id = (int)$_GET["sil_soru"];
     $stmt = $db->prepare("DELETE FROM anket_sorulari WHERE id = ? AND anket_id = ?");
     $stmt->execute([$sil_soru_id, $anket_id]);
+    adminSiraNormalize($db, "anket_sorulari", $anket_id);
     adminFlashSet("success", "Soru silindi.");
     header("Location: sorular.php?anket_id=" . $anket_id);
     exit();
@@ -74,7 +78,7 @@ if (isset($_GET["sil_secenek"])) {
 }
 
 // Soruları ve şıkları çek
-$sorular = dbFetchAll($db, "SELECT * FROM anket_sorulari WHERE anket_id = ? ORDER BY id ASC", [$anket_id]);
+$sorular = dbFetchAll($db, "SELECT * FROM anket_sorulari WHERE anket_id = ? ORDER BY sira ASC, id ASC", [$anket_id]);
 foreach ($sorular as $key => $soru) {
     $sorular[$key]["secenekler"] = dbFetchAll($db, "SELECT * FROM anket_secenekleri WHERE soru_id = ? ORDER BY id ASC", [$soru["id"]]);
 }

@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $form["kategori"] = trim((string) ($_POST["kategori"] ?? ""));
     $form["ikon_sinifi"] = trim((string) ($_POST["ikon_sinifi"] ?? ""));
     $form["renk"] = trim((string) ($_POST["renk"] ?? "")) ?: null;
-    $form["sira"] = (int) ($_POST["sira"] ?? 0);
+    $form["sira"] = max(1, (int) ($_POST["sira"] ?? 1));
     $form["aktif"] = isset($_POST["aktif"]) ? 1 : 0;
 
     if (
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $db
           ->prepare(
             "UPDATE site_ikonlari
-             SET anahtar = ?, ad = ?, kategori = ?, ikon_sinifi = ?, renk = ?, sira = ?, aktif = ?
+             SET anahtar = ?, ad = ?, kategori = ?, ikon_sinifi = ?, renk = ?, aktif = ?
              WHERE id = ?",
           )
           ->execute([
@@ -78,10 +78,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $form["kategori"],
             $form["ikon_sinifi"],
             $form["renk"],
-            $form["sira"],
             $form["aktif"],
             $id,
           ]);
+        adminSiraPlace($db, "site_ikonlari", $id, $form["sira"]);
         adminFlashSet("success", "İkon güncellendi.");
         header("Location: index.php");
         exit();
@@ -234,10 +234,11 @@ include __DIR__ . "/../includes/header.php";
                 id="sira"
                 name="sira"
                 class="form-control"
-                step="10"
+                step="1"
+                min="1"
                 value="<?= (int) $form["sira"] ?>"
               />
-              <p class="admin-form-hint">10’ar artar (10, 20, 30…) — araya ikon eklemek için boşluk bırakır.</p>
+              <p class="admin-form-hint">1’den başlayan index. Örn. 10. kaydı 1 yaparsanız eski 1→2, 2→3 diye kayar.</p>
             </div>
           </div>
 

@@ -635,11 +635,11 @@ function kaynakDateLabel(string $tarih): string
 function kaynakIconName(string $kategoriSlug, string $ext = ''): string
 {
     return match (true) {
-        $ext === 'youtube' || str_contains($ext, 'mp4') => 'video',
-        in_array($kategoriSlug, ['Eğitimler', 'egitimler'], true) => 'education',
-        in_array($kategoriSlug, ['Mevzuatlar', 'mevzuatlar'], true) => 'law',
-        in_array($kategoriSlug, ['Dökümanlar', 'Dokümanlar', 'dokumanlar'], true) => 'document',
-        default => 'protocol',
+        $ext === 'youtube' || str_contains($ext, 'mp4') => 'videolar',
+        in_array($kategoriSlug, ['Eğitimler', 'egitimler'], true) => 'egitimler',
+        in_array($kategoriSlug, ['Mevzuatlar', 'mevzuatlar'], true) => 'mevzuatlar',
+        in_array($kategoriSlug, ['Dökümanlar', 'Dokümanlar', 'dokumanlar'], true) => 'dokumanlar',
+        default => 'protokoller',
     };
 }
 
@@ -679,6 +679,81 @@ function fetchKaynaklarBySlug(PDO $pdo, string $slug): array
     }
 
     return [];
+}
+
+function fetchKaynakById(PDO $pdo, int $id): ?array
+{
+    if ($id <= 0 || !dbTableExists($pdo, 'kaynaklar')) {
+        return null;
+    }
+
+    $queries = [
+        'SELECT r.*, k.slug AS kategori_slug, k.ad AS kategori_adi
+         FROM kaynaklar r
+         LEFT JOIN kaynaklar_kategori k ON r.kategori_id = k.id
+         WHERE r.id = ?
+         LIMIT 1',
+        'SELECT * FROM kaynaklar WHERE id = ? LIMIT 1',
+    ];
+
+    foreach ($queries as $sql) {
+        try {
+            return dbFetchOne($pdo, $sql, [$id]);
+        } catch (Throwable) {
+            continue;
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Kaynak dosyasının disk yolunu ve MIME bilgisini döndürür.
+ *
+ * @return array{path:string,mime:string,name:string,ext:string}|null
+ */
+function kaynakLocalFileInfo(string $dbPath): ?array
+{
+    $dbPath = trim($dbPath);
+    if ($dbPath === '' || preg_match('#^https?://#i', $dbPath)) {
+        return null;
+    }
+
+    [$relative, $full] = resolveImageOnDisk($dbPath);
+    if ($full === '' || !is_file($full)) {
+        $normalized = normalizeDbImagePath($dbPath);
+        $candidate = IMAGES_DIR . '/' . $normalized;
+        if (!is_file($candidate)) {
+            return null;
+        }
+        $full = $candidate;
+        $relative = $normalized;
+    }
+
+    $name = basename($relative !== '' ? $relative : $full);
+    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+    $mimeMap = [
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'txt' => 'text/plain',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+    ];
+
+    return [
+        'path' => $full,
+        'mime' => $mimeMap[$ext] ?? 'application/octet-stream',
+        'name' => $name,
+        'ext' => $ext,
+    ];
 }
 
 function mapKaynaklarListForJs(array $rows, string $assetBase, string $fallbackCategory = ''): array

@@ -304,7 +304,6 @@ require __DIR__ . '/../includes/breadcrumb.php';
                                    value="<?= $secenekId ?>"
                                    <?= $checked ? 'checked' : '' ?>
                                    <?= $dahaOnceKatildi ? 'disabled' : 'required' ?>>
-                            <span class="ak-choice-box" aria-hidden="true"></span>
                             <span class="ak-choice-text"><?= e((string) ($secenek['secenek_metni'] ?? '')) ?></span>
                         </label>
                         <?php endforeach; ?>
@@ -369,10 +368,32 @@ require __DIR__ . '/../includes/breadcrumb.php';
         }
     }
 
-    form.addEventListener('change', function () {
+    function syncCheckedClass() {
         form.querySelectorAll('.ak-choice').forEach(function (lab) {
             lab.classList.toggle('is-checked', !!(lab.querySelector('input:checked')));
         });
+    }
+
+    form.querySelectorAll('.ak-choice').forEach(function (lab) {
+        var radio = lab.querySelector('input[type="radio"]');
+        if (!radio || radio.disabled) return;
+
+        lab.addEventListener('mousedown', function () {
+            radio.dataset.wasChecked = radio.checked ? '1' : '0';
+        });
+
+        lab.addEventListener('click', function (e) {
+            if (radio.dataset.wasChecked !== '1') return;
+            e.preventDefault();
+            radio.checked = false;
+            radio.dataset.wasChecked = '0';
+            syncCheckedClass();
+            sync();
+        });
+    });
+
+    form.addEventListener('change', function () {
+        syncCheckedClass();
         sync();
     });
     form.addEventListener('input', sync);

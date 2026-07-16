@@ -16,6 +16,8 @@
 
 .sizden-gelenler-page .sg-search-box {
     position: relative;
+    min-width: 0;
+    width: 100%;
 }
 
 .sizden-gelenler-page .sg-search-input {

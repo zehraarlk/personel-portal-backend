@@ -17,7 +17,7 @@ $pageTitle = "Anket Raporu: " . $anket["baslik"];
 $toplamKatilim = (int)(dbFetchOne($db, "SELECT COUNT(DISTINCT personel_id) as c FROM anket_cevaplari WHERE anket_id = ?", [$anket_id])["c"] ?? 0);
 
 // Soruları çekelim
-$sorular = dbFetchAll($db, "SELECT * FROM anket_sorulari WHERE anket_id = ? ORDER BY id ASC", [$anket_id]);
+$sorular = dbFetchAll($db, "SELECT * FROM anket_sorulari WHERE anket_id = ? ORDER BY sira ASC, id ASC", [$anket_id]);
 
 include __DIR__ . "/../includes/header.php";
 ?>

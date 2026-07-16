@@ -11,9 +11,11 @@ $id = (int) ($_POST["id"] ?? 0);
 $stmt = $db->prepare("DELETE FROM site_ikonlari WHERE id = ?");
 $stmt->execute([$id]);
 
-adminFlashSet(
-  $stmt->rowCount() ? "success" : "danger",
-  $stmt->rowCount() ? "İkon silindi." : "Silinemedi.",
-);
+if ($stmt->rowCount()) {
+  adminSiraNormalize($db, "site_ikonlari");
+  adminFlashSet("success", "İkon silindi.");
+} else {
+  adminFlashSet("danger", "Silinemedi.");
+}
 header("Location: index.php");
 exit();

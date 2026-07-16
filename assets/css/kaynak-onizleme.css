@@ -1,0 +1,197 @@
+/* Doküman önizleme sayfası */
+
+.kaynak-onizleme-page.content-area {
+    padding-block: 2rem 3rem;
+}
+
+.kaynak-onizleme-page .kr-preview-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.kaynak-onizleme-page .kr-preview-header h1 {
+    margin: 0 0 0.35rem;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    color: var(--secondary-heading);
+}
+
+.kaynak-onizleme-page .kr-preview-header p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.kaynak-onizleme-page .kr-preview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.kaynak-onizleme-page .kr-preview-actions .kr-card-btn {
+    width: auto;
+    min-width: 7.5rem;
+    padding: 0.7rem 1.1rem;
+}
+
+.kaynak-onizleme-page .kr-preview-frame {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    min-height: 70vh;
+    overflow: auto;
+}
+
+.kaynak-onizleme-page .kr-preview-embed {
+    display: block;
+    width: 100%;
+    min-height: 70vh;
+    border: 0;
+    background: #fff;
+}
+
+.kaynak-onizleme-page .kr-preview-image-wrap {
+    display: flex;
+    justify-content: center;
+    padding: 1.25rem;
+}
+
+.kaynak-onizleme-page .kr-preview-image-wrap img {
+    max-width: 100%;
+    height: auto;
+}
+
+.kaynak-onizleme-page .kr-preview-docx,
+.kaynak-onizleme-page .kr-preview-sheet {
+    padding: 1.25rem;
+    background: #fff;
+    overflow-x: auto;
+}
+
+.kaynak-onizleme-page .kr-preview-empty {
+    display: grid;
+    place-items: center;
+    gap: 1rem;
+    min-height: 50vh;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.kaynak-onizleme-page .kr-preview-note {
+    margin: 0;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.kaynak-onizleme-page .kr-preview-note-inline {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.kaynak-onizleme-page .kr-preview-loading {
+    margin: 0;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.kaynak-onizleme-page .kr-card-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    text-decoration: none;
+    transition: opacity var(--transition), transform var(--transition);
+}
+
+.kaynak-onizleme-page .kr-card-btn:hover {
+    opacity: 0.92;
+}
+
+.kaynak-onizleme-page .kr-card-btn.is-secondary {
+    background: var(--bg-body);
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+/* Excel / CSV önizleme tablosu */
+.kaynak-onizleme-page .kr-preview-sheet table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    background: #fff;
+}
+
+.kaynak-onizleme-page .kr-preview-sheet th,
+.kaynak-onizleme-page .kr-preview-sheet td {
+    border: 1px solid var(--border);
+    padding: 0.45rem 0.65rem;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+    max-width: 28rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kaynak-onizleme-page .kr-preview-sheet th,
+.kaynak-onizleme-page .kr-preview-sheet tr:first-child td {
+    background: rgba(2, 40, 66, 0.06);
+    font-weight: 600;
+    color: var(--secondary-heading);
+}
+
+.kaynak-onizleme-page .kr-preview-sheet tr:nth-child(even) td {
+    background: rgba(248, 249, 250, 0.85);
+}
+
+/* DOCX (docx-preview) tabloları ve sayfa düzeni */
+.kaynak-onizleme-page .kr-preview-docx .docx-wrapper {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+.kaynak-onizleme-page .kr-preview-docx .docx-wrapper > section.docx {
+    margin: 0 auto 1.25rem !important;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #fff;
+}
+
+.kaynak-onizleme-page .kr-preview-docx table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    table-layout: fixed;
+    margin: 0.5rem 0;
+}
+
+.kaynak-onizleme-page .kr-preview-docx table td,
+.kaynak-onizleme-page .kr-preview-docx table th {
+    border: 1px solid #c5cdd6 !important;
+    padding: 0.35rem 0.5rem !important;
+    vertical-align: top;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.kaynak-onizleme-page .kr-preview-docx p {
+    margin: 0.35rem 0;
+    line-height: 1.45;
+}
