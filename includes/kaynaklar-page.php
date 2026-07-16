@@ -94,6 +94,7 @@ require __DIR__ . '/../includes/breadcrumb.php';
 <script>
     window.kaynakData = <?= jsonData($kayitlar) ?>;
     window.kaynakEmptyText = <?= json_encode($kaynakEmptyText, JSON_UNESCAPED_UNICODE) ?>;
+    window.kaynakActiveKey = <?= json_encode($kaynakActiveKey, JSON_UNESCAPED_UNICODE) ?>;
 </script>
 <script src="<?= e($assetBase) ?>assets/js/kaynaklar.js" defer></script>
 <script src="<?= e($assetBase) ?>assets/js/navbar.js" defer></script>

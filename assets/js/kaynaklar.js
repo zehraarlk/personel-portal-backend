@@ -3,6 +3,7 @@
 
     const kaynakData = window.kaynakData || [];
     const emptyText = window.kaynakEmptyText || 'Kayıt bulunamadı.';
+    const isDokumanlarPage = window.kaynakActiveKey === 'document';
 
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
@@ -18,6 +19,8 @@
         video: 'M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z',
         calendar: 'M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM5 8V6h14v2H5z',
         documentMeta: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z',
+        download: 'M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z',
+        preview: 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 12.5c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z',
     };
 
     function esc(text) {
@@ -63,6 +66,15 @@
         }
 
         window.open(url, '_blank', 'noopener,noreferrer');
+    }
+
+    function fileNameFromUrl(url) {
+        if (!url) {
+            return '';
+        }
+        const path = String(url).split('?')[0].split('#')[0];
+        const segments = path.split('/');
+        return decodeURIComponent(segments[segments.length - 1] || '');
     }
 
     function filteredItems() {
@@ -127,8 +139,27 @@
             }
 
             const official = item.officialUrl
-                ? `<a class="kr-card-btn is-secondary" href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">Resmi Sayfa</a>`
+                ? `<a class="kr-card-btn is-secondary${isDokumanlarPage ? ' is-full' : ''}" href="${esc(item.officialUrl)}" target="_blank" rel="noopener noreferrer">Resmi Sayfa</a>`
                 : '';
+
+            const actions = isDokumanlarPage
+                ? `
+                    <button type="button" class="kr-card-btn" data-preview-url="${esc(item.previewUrl || item.fileUrl)}">
+                        ${iconSvg('preview')}
+                        Önizle
+                    </button>
+                    <a class="kr-card-btn is-secondary kr-download-btn" href="${esc(item.fileUrl)}" download="${esc(fileNameFromUrl(item.fileUrl))}">
+                        ${iconSvg('download')}
+                        İndir
+                    </a>
+                    ${official}
+                `
+                : `
+                    <button type="button" class="kr-card-btn" data-preview-url="${esc(item.fileUrl)}">
+                        Detaylı Bilgi İçin Tıklayınız
+                    </button>
+                    ${official}
+                `;
 
             return `
                 <article class="kr-card">
@@ -141,12 +172,7 @@
                     </div>
                     <p class="kr-card-desc">${esc(item.excerpt || item.description || '')}</p>
                     <div class="kr-card-meta">${metaBits.join('')}</div>
-                    <div class="kr-card-actions">
-                        <button type="button" class="kr-card-btn" data-preview-url="${esc(item.fileUrl)}">
-                            Detaylı Bilgi İçin Tıklayınız
-                        </button>
-                        ${official}
-                    </div>
+                    <div class="kr-card-actions${isDokumanlarPage ? ' is-split' : ''}">${actions}</div>
                 </article>
             `;
         }).join('');
@@ -162,12 +188,17 @@
     });
 
     grid?.addEventListener('click', (event) => {
-        const button = event.target.closest('[data-preview-url]');
-        if (!button) {
+        const previewBtn = event.target.closest('[data-preview-url]');
+        if (previewBtn) {
+            previewDocument(previewBtn.getAttribute('data-preview-url') || '');
             return;
         }
 
-        previewDocument(button.getAttribute('data-preview-url') || '');
+        const downloadBtn = event.target.closest('.kr-download-btn');
+        if (downloadBtn && !downloadBtn.getAttribute('href')) {
+            event.preventDefault();
+            window.alert('Dosya yolu bulunamadı.');
+        }
     });
 
     if (document.readyState === 'loading') {
