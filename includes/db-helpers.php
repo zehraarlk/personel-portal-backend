@@ -461,9 +461,36 @@ function loadSizdenGelenlerData(string $assetBase): array
     ];
 }
 
+function resolveEtkinlikDurum(array $row): string
+{
+    $durum = trim((string) ($row['durum'] ?? ''));
+    if (in_array($durum, ['aktif', 'pasif'], true)) {
+        return $durum;
+    }
+
+    $bitis = $row['bitis_tarihi'] ?? $row['tarih'] ?? null;
+    if (empty($bitis)) {
+        return 'aktif';
+    }
+
+    $ts = strtotime((string) $bitis);
+    if ($ts === false) {
+        return 'aktif';
+    }
+
+    return $ts >= strtotime('today') ? 'aktif' : 'pasif';
+}
+
+function etkinlikPublicDurumLabel(string $durum): string
+{
+    return $durum === 'aktif' ? 'Aktif' : 'SÜRESİ DOLDU';
+}
+
 function mapEtkinliklerListForJs(array $rows, string $assetBase): array
 {
     return array_map(static function (array $row) use ($assetBase): array {
+        $status = resolveEtkinlikDurum($row);
+
         return [
             'id'           => (int) ($row['id'] ?? 0),
             'title'        => (string) ($row['baslik'] ?? ''),
@@ -472,6 +499,9 @@ function mapEtkinliklerListForJs(array $rows, string $assetBase): array
             'date'         => formatDetailDate((string) ($row['tarih'] ?? '')),
             'dateSort'     => (string) ($row['tarih'] ?? ''),
             'views'        => (int) ($row['view'] ?? 0),
+            'status'       => $status,
+            'statusLabel'  => etkinlikPublicDurumLabel($status),
+            'statusClass'  => $status === 'aktif' ? 'is-active' : 'is-expired',
             'image'        => imgUrl((string) ($row['resim'] ?? ''), $assetBase),
         ];
     }, $rows);
