@@ -97,5 +97,162 @@ require __DIR__ . '/../includes/breadcrumb.php';
 </script>
 <script src="<?= e($assetBase) ?>assets/js/kaynaklar.js" defer></script>
 <script src="<?= e($assetBase) ?>assets/js/navbar.js" defer></script>
+
+<?php if ($kaynakActiveKey === 'training'): ?>
+<style>
+    .kr-training-actions {
+        --kr-training-hover-color: #f58220;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        width: 100%;
+    }
+
+    .kaynaklar-page .kr-training-actions > a.kr-training-action-button,
+    .kaynaklar-page .kr-training-actions > button.kr-training-action-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 0;
+        min-height: 44px;
+        padding: 10px 8px;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+    }
+
+    .kr-training-action-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: 19px;
+        height: 19px;
+        color: inherit;
+    }
+
+    .kr-training-action-icon svg {
+        width: 19px;
+        height: 19px;
+        fill: currentColor;
+    }
+
+    .kr-training-action-icon i {
+        color: inherit;
+        font-size: 17px;
+        line-height: 1;
+    }
+
+    body .kaynaklar-page .kr-training-actions > a.kr-training-action-button:hover,
+    body .kaynaklar-page .kr-training-actions > button.kr-training-action-button:hover,
+    body .kaynaklar-page .kr-training-actions > a.kr-training-action-button:focus-visible,
+    body .kaynaklar-page .kr-training-actions > button.kr-training-action-button:focus-visible,
+    body .kaynaklar-page .kr-training-actions > .kr-training-action-button.is-hovered {
+        background: var(--kr-training-hover-color) !important;
+        background-color: var(--kr-training-hover-color) !important;
+        background-image: none !important;
+        border-color: var(--kr-training-hover-color) !important;
+        color: #fff !important;
+        box-shadow: 0 6px 14px rgba(245, 130, 32, .24) !important;
+        transform: translateY(-1px);
+    }
+
+    body .kaynaklar-page .kr-training-actions > .kr-training-action-button:hover *,
+    body .kaynaklar-page .kr-training-actions > .kr-training-action-button:focus-visible *,
+    body .kaynaklar-page .kr-training-actions > .kr-training-action-button.is-hovered * {
+        color: #fff !important;
+        fill: currentColor !important;
+    }
+
+    @media (max-width: 420px) {
+        .kr-training-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+<script>
+(function () {
+    'use strict';
+
+    const detailButtonText = 'Detaylı Bilgi İçin Tıklayınız';
+    const actionItems = <?= json_encode([
+        ['label' => 'Eğitim', 'icon' => icon('education')],
+        ['label' => 'Video', 'icon' => icon('video')],
+        ['label' => 'Doküman', 'icon' => icon('document')],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+
+    function replaceTrainingButtons(root) {
+        root.querySelectorAll('a, button').forEach((originalButton) => {
+            if (originalButton.textContent.trim() !== detailButtonText) {
+                return;
+            }
+
+            const actionGroup = document.createElement('div');
+            actionGroup.className = 'kr-training-actions';
+            actionGroup.setAttribute('aria-label', 'Eğitim bağlantıları');
+
+            actionItems.forEach((item) => {
+                // Orijinal öğeyi klonladığımız için href/onclick/target gibi
+                // bağlantı bilgileri üç butonda da korunur.
+                const actionButton = originalButton.cloneNode(true);
+                const iconElement = document.createElement('span');
+                const labelElement = document.createElement('span');
+
+                iconElement.className = 'kr-training-action-icon';
+                iconElement.setAttribute('aria-hidden', 'true');
+                iconElement.innerHTML = item.icon;
+
+                labelElement.className = 'kr-training-action-label';
+                labelElement.textContent = item.label;
+
+                actionButton.replaceChildren(iconElement, labelElement);
+                actionButton.classList.add('kr-training-action-button');
+                actionButton.dataset.trainingAction = item.label;
+
+                // Mevcut tema CSS'i güçlü seçiciler veya gradient kullansa bile
+                // hover renginin kesin uygulanması için sınıf tabanlı destek.
+                actionButton.addEventListener('pointerenter', () => {
+                    actionButton.classList.add('is-hovered');
+                });
+                actionButton.addEventListener('pointerleave', () => {
+                    actionButton.classList.remove('is-hovered');
+                });
+                actionButton.addEventListener('focus', () => {
+                    actionButton.classList.add('is-hovered');
+                });
+                actionButton.addEventListener('blur', () => {
+                    actionButton.classList.remove('is-hovered');
+                });
+                actionButton.setAttribute('aria-label', item.label);
+                actionGroup.appendChild(actionButton);
+            });
+
+            originalButton.replaceWith(actionGroup);
+        });
+    }
+
+    function initializeTrainingActions() {
+        const grid = document.getElementById('documentsGrid');
+        if (!grid) {
+            return;
+        }
+
+        replaceTrainingButtons(grid);
+
+        // Arama sonucunda kartlar yeniden oluşturulursa butonları tekrar uygula.
+        const observer = new MutationObserver(() => replaceTrainingButtons(grid));
+        observer.observe(grid, { childList: true, subtree: true });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeTrainingActions);
+    } else {
+        initializeTrainingActions();
+    }
+})();
+</script>
+<?php endif; ?>
 </body>
 </html>
