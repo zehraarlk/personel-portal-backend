@@ -1,3 +1,14 @@
+/**
+ * Dosya sorumluluğu: Personel ve yönetici AJAX giriş davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
+/**
+ * Personel / yönetici giriş formu (AJAX).
+ * data-login-url ve data-redirect form üzerinden okunur.
+ * Sunucu yanıtı mutlaka JSON olmalıdır; HTML karışırsa anlamlı hata gösterilir.
+ */
 (function () {
     'use strict';
 
@@ -97,19 +108,45 @@
             method: 'POST',
             body: formData,
             credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
         })
-            .then((response) => response.json())
+            .then(async (response) => {
+                const raw = await response.text();
+                let data = null;
+
+                try {
+                    data = JSON.parse(raw);
+                } catch (parseError) {
+                    // Sunucu HTML/uyarı basmış olabilir; ham yanıtı JSON sanma.
+                    throw new Error(
+                        response.ok
+                            ? 'Sunucu beklenmeyen yanıt döndürdü.'
+                            : 'Sunucu hatası (' + response.status + ').'
+                    );
+                }
+
+                if (!response.ok && (!data || !data.message)) {
+                    throw new Error('Sunucu hatası (' + response.status + ').');
+                }
+
+                return data;
+            })
             .then((data) => {
-                if (data.status === 'success') {
+                if (data && data.status === 'success') {
                     window.location.href = redirectUrl;
                     return;
                 }
 
-                showServerError(data.message || 'Giriş başarısız.');
+                showServerError((data && data.message) || 'Giriş başarısız.');
                 setLoading(false);
             })
-            .catch(() => {
-                showServerError('Sunucu bağlantı hatası oluştu.');
+            .catch((err) => {
+                showServerError(
+                    (err && err.message) || 'Sunucu bağlantı hatası oluştu.'
+                );
                 setLoading(false);
             });
     });

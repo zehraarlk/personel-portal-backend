@@ -1,5 +1,11 @@
 <?php
 /**
+ * Dosya sorumluluğu: Yönetici oturumunu kapatma uç noktası.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
  * Yönetim paneli sekmesi/tarayıcı kapanınca oturum kaydını kapatır ve
  * yönetici oturum bilgilerini temizler; tekrar girişte şifre istenir.
  */

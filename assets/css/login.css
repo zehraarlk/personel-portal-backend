@@ -1,4 +1,9 @@
-/* Personel giriş sayfası */
+/*
+ * Personel ve yönetici giriş ekranlarının ortak görünüm katmanı.
+ *
+ * Giriş kutusu, logo, form alanları, doğrulama mesajları, şifre gösterme
+ * butonu ve işlem durumlarının responsive görünümünü tanımlar.
+ */
 
 .login-page {
     --login-input-bg: #f1f2f6;

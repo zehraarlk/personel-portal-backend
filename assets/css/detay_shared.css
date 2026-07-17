@@ -1,4 +1,9 @@
-/* Detay sayfası ortak stiller */
+/*
+ * Haber, duyuru ve etkinlik detay sayfalarının ortak görünüm katmanı.
+ *
+ * Ana içerik, yan panel, meta bilgiler, görsel galeri ve benzer içerik
+ * kartlarının ortak yerleşimini tanımlar.
+ */
 
 .detail-page.content-area {
     padding-block: 1.5rem 2.5rem;

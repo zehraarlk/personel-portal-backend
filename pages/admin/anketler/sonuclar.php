@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Anket sonuçlarını raporlar.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 require_once __DIR__ . "/../includes/auth.php";
 
 $anket_id = (int)($_GET["anket_id"] ?? 0);

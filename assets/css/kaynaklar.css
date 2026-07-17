@@ -1,4 +1,9 @@
-/* Kaynaklar — Protokoller / Dökümanlar / Mevzuatlar / Eğitimler */
+/*
+ * Protokol, doküman, mevzuat ve eğitim kaynaklarının ortak görünümü.
+ *
+ * Arama/filtre kontrolleri, kategori sekmeleri, kaynak kartları, dosya
+ * işlemleri ve sayfalama düzeni bu dosyada tanımlanır.
+ */
 
 .content-area {
     flex: 1;

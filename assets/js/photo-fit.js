@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: İçerik görsellerinin sığdırma ayarı.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function (global) {
     'use strict';
 

@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Etkinlik arama, durum filtresi ve sayfalama davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
   "use strict";
 

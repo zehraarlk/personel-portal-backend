@@ -1,4 +1,9 @@
-/* Vefat Eden Bilgisi */
+/*
+ * Vefat bilgisi sayfasının görünüm katmanı.
+ *
+ * Kayıt kartları, kişi bilgileri, tarih alanları, başsağlığı içeriği,
+ * boş durum ve responsive yerleşim kurallarını yönetir.
+ */
 
 .content-area {
     flex: 1;

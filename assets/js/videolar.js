@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Video listeleme, filtreleme ve oynatma davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
     'use strict';
 

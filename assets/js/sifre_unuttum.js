@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Şifre sıfırlama formunun AJAX davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
     'use strict';
 
@@ -101,22 +107,37 @@
             method: 'POST',
             body: formData,
             credentials: 'same-origin',
+            headers: {
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
         })
-            .then((response) => response.json())
+            .then(async (response) => {
+                const raw = await response.text();
+                try {
+                    return JSON.parse(raw);
+                } catch (parseError) {
+                    throw new Error(
+                        response.ok
+                            ? 'Sunucu beklenmeyen yanıt döndürdü.'
+                            : 'Sunucu hatası (' + response.status + ').'
+                    );
+                }
+            })
             .then((data) => {
                 setLoading(false);
 
-                if (data.status === 'success') {
+                if (data && data.status === 'success') {
                     showSuccess(data.message || 'Şifreniz sıfırlandı.');
                     form.reset();
                     return;
                 }
 
-                showError(data.message || 'İşlem başarısız.');
+                showError((data && data.message) || 'İşlem başarısız.');
             })
-            .catch(() => {
+            .catch((err) => {
                 setLoading(false);
-                showError('Sunucu bağlantı hatası oluştu.');
+                showError((err && err.message) || 'Sunucu bağlantı hatası oluştu.');
             });
     });
 })();

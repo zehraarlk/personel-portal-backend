@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Detay sayfası yan panel bileşeni.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 declare(strict_types=1);
 
 /**

@@ -1,4 +1,9 @@
-/* Doküman önizleme sayfası */
+/*
+ * Kaynak dosyalarının tarayıcı içi önizleme görünümü.
+ *
+ * PDF, görsel, DOCX ve elektronik tablo önizlemelerinin çerçevesini,
+ * işlem butonlarını, yüklenme ve hata durumlarını yönetir.
+ */
 
 .kaynak-onizleme-page.content-area {
     padding-block: 2rem 3rem;

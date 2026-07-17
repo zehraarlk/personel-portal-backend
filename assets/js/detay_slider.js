@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Detay sayfası görsel galerisi davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
     'use strict';
 

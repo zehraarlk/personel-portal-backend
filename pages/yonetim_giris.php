@@ -1,4 +1,16 @@
 <?php
+/**
+ * Dosya sorumluluğu: Yönetici giriş sayfası.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * Yönetici giriş ekranı.
+ *
+ * GET  → HTML form
+ * POST → JSON { status, message } (login.js)
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/baglan.php';
@@ -17,52 +29,63 @@ if (
 ) {
     header('Content-Type: application/json; charset=utf-8');
 
-    $kullaniciAdi = trim((string) $_POST['kullanici_adi']);
-    $sifre = (string) $_POST['sifre'];
+    try {
+        $kullaniciAdi = trim((string) $_POST['kullanici_adi']);
+        $sifre = (string) $_POST['sifre'];
 
-    if ($kullaniciAdi === '' || trim($sifre) === '') {
-        echo json_encode(['status' => 'error', 'message' => 'Kullanıcı adı ve şifre zorunludur.'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-
-    $yonetici = dbFetchOne(
-        $db,
-        'SELECT * FROM yoneticiler WHERE LOWER(kullanici_adi) = LOWER(?) AND aktif = 1 LIMIT 1',
-        [$kullaniciAdi]
-    );
-
-    if ($yonetici && adminVerifyPassword((string) $yonetici['sifre'], $sifre)) {
-        if (!empty($_SESSION['oturum_id'])) {
-            oturumClose($db, (int) $_SESSION['oturum_id'], 'otomatik');
+        if ($kullaniciAdi === '' || trim($sifre) === '') {
+            echo json_encode(['status' => 'error', 'message' => 'Kullanıcı adı ve şifre zorunludur.'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
-        unset(
-            $_SESSION['personel_id'],
-            $_SESSION['oturum_id'],
-            $_SESSION['ad'],
-            $_SESSION['soyad'],
-            $_SESSION['email'],
-            $_SESSION['sicil_no']
+        $yonetici = dbFetchOne(
+            $db,
+            'SELECT * FROM yoneticiler WHERE LOWER(kullanici_adi) = LOWER(?) AND aktif = 1 LIMIT 1',
+            [$kullaniciAdi]
         );
 
-        $_SESSION['yonetici_id'] = (int) $yonetici['id'];
-        $_SESSION['yonetici_kullanici'] = (string) $yonetici['kullanici_adi'];
-        $_SESSION['yonetici_ad'] = (string) $yonetici['ad'];
-        $_SESSION['yonetici_soyad'] = (string) $yonetici['soyad'];
-        $_SESSION['yonetici_yetki'] = (string) $yonetici['yetki'];
-        $_SESSION['yonetici_oturum_id'] = yoneticiOturumStart($db, (int) $yonetici['id']);
+        if ($yonetici && adminVerifyPassword((string) $yonetici['sifre'], $sifre)) {
+            // Personel oturumu açıksa kapat.
+            if (!empty($_SESSION['oturum_id'])) {
+                oturumClose($db, (int) $_SESSION['oturum_id'], 'otomatik');
+            }
 
-        if (strlen((string) $yonetici['sifre']) === 32 && ctype_xdigit((string) $yonetici['sifre'])) {
-            $db->prepare('UPDATE yoneticiler SET sifre = ? WHERE id = ?')
-                ->execute([adminHashPassword($sifre), (int) $yonetici['id']]);
+            unset(
+                $_SESSION['personel_id'],
+                $_SESSION['oturum_id'],
+                $_SESSION['ad'],
+                $_SESSION['soyad'],
+                $_SESSION['email'],
+                $_SESSION['sicil_no']
+            );
+
+            $_SESSION['yonetici_id'] = (int) $yonetici['id'];
+            $_SESSION['yonetici_kullanici'] = (string) $yonetici['kullanici_adi'];
+            $_SESSION['yonetici_ad'] = (string) $yonetici['ad'];
+            $_SESSION['yonetici_soyad'] = (string) $yonetici['soyad'];
+            $_SESSION['yonetici_yetki'] = (string) $yonetici['yetki'];
+            $_SESSION['yonetici_oturum_id'] = yoneticiOturumStart($db, (int) $yonetici['id']);
+
+            // Eski MD5 şifreyi bcrypt’e yükselt.
+            if (strlen((string) $yonetici['sifre']) === 32 && ctype_xdigit((string) $yonetici['sifre'])) {
+                $db->prepare('UPDATE yoneticiler SET sifre = ? WHERE id = ?')
+                    ->execute([adminHashPassword($sifre), (int) $yonetici['id']]);
+            }
+
+            echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
 
-        echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['status' => 'error', 'message' => 'Kullanıcı adı veya şifre hatalı!'], JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Throwable $e) {
+        error_log('Yonetici giris hatasi: ' . $e->getMessage());
+        echo json_encode(
+            ['status' => 'error', 'message' => 'Giriş işlemi sırasında bir hata oluştu.'],
+            JSON_UNESCAPED_UNICODE
+        );
         exit;
     }
-
-    echo json_encode(['status' => 'error', 'message' => 'Kullanıcı adı veya şifre hatalı!'], JSON_UNESCAPED_UNICODE);
-    exit;
 }
 
 $assetBase = '../';

@@ -1,4 +1,9 @@
-/* Sizden Gelenler */
+/*
+ * Personelden gelen içeriklerin listeleme sayfası.
+ *
+ * Arama/filtre alanı, içerik kartları, görseller, metin özetleri ve
+ * sayfalama bileşenlerinin responsive görünümünü tanımlar.
+ */
 
 .content-area {
     flex: 1;

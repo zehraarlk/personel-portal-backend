@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Admin erişim kontrolü ve kullanıcı bağlamı.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }

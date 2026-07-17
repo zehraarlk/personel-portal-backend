@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Yönetim paneli HTML başlığı ve üst bar bileşeni.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 $pageTitle = $pageTitle ?? "Yönetim Paneli";
 $flash = adminFlashGet();
 ?>

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Görünüm ve içerik hazırlama yardımcıları.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 declare(strict_types=1);
 
 function dbEnsureIcerikIzlemeleri(PDO $pdo): void

@@ -1,4 +1,13 @@
 <?php
+/**
+ * Dosya sorumluluğu:  yönetim işlemlerini yürütür.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * Yönetici oturumunu kapatır ve yönetim giriş sayfasına yönlendirir.
+ */
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }

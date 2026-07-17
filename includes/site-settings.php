@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Site görünüm ayarları.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 declare(strict_types=1);
 
 function siteSettingsPath(): string

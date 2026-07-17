@@ -1,4 +1,9 @@
-/* Anketler — portal liste sayfası */
+/*
+ * Anket listeleme ve ankete katılım sayfalarının görünüm katmanı.
+ *
+ * Arama/filtre alanı, anket kartları, durum rozetleri, ilerleme bilgisi,
+ * soru kartları ve cevap kontrolleri bu dosyada tanımlanır.
+ */
 
 .content-area {
     flex: 1;

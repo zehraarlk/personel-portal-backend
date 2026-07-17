@@ -1,3 +1,10 @@
+/*
+ * Etkinlik listeleme sayfasının görünüm katmanı.
+ *
+ * Arama/filtre alanı, aktif-pasif sekmeleri, etkinlik kartları, durum
+ * rozetleri ve sayfalama bileşenlerini yönetir.
+ */
+
 .content-area {
   flex: 1;
   padding-block: 2rem 3rem;

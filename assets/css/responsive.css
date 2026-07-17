@@ -1,4 +1,9 @@
-/* Site geneli responsive düzenlemeler */
+/*
+ * Site genelindeki responsive düzeltmeler.
+ *
+ * Ortak içerik, medya, form ve mobil taşma davranışlarını düzenler.
+ * Sayfaya özel responsive kurallar ilgili sayfanın CSS dosyasında kalır.
+ */
 
 html {
     overflow-x: clip;

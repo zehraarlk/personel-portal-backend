@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Admin anket soru oluşturucusunun istemci tarafı davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
   'use strict';
 

@@ -1,4 +1,9 @@
-/* Yardımcı Linkler */
+/*
+ * Kurum içi ve dışı yardımcı bağlantıların listeleme görünümü.
+ *
+ * Arama/kategori kontrolleri, bağlantı kartları, logo alanları, hedef
+ * butonları ve boş durum mesajlarını yönetir.
+ */
 
 .content-area {
     flex: 1;

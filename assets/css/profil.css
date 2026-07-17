@@ -1,4 +1,9 @@
-/* Profil sayfaları — e-posta, şifre, oturum */
+/*
+ * Kullanıcı profil işlemlerinin ortak görünüm katmanı.
+ *
+ * E-posta değiştirme, şifre değiştirme ve oturum bilgisi sayfalarındaki
+ * form, bilgi kartı, uyarı ve oturum listesi bileşenlerini yönetir.
+ */
 
 .profil-page.content-area {
     padding-block: 2rem 3rem;

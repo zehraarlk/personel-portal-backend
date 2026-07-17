@@ -1,7 +1,18 @@
 <?php
-if (!headers_sent()) {
-  header("Content-Type: text/html; charset=utf-8");
-}
+/**
+ * Dosya sorumluluğu: Veritabanı ve yönetim yardımcıları.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * baglan.php — Yönetim / giriş sayfalarının ortak PDO bağlantısı ve DB yardımcıları.
+ *
+ * Bu dosya include edilir; çıktı üretmemelidir. Aksi halde login.php gibi
+ * JSON dönen uçlar bozulur ve tarayıcıda "Sunucu bağlantı hatası" görünür.
+ */
+declare(strict_types=1);
+
 mb_internal_encoding("UTF-8");
 
 require_once __DIR__ . "/../config/config.php";
@@ -10,7 +21,31 @@ require_once __DIR__ . "/../config/database.php";
 try {
   $db = getPDO();
 } catch (PDOException $e) {
-  die("Veritabanı bağlantı hatası: " . $e->getMessage());
+  // AJAX/JSON isteklerinde HTML die() yerine JSON hata dön.
+  if (
+    ($_SERVER["REQUEST_METHOD"] ?? "") === "POST" &&
+    (isset($_POST["sicil_no"]) ||
+      isset($_POST["kullanici_adi"]) ||
+      isset($_POST["email"]))
+  ) {
+    if (!headers_sent()) {
+      header("Content-Type: application/json; charset=utf-8");
+      http_response_code(500);
+    }
+    echo json_encode(
+      [
+        "status" => "error",
+        "message" => "Veritabanı bağlantısı kurulamadı. Lütfen daha sonra tekrar deneyin.",
+      ],
+      JSON_UNESCAPED_UNICODE,
+    );
+    exit();
+  }
+
+  if (!headers_sent()) {
+    header("Content-Type: text/html; charset=utf-8");
+  }
+  die("Veritabanı bağlantı hatası: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, "UTF-8"));
 }
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -4387,4 +4422,6 @@ function importPersonelDb(): void
 
 // Anket katılım tablosu (tüm fonksiyon tanımlarından sonra)
 dbEnsureAnketKatilimlari($db);
-?>
+
+// Bu dosya yalnızca include içindir: kapanış etiketi ve HTML çıktısı olmamalı.
+// Aksi halde login JSON yanıtları bozulur.

@@ -1,8 +1,25 @@
 <?php
+/**
+ * Dosya sorumluluğu: PDO veritabanı bağlantısı.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * PDO veritabanı bağlantısı.
+ *
+ * getPDO() tek bir bağlantı örneği (singleton) döner; tekrar çağrılınca
+ * yeni bağlantı açılmaz. Tüm sorgular prepared statement ile yapılmalıdır.
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/config.php';
 
+/**
+ * Paylaşılan PDO örneğini döndürür.
+ *
+ * @throws PDOException Bağlantı kurulamazsa
+ */
 function getPDO(): PDO
 {
     static $pdo = null;

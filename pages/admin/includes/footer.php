@@ -1,3 +1,8 @@
+        <!--
+          Dosya sorumluluğu: Yönetim panelinin içerik alanını kapatır,
+          ortak JavaScript dosyalarını yükler ve mobil sidebar ile oturum
+          yaşam döngüsü davranışlarını başlatır.
+        -->
         </main>
       </div>
     </div>

@@ -1,4 +1,9 @@
-/* Footer — Sol: Logo | Orta: İletişim | Sağ: Sosyal Medya */
+/*
+ * Site genelinde kullanılan footer görünümü.
+ *
+ * Belediye logosu, iletişim bilgileri, sosyal medya bağlantıları ve
+ * alt telif satırının masaüstü/mobil yerleşimini tanımlar.
+ */
 
 .site-footer {
     background: var(--primary);

@@ -1,4 +1,9 @@
-/* Navbar — Sol: Logo | Orta: Menü | Sağ: Profil */
+/*
+ * Kamu portalının ortak navigasyon alanı.
+ *
+ * Masaüstünde logo, ana menü ve kullanıcı profilini; mobilde hamburger
+ * butonu, yan menü, alt menüler ve menü arka planını yönetir.
+ */
 
 .navbar {
     position: sticky;

@@ -1,4 +1,10 @@
 /**
+ * Dosya sorumluluğu: Admin formlarındaki görsel önizleme davranışları.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
+/**
  * Admin görsel alanları: mevcut resim + yeni dosya seçince canlı önizleme.
  * Markup: .admin-img-field > img[data-preview-img] + input[data-preview-input|data-preview-url]
  */

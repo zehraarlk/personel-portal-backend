@@ -1,4 +1,9 @@
-/* Duyurular — Etkinlikler / Sizden Gelenler liste kalıbı + detay modal */
+/*
+ * Duyuru listeleme sayfasının görünüm katmanı.
+ *
+ * Arama ve filtreler, duyuru kartları, sayfalama, durum alanları ve detay
+ * modalının masaüstü/mobil düzenini tanımlar.
+ */
 
 .content-area {
     flex: 1;

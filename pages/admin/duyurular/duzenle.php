@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Duyuru kaydını düzenleme formunu ve güncelleme işlemini yürütür.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 require_once __DIR__ . "/../includes/auth.php";
 
 $table = adminDuyuruTable($db);

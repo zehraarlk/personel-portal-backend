@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Doküman kaynakları sayfası.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 declare(strict_types=1);
 
 $pageTitle = 'Dökümanlar';

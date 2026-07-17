@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Personelden gelen içerik kaydını güvenli biçimde siler.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 require_once __DIR__ . "/../includes/auth.php";
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST" || !adminVerifyCsrf($_POST["csrf"] ?? null)) {

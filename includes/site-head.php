@@ -1,4 +1,18 @@
 <?php
+/**
+ * Dosya sorumluluğu: Ortak HTML head ve body başlangıcı.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * Ortak HTML <head> ve <body> açılışı.
+ *
+ * Beklenen değişkenler (init / sayfa tarafından set edilir):
+ * - $assetBase, $pageTitle, $pageCss (opsiyonel)
+ * - $showBreadcrumb, $useDetailLayout, $documentTitle (opsiyonel)
+ * - $portalSessionGuard, $portalOturumKapatUrl (personel oturum koruması)
+ */
 declare(strict_types=1);
 
 $pageTitle = $pageTitle ?? 'Ana Sayfa';

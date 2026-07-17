@@ -1,4 +1,9 @@
-/* Videolar Sayfası */
+/*
+ * Video listeleme ve vitrin bölümünün görünüm katmanı.
+ *
+ * Öne çıkan video, video kartları, kategori/arama kontrolleri, süre
+ * bilgileri ve sayfalama bileşenlerini yönetir.
+ */
 
 .content-area {
     flex: 1;

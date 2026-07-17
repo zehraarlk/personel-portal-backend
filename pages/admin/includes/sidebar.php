@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Yönetim paneli yan menü bileşeni.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 $currentPage = $currentPage ?? "";
 $menuItems = [
   [

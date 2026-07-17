@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Anket favori işlemi.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');

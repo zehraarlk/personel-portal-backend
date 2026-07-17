@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Yardımcı bağlantı kayıtlarını listeler ve yönetim işlemlerini sunar.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 require_once __DIR__ . "/../includes/auth.php";
 
 $currentPage = "linkler";

@@ -1,4 +1,18 @@
 <?php
+/**
+ * Dosya sorumluluğu: Kimlik doğrulama ve oturum yardımcıları.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * Kimlik doğrulama ve oturum yardımcıları (kamu portal).
+ *
+ * CSRF, personel/yönetici oturum açma-kapama, login JSON yanıtları.
+ * Not: Admin paneli (baglan.php) kendi oturumClose / yoneticiOturumClose
+ * imzalarını tanımlar; çakışmayı önlemek için aşağıdaki tanımlar
+ * function_exists ile korunur.
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/db-helpers.php';
@@ -55,12 +69,36 @@ function clearYoneticiSession(): void
 function clearStalePortalSession(?PDO $pdo = null): void
 {
     if ($pdo instanceof PDO) {
+        // baglan.php: oturumClose($db, $oturumId, $tip)
+        // auth-helpers: oturumClose($pdo, $oturumId, $personelId, $tip)
         if (!empty($_SESSION['oturum_id']) && !empty($_SESSION['personel_id'])) {
-            oturumClose($pdo, (int) $_SESSION['oturum_id'], (int) $_SESSION['personel_id'], 'otomatik');
+            try {
+                $oturumId = (int) $_SESSION['oturum_id'];
+                $personelId = (int) $_SESSION['personel_id'];
+                $ref = new ReflectionFunction('oturumClose');
+                if ($ref->getNumberOfParameters() >= 4) {
+                    oturumClose($pdo, $oturumId, $personelId, 'otomatik');
+                } else {
+                    oturumClose($pdo, $oturumId, 'otomatik');
+                }
+            } catch (Throwable) {
+                // Oturum kapatma başarısız olsa da session anahtarları temizlenir.
+            }
         }
 
         if (!empty($_SESSION['yonetici_oturum_id']) && !empty($_SESSION['yonetici_id'])) {
-            yoneticiOturumClose($pdo, (int) $_SESSION['yonetici_oturum_id'], (int) $_SESSION['yonetici_id'], 'otomatik');
+            try {
+                $oturumId = (int) $_SESSION['yonetici_oturum_id'];
+                $yoneticiId = (int) $_SESSION['yonetici_id'];
+                $ref = new ReflectionFunction('yoneticiOturumClose');
+                if ($ref->getNumberOfParameters() >= 4) {
+                    yoneticiOturumClose($pdo, $oturumId, $yoneticiId, 'otomatik');
+                } else {
+                    yoneticiOturumClose($pdo, $oturumId, 'otomatik');
+                }
+            } catch (Throwable) {
+                // devam
+            }
         }
     }
 
@@ -258,6 +296,7 @@ function loginJsonResponse(array $payload, int $status = 200): never
     exit;
 }
 
+if (!function_exists('oturumStart')) {
 function oturumStart(PDO $pdo, int $personelId): int
 {
     $closeStmt = $pdo->prepare(
@@ -277,6 +316,80 @@ function oturumStart(PDO $pdo, int $personelId): int
     $insertStmt->execute([$personelId, $ip, $userAgent]);
 
     return (int) $pdo->lastInsertId();
+}
+}
+
+if (!function_exists('oturumClose')) {
+function oturumClose(PDO $pdo, int $oturumId, int $personelId, string $kapanisTipi = 'cikis'): void
+{
+    $stmt = $pdo->prepare(
+        'UPDATE oturum_kayitlari
+         SET cikis_zamani = NOW(), kapanis_tipi = ?
+         WHERE id = ? AND personel_id = ? AND cikis_zamani IS NULL'
+    );
+    $stmt->execute([$kapanisTipi, $oturumId, $personelId]);
+}
+}
+
+if (!function_exists('yoneticiOturumStart')) {
+function yoneticiOturumStart(PDO $pdo, int $yoneticiId): int
+{
+    $closeStmt = $pdo->prepare(
+        'UPDATE yonetici_oturum_kayitlari
+         SET cikis_zamani = NOW(), kapanis_tipi = ?
+         WHERE yonetici_id = ? AND cikis_zamani IS NULL'
+    );
+    $closeStmt->execute(['eski', $yoneticiId]);
+
+    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+    $userAgent = substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255);
+
+    $insertStmt = $pdo->prepare(
+        'INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani, ip_adresi, user_agent, son_aktivite)
+         VALUES (?, NOW(), ?, ?, NOW())'
+    );
+    $insertStmt->execute([$yoneticiId, $ip, $userAgent]);
+
+    return (int) $pdo->lastInsertId();
+}
+}
+
+if (!function_exists('yoneticiOturumClose')) {
+function yoneticiOturumClose(PDO $pdo, int $oturumId, int $yoneticiId, string $kapanisTipi = 'cikis'): void
+{
+    $stmt = $pdo->prepare(
+        'UPDATE yonetici_oturum_kayitlari
+         SET cikis_zamani = NOW(), kapanis_tipi = ?
+         WHERE id = ? AND yonetici_id = ? AND cikis_zamani IS NULL'
+    );
+    $stmt->execute([$kapanisTipi, $oturumId, $yoneticiId]);
+}
+}
+
+if (!function_exists('adminVerifyPassword')) {
+function adminVerifyPassword(string $storedHash, string $plainPassword): bool
+{
+    if ($storedHash === '') {
+        return false;
+    }
+
+    if (str_starts_with($storedHash, '$2y$') || str_starts_with($storedHash, '$2a$')) {
+        return password_verify($plainPassword, $storedHash);
+    }
+
+    if (strlen($storedHash) === 32 && ctype_xdigit($storedHash)) {
+        return hash_equals($storedHash, md5($plainPassword));
+    }
+
+    return hash_equals($storedHash, $plainPassword);
+}
+}
+
+if (!function_exists('adminHashPassword')) {
+function adminHashPassword(string $plainPassword): string
+{
+    return password_hash($plainPassword, PASSWORD_DEFAULT);
+}
 }
 
 function loginPersonel(PDO $pdo, string $sicilNo, string $plainPassword): ?array
@@ -360,11 +473,33 @@ function logoutCurrentUser(PDO $pdo): void
     }
 
     if (!empty($_SESSION['oturum_id']) && !empty($_SESSION['personel_id'])) {
-        oturumClose($pdo, (int) $_SESSION['oturum_id'], (int) $_SESSION['personel_id'], 'cikis');
+        try {
+            $oturumId = (int) $_SESSION['oturum_id'];
+            $personelId = (int) $_SESSION['personel_id'];
+            $ref = new ReflectionFunction('oturumClose');
+            if ($ref->getNumberOfParameters() >= 4) {
+                oturumClose($pdo, $oturumId, $personelId, 'cikis');
+            } else {
+                oturumClose($pdo, $oturumId, 'manuel');
+            }
+        } catch (Throwable) {
+            // devam
+        }
     }
 
     if (!empty($_SESSION['yonetici_oturum_id']) && !empty($_SESSION['yonetici_id'])) {
-        yoneticiOturumClose($pdo, (int) $_SESSION['yonetici_oturum_id'], (int) $_SESSION['yonetici_id'], 'cikis');
+        try {
+            $oturumId = (int) $_SESSION['yonetici_oturum_id'];
+            $yoneticiId = (int) $_SESSION['yonetici_id'];
+            $ref = new ReflectionFunction('yoneticiOturumClose');
+            if ($ref->getNumberOfParameters() >= 4) {
+                yoneticiOturumClose($pdo, $oturumId, $yoneticiId, 'cikis');
+            } else {
+                yoneticiOturumClose($pdo, $oturumId, 'manuel');
+            }
+        } catch (Throwable) {
+            // devam
+        }
     }
 
     $_SESSION = [];
@@ -375,47 +510,6 @@ function logoutCurrentUser(PDO $pdo): void
     }
 
     session_destroy();
-}
-
-function oturumClose(PDO $pdo, int $oturumId, int $personelId, string $kapanisTipi = 'cikis'): void
-{
-    $stmt = $pdo->prepare(
-        'UPDATE oturum_kayitlari
-         SET cikis_zamani = NOW(), kapanis_tipi = ?
-         WHERE id = ? AND personel_id = ? AND cikis_zamani IS NULL'
-    );
-    $stmt->execute([$kapanisTipi, $oturumId, $personelId]);
-}
-
-function yoneticiOturumStart(PDO $pdo, int $yoneticiId): int
-{
-    $closeStmt = $pdo->prepare(
-        'UPDATE yonetici_oturum_kayitlari
-         SET cikis_zamani = NOW(), kapanis_tipi = ?
-         WHERE yonetici_id = ? AND cikis_zamani IS NULL'
-    );
-    $closeStmt->execute(['eski', $yoneticiId]);
-
-    $ip = $_SERVER['REMOTE_ADDR'] ?? null;
-    $userAgent = substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255);
-
-    $insertStmt = $pdo->prepare(
-        'INSERT INTO yonetici_oturum_kayitlari (yonetici_id, giris_zamani, ip_adresi, user_agent, son_aktivite)
-         VALUES (?, NOW(), ?, ?, NOW())'
-    );
-    $insertStmt->execute([$yoneticiId, $ip, $userAgent]);
-
-    return (int) $pdo->lastInsertId();
-}
-
-function yoneticiOturumClose(PDO $pdo, int $oturumId, int $yoneticiId, string $kapanisTipi = 'cikis'): void
-{
-    $stmt = $pdo->prepare(
-        'UPDATE yonetici_oturum_kayitlari
-         SET cikis_zamani = NOW(), kapanis_tipi = ?
-         WHERE id = ? AND yonetici_id = ? AND cikis_zamani IS NULL'
-    );
-    $stmt->execute([$kapanisTipi, $oturumId, $yoneticiId]);
 }
 
 function isYoneticiLoggedIn(): bool
@@ -429,28 +523,6 @@ function isYoneticiLoggedIn(): bool
     } catch (Throwable) {
         return false;
     }
-}
-
-function adminVerifyPassword(string $storedHash, string $plainPassword): bool
-{
-    if ($storedHash === '') {
-        return false;
-    }
-
-    if (str_starts_with($storedHash, '$2y$') || str_starts_with($storedHash, '$2a$')) {
-        return password_verify($plainPassword, $storedHash);
-    }
-
-    if (strlen($storedHash) === 32 && ctype_xdigit($storedHash)) {
-        return hash_equals($storedHash, md5($plainPassword));
-    }
-
-    return hash_equals($storedHash, $plainPassword);
-}
-
-function adminHashPassword(string $plainPassword): string
-{
-    return password_hash($plainPassword, PASSWORD_DEFAULT);
 }
 
 function loginYonetici(PDO $pdo, string $kullaniciAdi, string $plainPassword): ?array

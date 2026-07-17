@@ -1,4 +1,9 @@
-/* Doğum Günü Bilgisi */
+/*
+ * Doğum günü bilgi sayfasının görünüm katmanı.
+ *
+ * Sayfa başlığı, personel kartları, fotoğraflar, tarih bilgisi ve boş
+ * durum mesajının responsive yerleşimini yönetir.
+ */
 
 .content-area {
     flex: 1;

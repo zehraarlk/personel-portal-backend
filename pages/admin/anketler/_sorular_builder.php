@@ -1,5 +1,11 @@
 <?php
 /**
+ * Dosya sorumluluğu: Anket soru formu bileşenini oluşturur.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
  * Anket soru builder parçası.
  * Beklenen: $sorular (array), $sorularKilitli (bool)
  */

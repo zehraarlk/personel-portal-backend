@@ -1,3 +1,10 @@
+/*
+ * Yönetim panelinin ortak görünüm katmanı.
+ *
+ * Sidebar, üst bar, istatistik kartları, tablolar, formlar, butonlar ve
+ * mobil yönetim düzeni bu dosyada tanımlanır.
+ */
+
 :root {
   --admin-primary: #6368a3;
   --admin-primary-dark: #363958;

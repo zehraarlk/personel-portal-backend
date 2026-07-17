@@ -1,4 +1,9 @@
-/* Breadcrumb */
+/*
+ * İç sayfalarda konum bilgisini gösteren breadcrumb bileşeni.
+ *
+ * Ana sayfa bağlantısı, ara adımlar, aktif sayfa ve ayırıcı işaretlerin
+ * görünümünü yönetir.
+ */
 
 .breadcrumb-section {
     background: var(--bg-body);

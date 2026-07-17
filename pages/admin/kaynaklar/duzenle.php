@@ -1,4 +1,10 @@
 <?php
+/**
+ * Dosya sorumluluğu: Kaynak kaydını düzenleme formunu ve güncelleme işlemini yürütür.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
 require_once __DIR__ . "/../includes/auth.php";
 
 $id = (int) ($_GET["id"] ?? 0);

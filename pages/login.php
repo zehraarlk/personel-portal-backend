@@ -1,9 +1,24 @@
 <?php
+/**
+ * Dosya sorumluluğu: Personel giriş sayfası.
+ *
+ * Girdi doğrulama, yetkilendirme ve çıktı kaçışları bu dosyanın
+ * mevcut güvenlik akışına uygun biçimde korunmalıdır.
+ */
+/**
+ * Personel giriş ekranı.
+ *
+ * GET  → HTML form (sicil no + şifre)
+ * POST → JSON { status, message }  (login.js AJAX ile çağırır)
+ *
+ * Başarılı girişte personel oturumu açılır; varsa yönetici oturumu kapatılır.
+ */
 declare(strict_types=1);
 
 require_once __DIR__ . '/baglan.php';
 require_once __DIR__ . '/../includes/icons.php';
 
+// Zaten geçerli personel oturumu varsa ana sayfaya yönlendir.
 if (!empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id'])) {
     $aktifOturum = dbFetchOne(
         $db,
@@ -18,6 +33,7 @@ if (!empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id'])) {
         exit;
     }
 
+    // Oturum kaydı kapanmışsa PHP session anahtarlarını temizle.
     unset(
         $_SESSION['personel_id'],
         $_SESSION['oturum_id'],
@@ -28,54 +44,64 @@ if (!empty($_SESSION['personel_id']) && !empty($_SESSION['oturum_id'])) {
     );
 }
 
+// --- AJAX giriş (JSON) ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['sicil_no'], $_POST['sifre'])) {
     header('Content-Type: application/json; charset=utf-8');
 
-    $sicilNo = trim((string) $_POST['sicil_no']);
-    $sifreHash = md5(trim((string) $_POST['sifre']));
+    try {
+        $sicilNo = trim((string) $_POST['sicil_no']);
+        $sifreHash = md5(trim((string) $_POST['sifre']));
 
-    if ($sicilNo === '' || $sifreHash === md5('')) {
-        echo json_encode(['status' => 'error', 'message' => 'Sicil numarası ve şifre zorunludur.'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-
-    $personel = dbFetchOne(
-        $db,
-        'SELECT * FROM personeller WHERE sicil_no = ? AND sifre = ? LIMIT 1',
-        [$sicilNo, $sifreHash]
-    );
-
-    if (!$personel) {
-        echo json_encode(['status' => 'error', 'message' => 'Sicil numarası veya şifre hatalı!'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-
-    // Yönetici oturumu ile karışmasın: personel girişi yonetici anahtarlarını temizler
-    if (!empty($_SESSION['yonetici_oturum_id'])) {
-        try {
-            yoneticiOturumClose($db, (int) $_SESSION['yonetici_oturum_id'], 'otomatik');
-        } catch (Throwable) {
-            // devam
+        if ($sicilNo === '' || $sifreHash === md5('')) {
+            echo json_encode(['status' => 'error', 'message' => 'Sicil numarası ve şifre zorunludur.'], JSON_UNESCAPED_UNICODE);
+            exit;
         }
+
+        $personel = dbFetchOne(
+            $db,
+            'SELECT * FROM personeller WHERE sicil_no = ? AND sifre = ? LIMIT 1',
+            [$sicilNo, $sifreHash]
+        );
+
+        if (!$personel) {
+            echo json_encode(['status' => 'error', 'message' => 'Sicil numarası veya şifre hatalı!'], JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        // Aynı tarayıcıda yönetici oturumu varsa kapat (karışmayı önle).
+        if (!empty($_SESSION['yonetici_oturum_id'])) {
+            try {
+                yoneticiOturumClose($db, (int) $_SESSION['yonetici_oturum_id'], 'otomatik');
+            } catch (Throwable) {
+                // Oturum kapatma başarısız olsa da personel girişine devam et.
+            }
+        }
+        unset(
+            $_SESSION['yonetici_id'],
+            $_SESSION['yonetici_oturum_id'],
+            $_SESSION['yonetici_kullanici'],
+            $_SESSION['yonetici_ad'],
+            $_SESSION['yonetici_soyad'],
+            $_SESSION['yonetici_yetki']
+        );
+
+        $_SESSION['personel_id'] = (int) $personel['id'];
+        $_SESSION['sicil_no'] = (string) $personel['sicil_no'];
+        $_SESSION['email'] = (string) $personel['email'];
+        $_SESSION['ad'] = (string) $personel['ad'];
+        $_SESSION['soyad'] = (string) $personel['soyad'];
+        $_SESSION['oturum_id'] = oturumStart($db, (int) $personel['id']);
+
+        echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
+        exit;
+    } catch (Throwable $e) {
+        error_log('Personel giris hatasi: ' . $e->getMessage());
+        echo json_encode(
+            ['status' => 'error', 'message' => 'Giriş işlemi sırasında bir hata oluştu.'],
+            JSON_UNESCAPED_UNICODE
+        );
+        exit;
     }
-    unset(
-        $_SESSION['yonetici_id'],
-        $_SESSION['yonetici_oturum_id'],
-        $_SESSION['yonetici_kullanici'],
-        $_SESSION['yonetici_ad'],
-        $_SESSION['yonetici_soyad'],
-        $_SESSION['yonetici_yetki']
-    );
-
-    $_SESSION['personel_id'] = (int) $personel['id'];
-    $_SESSION['sicil_no'] = (string) $personel['sicil_no'];
-    $_SESSION['email'] = (string) $personel['email'];
-    $_SESSION['ad'] = (string) $personel['ad'];
-    $_SESSION['soyad'] = (string) $personel['soyad'];
-    $_SESSION['oturum_id'] = oturumStart($db, (int) $personel['id']);
-
-    echo json_encode(['status' => 'success'], JSON_UNESCAPED_UNICODE);
-    exit;
 }
 
 $assetBase = '../';

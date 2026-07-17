@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Anket filtreleme, listeleme ve favori işlemleri.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
     'use strict';
 

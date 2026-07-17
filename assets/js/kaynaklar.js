@@ -1,3 +1,9 @@
+/**
+ * Dosya sorumluluğu: Kaynak arama, kategori filtresi ve dosya işlemleri.
+ *
+ * Bu dosya yalnızca istemci tarafı etkileşimlerini yönetir; kalıcı
+ * veri doğrulaması ve yetkilendirme sunucu tarafında yapılmalıdır.
+ */
 (function () {
     'use strict';
 

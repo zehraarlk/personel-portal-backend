@@ -1,17 +1,31 @@
-/* Ana Sayfa */
+/*
+ * Ana sayfa görünüm katmanı.
+ *
+ * Bu dosya pages/ana_sayfa.php sayfasının görünümünü yönetir.
+ * Haber galerisi, duyurular, doğum günleri ve kurum içi
+ * otomasyon kartlarına ait yerleşim kurallarını içerir.
+ *
+ * Seçiciler .home-page ile sınırlandırılarak diğer sayfaların
+ * stillerinin etkilenmesi önlenir.
+ */
 
+/* --- Sayfa genel değişkenleri (yalnızca ana sayfa kapsamında) --- */
 .home-page {
+    /* Bölümler arası dikey boşluk (ekran genişliğine göre ölçeklenir) */
     --home-gap: clamp(1rem, 2.5vw, 1.5rem);
+    /* Haber galerisi küçük resim ölçüleri */
     --gallery-thumb-w: clamp(4.75rem, 14vw, 7.5rem);
     --gallery-thumb-h: clamp(3rem, 9vw, 4.5rem);
     --gallery-gap: 0.65rem;
 }
 
+/* Ana içerik alanı: üst/alt iç boşluk */
 .home-page.content-area {
     flex: 1;
     padding-block: clamp(1.15rem, 3vw, 2rem) clamp(1.75rem, 4vw, 3rem);
 }
 
+/* Üst satır: Haberler + Duyurular (mobilde tek sütun) */
 .home-page .home-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -19,15 +33,17 @@
     align-items: stretch;
 }
 
+/* Ortak kart kutusu (beyaz zemin, gölge, yuvarlatılmış köşe) */
 .home-page .home-card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border);
     padding: clamp(1rem, 2.5vw, 1.25rem);
-    min-width: 0;
+    min-width: 0; /* Grid taşmasını engeller */
 }
 
+/* Kart başlığı: ikon + başlık yan yana */
 .home-page .home-card-header {
     display: flex;
     align-items: center;
@@ -59,7 +75,9 @@
     line-height: 1.3;
 }
 
-/* Haberler */
+/* ============================================================
+ * Haberler — büyük görsel + başlık overlay
+ * ============================================================ */
 .home-page .ana-haber-container {
     position: relative;
     border-radius: var(--radius-md);
@@ -72,12 +90,13 @@
     width: 100%;
     aspect-ratio: 16 / 9;
     max-height: min(26.25rem, 52vh);
-    object-fit: var(--content-photo-fit);
+    object-fit: var(--content-photo-fit); /* Admin “foto sığdırma” ayarı */
     object-position: center;
     display: block;
     background: var(--content-photo-bg);
 }
 
+/* Başlık bandı: görselin altından yukarı gradient */
 .home-page .ana-haber-baslik-container {
     position: absolute;
     inset-inline: 0;
@@ -95,10 +114,13 @@
 }
 
 .home-page .ana-haber-baslik-link:hover .ana-haber-baslik {
-    color: var(--accent);
+    color: var(--accent); /* Turuncu vurgu */
 }
 
-/* Galeri — oklar thumbnail satırıyla flex ile ortalanır */
+/* ============================================================
+ * Galeri — küçük haber önizlemeleri + sol/sağ oklar
+ * JS (ana_sayfa.js) track’i kaydırır; CSS yalnızca görünümü verir.
+ * ============================================================ */
 .home-page .gallery-container {
     min-width: 0;
 }
@@ -113,7 +135,7 @@
 .home-page .gallery-wrapper {
     flex: 1 1 auto;
     min-width: 0;
-    overflow: hidden;
+    overflow: hidden; /* Kaydırma penceresi */
 }
 
 .home-page .gallery-track {
@@ -123,6 +145,7 @@
     will-change: transform;
 }
 
+/* Sol / sağ navigasyon butonları */
 .home-page .gallery-nav {
     flex: 0 0 auto;
     width: clamp(2rem, 6vw, 2.25rem);
@@ -157,6 +180,7 @@
     display: block;
 }
 
+/* Tek thumbnail (küçük haber resmi) */
 .home-page .gallery-thumb {
     flex: 0 0 var(--gallery-thumb-w);
     border-radius: var(--radius-sm);
@@ -168,7 +192,7 @@
 }
 
 .home-page .gallery-thumb.is-active {
-    border-color: var(--accent);
+    border-color: var(--accent); /* Seçili haber */
 }
 
 .home-page .gallery-thumb img {
@@ -180,6 +204,7 @@
     background: var(--content-photo-bg);
 }
 
+/* Sayfa noktaları (mobil/çoklu sayfa göstergesi) */
 .home-page .gallery-dots {
     display: flex;
     justify-content: center;
@@ -202,7 +227,9 @@
     transform: scale(1.2);
 }
 
-/* Duyurular */
+/* ============================================================
+ * Duyurular paneli (sağ kolon / alt satır)
+ * ============================================================ */
 .home-page .duyurular-card {
     display: flex;
     flex-direction: column;
@@ -223,6 +250,7 @@
     min-height: 0;
 }
 
+/* Tek duyuru satırı: küçük görsel + metin */
 .home-page .duyuru-item {
     display: flex;
     align-items: flex-start;
@@ -263,6 +291,7 @@
     margin-bottom: 0.25rem;
 }
 
+/* Açıklama en fazla 2 satır (taşanı kes) */
 .home-page .duyuru-content p {
     font-size: clamp(0.72rem, 1.8vw, 0.75rem);
     color: var(--text-muted);
@@ -273,6 +302,7 @@
     overflow: hidden;
 }
 
+/* Duyuru sayfalama (önceki / sonraki) */
 .home-page .pagination-controls {
     display: flex;
     align-items: center;
@@ -322,7 +352,9 @@
     text-align: center;
 }
 
-/* Doğum günü */
+/* ============================================================
+ * Doğum günü bölümü
+ * ============================================================ */
 .home-page .home-section {
     margin-top: var(--home-gap);
 }
@@ -364,6 +396,7 @@
     margin-top: 0.15rem;
 }
 
+/* Personel kartları: otomatik sığan grid */
 .home-page .birthday-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.75rem), 10rem));
@@ -405,6 +438,7 @@
     white-space: nowrap;
 }
 
+/* Boş durum / hata kutusu (doğum günü yok, duyuru yok vb.) */
 .home-page .home-empty {
     text-align: center;
     padding: 1.25rem;
@@ -421,7 +455,9 @@
     color: #a94442;
 }
 
-/* Otomasyon */
+/* ============================================================
+ * Kurum içi otomasyon sistemleri
+ * ============================================================ */
 .home-page .otomasyon-header {
     margin-bottom: 1.75rem;
 }
@@ -447,6 +483,7 @@
     align-items: stretch;
 }
 
+/* Tek otomasyon kartı: logo / isim / “Sisteme Git” butonu */
 .home-page .otomasyon-item {
     background: var(--bg-body);
     border: 1px solid var(--border);
@@ -485,6 +522,7 @@
     object-fit: contain;
 }
 
+/* Logo yoksa lacivert ikon kutusu */
 .home-page .otomasyon-icon-fallback {
     width: 6.5rem;
     height: 6.5rem;
@@ -544,7 +582,11 @@
     flex-shrink: 0;
 }
 
-/* Geniş ekran: haberler + duyurular yan yana */
+/* ============================================================
+ * Responsive
+ * ============================================================ */
+
+/* Geniş ekran: haberler solda, duyurular sağda */
 @media (min-width: 64rem) {
     .home-page .home-layout {
         grid-template-columns: minmax(0, 1.65fr) minmax(17.5rem, 1fr);
@@ -555,6 +597,7 @@
     }
 }
 
+/* Dar telefon: galeri oklarını küçült */
 @media (max-width: 30rem) {
     .home-page .gallery-viewport {
         gap: 0.3rem;
