@@ -18,6 +18,7 @@
   --admin-success: #198754;
   --admin-danger: #dc3545;
   --admin-warning: #f59e0b;
+  --admin-topbar-h: 57px;
   --content-photo-fit: cover;
   --content-photo-bg: #eee;
 }
@@ -80,11 +81,22 @@ body.admin-body {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.admin-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.admin-brand-row .admin-brand-link {
+  min-width: 0;
+}
+
 .admin-brand img {
   max-height: 52px;
   max-width: 100%;
   width: auto;
-  margin-bottom: 12px;
   display: block;
 }
 
@@ -182,26 +194,40 @@ body.admin-body {
 .admin-topbar {
   background: var(--admin-card);
   border-bottom: 1px solid var(--admin-border);
-  padding: 16px 28px;
+  padding: 12px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   position: sticky;
   top: 0;
   z-index: 100;
+  min-height: var(--admin-topbar-h);
+}
+
+.admin-topbar-start {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .admin-topbar h2 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-topbar-end {
   display: flex;
   align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
   justify-content: flex-end;
 }
 
@@ -226,7 +252,14 @@ body.admin-body {
   padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: background 0.2s ease, color 0.2s ease;
+}
+
+.admin-photo-fit-btn i {
+  font-size: 0.8rem;
 }
 
 .admin-photo-fit-btn:hover {
@@ -239,11 +272,37 @@ body.admin-body {
   color: #fff;
 }
 
+.admin-menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.admin-sidebar-close {
+  display: none;
+}
+
+.admin-sidebar-backdrop {
+  display: none;
+}
+
 .admin-user {
   display: flex;
   align-items: center;
   gap: 12px;
   font-size: 0.9rem;
+  min-width: 0;
+}
+
+.admin-user-name {
+  max-width: 11rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .admin-user-badge {
@@ -566,12 +625,13 @@ a.admin-stat-card:hover {
 @media (max-width: 992px) {
   .admin-sidebar {
     width: min(300px, 88vw);
-    top: 57px;
-    height: calc(100vh - 57px);
+    top: var(--admin-topbar-h, 57px);
+    height: calc(100dvh - var(--admin-topbar-h, 57px));
     bottom: auto;
     transform: translateX(-100%);
     transition: transform 0.3s ease;
     z-index: 1001;
+    -webkit-overflow-scrolling: touch;
   }
 
   .admin-sidebar.open {
@@ -586,26 +646,34 @@ a.admin-stat-card:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
+    position: static;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
     padding: 0;
-    border: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.78);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     line-height: 1;
     z-index: 2;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .admin-sidebar-close:hover,
+  .admin-sidebar-close:focus-visible {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+    outline: none;
   }
 
   .admin-sidebar-backdrop {
     display: none;
     position: fixed;
-    top: 57px;
+    top: var(--admin-topbar-h, 57px);
     right: 0;
     bottom: 0;
     left: 0;
@@ -624,30 +692,49 @@ a.admin-stat-card:hover {
   .admin-main {
     margin-left: 0;
     width: 100%;
+    max-width: 100%;
   }
 
   .admin-topbar {
     position: sticky;
     top: 0;
     z-index: 1002;
-    padding: 12px 16px;
+    padding: 10px 14px;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
-  .admin-topbar-end {
+  .admin-topbar-start {
     gap: 10px;
   }
 
+  .admin-topbar h2 {
+    font-size: 1.05rem;
+  }
+
+  .admin-topbar-end {
+    gap: 8px;
+  }
+
   .admin-photo-fit-btn {
-    padding: 7px 10px;
-    font-size: 0.72rem;
+    padding: 8px;
+  }
+
+  .admin-photo-fit-label {
+    display: none;
+  }
+
+  .admin-user-name {
+    max-width: 7.5rem;
   }
 
   .admin-content {
     padding: 16px;
+    overflow-x: hidden;
   }
 
   .admin-menu-toggle {
-    display: inline-flex !important;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 36px;
@@ -655,20 +742,78 @@ a.admin-stat-card:hover {
     padding: 0;
     flex-shrink: 0;
   }
+
+  .admin-stats,
+  .admin-stats--compact,
+  .admin-quick-links {
+    grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+    gap: 12px;
+  }
+
+  .admin-card-header {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+
+  .admin-card-body {
+    padding: 16px;
+  }
+
+  .admin-table {
+    min-width: 640px;
+  }
+
+  .admin-table-wrap {
+    margin: 0 -4px;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-filter-select {
+    max-width: 100%;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .admin-actions {
+    flex-wrap: wrap;
+  }
 }
 
-.admin-sidebar-close {
-  display: none;
-}
+@media (max-width: 576px) {
+  .admin-user-badge {
+    display: none;
+  }
 
-.admin-menu-toggle {
-  display: none;
-  background: none;
-  border: 1px solid var(--admin-border);
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 1.1rem;
+  .admin-user-name {
+    max-width: 5.5rem;
+    font-size: 0.82rem;
+  }
+
+  .admin-content {
+    padding: 12px;
+  }
+
+  .admin-stats,
+  .admin-stats--compact,
+  .admin-quick-links {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-table {
+    min-width: 560px;
+    font-size: 0.82rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 10px;
+  }
+
+  .admin-thumb {
+    width: 64px;
+    height: 36px;
+  }
 }
 
 .admin-soru-sayisi {

@@ -13,6 +13,7 @@ require_once __DIR__ . "/../../baglan.php";
 require_once __DIR__ . "/../../../includes/site-settings.php";
 
 adminRequireLogin();
+dbEnsureColumn($db, "yoneticiler", "foto_url", "varchar(255) DEFAULT NULL");
 
 $adminUser = [
   "id" => (int) ($_SESSION["yonetici_id"] ?? 0),

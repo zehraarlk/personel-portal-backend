@@ -103,7 +103,7 @@ $navItems = [
         <div class="navbar-end">
             <div class="profile-dropdown" data-profile-dropdown>
                 <button type="button" class="profile-trigger" aria-expanded="false" aria-haspopup="true">
-                    <img src="<?= e($userPhoto) ?>" alt="" class="profile-avatar profile-avatar-img profile-avatar--brand" width="38" height="38">
+                    <img src="<?= e($userPhoto) ?>" alt="" class="profile-avatar profile-avatar-img<?= !empty($userPhotoIsBrand) ? ' profile-avatar--brand' : '' ?>" width="38" height="38">
                     <span class="profile-info">
                         <span class="profile-name"><?= e($userName) ?></span>
                         <span class="profile-role profile-role--<?= e($userType) ?>"><?= e($userTitle) ?></span>
@@ -117,11 +117,19 @@ $navItems = [
                         <span class="icon" aria-hidden="true"><?= icon('yonetim_paneli') ?></span>
                         Yönetim Paneli
                     </a>
+                    <a href="<?= e($assetBase) ?>pages/profil/foto.php" role="menuitem">
+                        <span class="icon" aria-hidden="true"><?= icon('image') ?></span>
+                        Profil Fotoğrafı
+                    </a>
                     <a href="<?= e($assetBase) ?>pages/profil/oturum.php" role="menuitem">
                         <span class="icon" aria-hidden="true"><?= icon('oturum_bilgileri') ?></span>
                         Oturum Bilgileri
                     </a>
                     <?php else: ?>
+                    <a href="<?= e($assetBase) ?>pages/profil/foto.php" role="menuitem">
+                        <span class="icon" aria-hidden="true"><?= icon('image') ?></span>
+                        Profil Fotoğrafı
+                    </a>
                     <a href="<?= e($assetBase) ?>pages/profil/email.php" role="menuitem">
                         <span class="icon" aria-hidden="true"><?= icon('email_degistir') ?></span>
                         E-posta Değiştir
@@ -184,11 +192,19 @@ $navItems = [
         <span class="icon" aria-hidden="true"><?= icon('yonetim_paneli') ?></span>
         Yönetim Paneli
     </a>
+    <a href="<?= e($assetBase) ?>pages/profil/foto.php" class="side-menu-link">
+        <span class="icon" aria-hidden="true"><?= icon('image') ?></span>
+        Profil Fotoğrafı
+    </a>
     <a href="<?= e($assetBase) ?>pages/profil/oturum.php" class="side-menu-link">
         <span class="icon" aria-hidden="true"><?= icon('oturum_bilgileri') ?></span>
         Oturum Bilgileri
     </a>
     <?php else: ?>
+    <a href="<?= e($assetBase) ?>pages/profil/foto.php" class="side-menu-link">
+        <span class="icon" aria-hidden="true"><?= icon('image') ?></span>
+        Profil Fotoğrafı
+    </a>
     <a href="<?= e($assetBase) ?>pages/profil/email.php" class="side-menu-link">
         <span class="icon" aria-hidden="true"><?= icon('email_degistir') ?></span>
         E-posta Değiştir

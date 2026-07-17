@@ -40,21 +40,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       if ($mevcut) {
         $hata = "Bu kullanıcı adı zaten kayıtlı.";
       } else {
-        $db->prepare(
-          "INSERT INTO yoneticiler (kullanici_adi, ad, soyad, sifre, yetki, aktif)
-           VALUES (?, ?, ?, ?, ?, ?)",
-        )->execute([
-          $kullaniciAdi,
-          $ad,
-          $soyad,
-          adminHashPassword($sifre),
-          $yetki,
-          $aktif,
-        ]);
+        $foto = adminUploadImage($_FILES["foto"] ?? [], "yoneticiler", null);
+        if ($foto === null && !empty($_FILES["foto"]["name"])) {
+          $hata = "Fotoğraf yüklenemedi.";
+        } else {
+          $db->prepare(
+            "INSERT INTO yoneticiler (kullanici_adi, ad, soyad, sifre, yetki, aktif, foto_url)
+             VALUES (?, ?, ?, ?, ?, ?, ?)",
+          )->execute([
+            $kullaniciAdi,
+            $ad,
+            $soyad,
+            adminHashPassword($sifre),
+            $yetki,
+            $aktif,
+            $foto,
+          ]);
 
-        adminFlashSet("success", "Yönetici başarıyla eklendi.");
-        header("Location: index.php");
-        exit();
+          adminFlashSet("success", "Yönetici başarıyla eklendi.");
+          header("Location: index.php");
+          exit();
+        }
       }
     }
   }
@@ -74,7 +80,7 @@ include __DIR__ . "/../includes/header.php";
       <div class="admin-alert admin-alert-danger"><?= htmlspecialchars($hata, ENT_QUOTES, "UTF-8") ?></div>
     <?php endif; ?>
 
-    <form method="post" class="admin-form">
+    <form method="post" enctype="multipart/form-data" class="admin-form">
       <input type="hidden" name="csrf" value="<?= htmlspecialchars(adminCsrfToken(), ENT_QUOTES, "UTF-8") ?>" />
 
       <div class="mb-3">
@@ -110,6 +116,12 @@ include __DIR__ . "/../includes/header.php";
         <input type="password" name="sifre" class="form-control" required minlength="6" autocomplete="new-password" />
         <div class="admin-form-hint">Yönetim paneli girişinde kullanıcı adı + bu şifre kullanılır.</div>
       </div>
+
+      <?= adminImageFieldHtml($assetBase, null, [
+        "name" => "foto",
+        "label" => "Profil Fotoğrafı",
+        "hint" => "İsteğe bağlı. Navbar profil alanında görünür.",
+      ]) ?>
 
       <div class="mb-3">
         <label class="form-label">Yetki *</label>

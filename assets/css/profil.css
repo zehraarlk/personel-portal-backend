@@ -265,6 +265,34 @@
     padding: 2rem 1rem;
 }
 
+.profil-form-hint {
+    margin: 0.35rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    line-height: 1.45;
+}
+
+.profil-foto-preview {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 1.25rem;
+}
+
+.profil-foto-preview__img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--border);
+    background: #eef2f6;
+}
+
+.profil-foto-preview__img--brand {
+    object-fit: contain;
+    padding: 0.75rem;
+    background: #fff;
+}
+
 @media (max-width: 48rem) {
     .profil-card__header {
         align-items: flex-start;

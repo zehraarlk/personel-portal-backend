@@ -40,8 +40,8 @@ $flash = adminFlashGet();
       <?php include __DIR__ . "/sidebar.php"; ?>
       <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop" aria-hidden="true"></div>
       <div class="admin-main">
-        <header class="admin-topbar">
-          <div class="d-flex align-items-center gap-3">
+        <header class="admin-topbar" id="adminTopbar">
+          <div class="admin-topbar-start">
             <button
               type="button"
               class="admin-menu-toggle"
@@ -56,11 +56,17 @@ $flash = adminFlashGet();
           </div>
           <div class="admin-topbar-end">
             <div class="admin-photo-fit" role="group" aria-label="Fotoğraf görünümü">
-              <button type="button" class="admin-photo-fit-btn" data-photo-fit-set="contain" aria-pressed="false">Tam ekran</button>
-              <button type="button" class="admin-photo-fit-btn" data-photo-fit-set="cover" aria-pressed="false">Doldur</button>
+              <button type="button" class="admin-photo-fit-btn" data-photo-fit-set="contain" aria-pressed="false" title="Tam ekran">
+                <i class="fas fa-expand" aria-hidden="true"></i>
+                <span class="admin-photo-fit-label">Tam ekran</span>
+              </button>
+              <button type="button" class="admin-photo-fit-btn" data-photo-fit-set="cover" aria-pressed="false" title="Doldur">
+                <i class="fas fa-compress" aria-hidden="true"></i>
+                <span class="admin-photo-fit-label">Doldur</span>
+              </button>
             </div>
             <div class="admin-user">
-              <span><?= htmlspecialchars(
+              <span class="admin-user-name"><?= htmlspecialchars(
                 $adminUser["gorunen_ad"] !== "" ? $adminUser["gorunen_ad"] : "Yönetici",
                 ENT_QUOTES,
                 "UTF-8",

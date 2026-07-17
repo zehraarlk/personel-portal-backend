@@ -206,23 +206,76 @@ function mapYoneticiYetkiLabel(string $yetki): string
     };
 }
 
+function ensureYoneticiFotoColumn(PDO $pdo): void
+{
+    static $done = false;
+
+    if ($done || !dbTableExists($pdo, 'yoneticiler')) {
+        return;
+    }
+
+    try {
+        $stmt = $pdo->prepare(
+            'SELECT COUNT(*) AS c
+             FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE()
+               AND TABLE_NAME = ?
+               AND COLUMN_NAME = ?'
+        );
+        $stmt->execute(['yoneticiler', 'foto_url']);
+        $exists = (int) ($stmt->fetch()['c'] ?? 0) > 0;
+
+        if (!$exists) {
+            $pdo->exec('ALTER TABLE `yoneticiler` ADD COLUMN `foto_url` varchar(255) DEFAULT NULL');
+        }
+
+        $done = true;
+    } catch (Throwable $e) {
+        error_log('yoneticiler.foto_url kolon kontrolu: ' . $e->getMessage());
+    }
+}
+
+function profilePhotoMeta(?string $dbPath, string $assetBase): array
+{
+    $fallback = faviconUrl($assetBase);
+    $path = trim((string) $dbPath);
+
+    if ($path === '') {
+        return ['url' => $fallback, 'isBrand' => true];
+    }
+
+    $url = imgUrl($path, $assetBase);
+    $normalized = strtolower(normalizeDbImagePath($path));
+    $isBrand = $normalized === ''
+        || str_contains($normalized, 'favicon')
+        || str_contains($normalized, 'gebze-logo')
+        || str_contains($normalized, 'gebze_logo')
+        || str_contains($normalized, 'logo(2)');
+
+    return ['url' => $url !== '' ? $url : $fallback, 'isBrand' => $isBrand];
+}
+
 function loadCurrentUserProfile(PDO $pdo, string $assetBase): array
 {
-    $photo = faviconUrl($assetBase);
+    $fallbackPhoto = faviconUrl($assetBase);
+    ensureYoneticiFotoColumn($pdo);
 
     if (!empty($_SESSION['yonetici_id'])) {
         $row = dbFetchOne(
             $pdo,
-            'SELECT id, ad, soyad, yetki FROM yoneticiler WHERE id = ? AND aktif = 1 LIMIT 1',
+            'SELECT id, ad, soyad, yetki, foto_url FROM yoneticiler WHERE id = ? AND aktif = 1 LIMIT 1',
             [(int) $_SESSION['yonetici_id']]
         );
 
         if ($row !== null) {
+            $photo = profilePhotoMeta(isset($row['foto_url']) ? (string) $row['foto_url'] : null, $assetBase);
+
             return [
                 'userType'  => 'yonetici',
                 'userName'  => trim(($row['ad'] ?? '') . ' ' . ($row['soyad'] ?? '')),
                 'userTitle' => mapYoneticiYetkiLabel((string) ($row['yetki'] ?? '')),
-                'userPhoto' => $photo,
+                'userPhoto' => $photo['url'],
+                'userPhotoIsBrand' => $photo['isBrand'],
                 'id'        => (int) $row['id'],
             ];
         }
@@ -235,7 +288,7 @@ function loadCurrentUserProfile(PDO $pdo, string $assetBase): array
     if ($personelId > 0) {
         $row = dbFetchOne(
             $pdo,
-            'SELECT id, ad, soyad FROM personeller WHERE id = ? LIMIT 1',
+            'SELECT id, ad, soyad, foto_url FROM personeller WHERE id = ? LIMIT 1',
             [$personelId]
         );
     } elseif (!empty($_SESSION['yonetici_id'])) {
@@ -245,11 +298,14 @@ function loadCurrentUserProfile(PDO $pdo, string $assetBase): array
     }
 
     if ($row !== null) {
+        $photo = profilePhotoMeta(isset($row['foto_url']) ? (string) $row['foto_url'] : null, $assetBase);
+
         return [
             'userType'  => 'personel',
             'userName'  => trim(($row['ad'] ?? '') . ' ' . ($row['soyad'] ?? '')),
             'userTitle' => 'Personel',
-            'userPhoto' => $photo,
+            'userPhoto' => $photo['url'],
+            'userPhotoIsBrand' => $photo['isBrand'],
             'id'        => (int) $row['id'],
         ];
     }
@@ -258,7 +314,8 @@ function loadCurrentUserProfile(PDO $pdo, string $assetBase): array
         'userType'  => 'personel',
         'userName'  => 'Misafir',
         'userTitle' => 'Personel',
-        'userPhoto' => $photo,
+        'userPhoto' => $fallbackPhoto,
+        'userPhotoIsBrand' => true,
         'id'        => 0,
     ];
 }

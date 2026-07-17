@@ -17,7 +17,14 @@
         var toggle = document.getElementById("adminMenuToggle");
         var closeBtn = document.getElementById("adminSidebarClose");
         var backdrop = document.getElementById("adminSidebarBackdrop");
+        var topbar = document.getElementById("adminTopbar");
         if (!sidebar || !toggle) return;
+
+        function syncTopbarHeight() {
+          if (!topbar) return;
+          var h = Math.max(48, Math.round(topbar.getBoundingClientRect().height));
+          document.documentElement.style.setProperty("--admin-topbar-h", h + "px");
+        }
 
         function setMenuOpen(open) {
           sidebar.classList.toggle("open", open);
@@ -28,6 +35,13 @@
           document.body.classList.toggle("admin-sidebar-open", open);
           toggle.setAttribute("aria-expanded", open ? "true" : "false");
           toggle.setAttribute("aria-label", open ? "Menüyü kapat" : "Menüyü aç");
+          syncTopbarHeight();
+        }
+
+        syncTopbarHeight();
+        window.addEventListener("resize", syncTopbarHeight);
+        if (window.ResizeObserver && topbar) {
+          new ResizeObserver(syncTopbarHeight).observe(topbar);
         }
 
         toggle.addEventListener("click", function (e) {

@@ -1563,7 +1563,7 @@ function adminPersonelHashPassword(string $plain): string
 
 function adminPersonelDefaultFoto(): string
 {
-  return "../images/gebze_logo.jpg";
+  return "../images/gebze-logo.webp";
 }
 
 function adminUploadImage(array $file, string $subdir, ?string $currentPath = null): ?string

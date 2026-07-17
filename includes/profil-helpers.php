@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/auth-helpers.php';
+require_once __DIR__ . '/db-helpers.php';
 
 function profilFlashSet(string $type, string $message): void
 {
@@ -213,4 +214,117 @@ function formatProfilDateTime(?string $value): string
     }
 
     return date('d.m.Y H:i:s', $timestamp);
+}
+
+function profilUploadImage(array $file, string $subdir, ?string $currentPath = null): ?string
+{
+    if (!isset($file['error']) || $file['error'] === UPLOAD_ERR_NO_FILE) {
+        return $currentPath;
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_uploaded_file((string) ($file['tmp_name'] ?? ''))) {
+        return null;
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = (string) $finfo->file((string) $file['tmp_name']);
+    $allowed = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+
+    if (!isset($allowed[$mime])) {
+        return null;
+    }
+
+    $baseDir = defined('IMAGES_DIR') ? IMAGES_DIR : (realpath(__DIR__ . '/../images') ?: '');
+    if ($baseDir === '') {
+        return null;
+    }
+
+    $targetDir = rtrim($baseDir, '/\\') . DIRECTORY_SEPARATOR . trim($subdir, '/\\');
+    if (!is_dir($targetDir) && !mkdir($targetDir, 0755, true) && !is_dir($targetDir)) {
+        return null;
+    }
+
+    $name = pathinfo((string) ($file['name'] ?? ''), PATHINFO_FILENAME);
+    $name = preg_replace('/[^a-z0-9_-]+/i', '-', (string) $name) ?? 'profil';
+    $name = strtolower(trim($name, '-'));
+    if ($name === '') {
+        $name = 'profil';
+    }
+
+    $filename = $name . '_' . bin2hex(random_bytes(4)) . '.' . $allowed[$mime];
+    $fullPath = $targetDir . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file((string) $file['tmp_name'], $fullPath)) {
+        return null;
+    }
+
+    return '../images/' . trim($subdir, '/') . '/' . $filename;
+}
+
+function getProfilFotoPath(PDO $pdo): ?string
+{
+    if (!empty($_SESSION['yonetici_id']) && empty($_SESSION['personel_id'])) {
+        ensureYoneticiFotoColumn($pdo);
+        $row = dbFetchOne(
+            $pdo,
+            'SELECT foto_url FROM yoneticiler WHERE id = ? LIMIT 1',
+            [(int) $_SESSION['yonetici_id']]
+        );
+
+        return isset($row['foto_url']) ? (string) $row['foto_url'] : null;
+    }
+
+    if (!empty($_SESSION['personel_id'])) {
+        $row = dbFetchOne(
+            $pdo,
+            'SELECT foto_url FROM personeller WHERE id = ? LIMIT 1',
+            [(int) $_SESSION['personel_id']]
+        );
+
+        return isset($row['foto_url']) ? (string) $row['foto_url'] : null;
+    }
+
+    return null;
+}
+
+function updateProfilFoto(PDO $pdo, array $file): array
+{
+    if (empty($file['name'])) {
+        return ['ok' => false, 'message' => 'Lütfen bir fotoğraf seçin.'];
+    }
+
+    $current = getProfilFotoPath($pdo);
+    $isYonetici = !empty($_SESSION['yonetici_id']) && empty($_SESSION['personel_id']);
+    $subdir = $isYonetici ? 'yoneticiler' : 'personeller';
+    $uploaded = profilUploadImage($file, $subdir, $current);
+
+    if ($uploaded === null || $uploaded === $current) {
+        return ['ok' => false, 'message' => 'Fotoğraf yüklenemedi. JPG, PNG, WEBP veya GIF kullanın.'];
+    }
+
+    if ($isYonetici) {
+        ensureYoneticiFotoColumn($pdo);
+        $ok = $pdo->prepare('UPDATE yoneticiler SET foto_url = ? WHERE id = ?')
+            ->execute([$uploaded, (int) $_SESSION['yonetici_id']]);
+    } else {
+        $ok = $pdo->prepare('UPDATE personeller SET foto_url = ? WHERE id = ?')
+            ->execute([$uploaded, (int) $_SESSION['personel_id']]);
+    }
+
+    if (!$ok) {
+        return ['ok' => false, 'message' => 'Güncelleme sırasında bir hata oluştu.'];
+    }
+
+    $_SESSION['fotograf'] = $uploaded;
+
+    return ['ok' => true, 'message' => 'Profil fotoğrafınız güncellendi.', 'path' => $uploaded];
 }

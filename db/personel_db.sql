@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Anamakine: 127.0.0.1
--- Üretim Zamanı: 16 Tem 2026, 15:52:41
+-- Üretim Zamanı: 17 Tem 2026, 09:03:26
 -- Sunucu sürümü: 10.4.32-MariaDB
 -- PHP Sürümü: 8.2.12
 
@@ -544,7 +544,8 @@ INSERT INTO `icerik_izlemeleri` (`id`, `tablo`, `kayit_id`, `izleyici`, `olustur
 (59, 'sizden_gelenler', 4, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 14:04:04'),
 (62, 'anasayfa_duyurular', 13, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 15:03:48'),
 (65, 'sizden_gelenler', 2, 'guest:81103e765626c0a68d547c30e1fe6b33', '2026-07-14 15:37:29'),
-(73, 'etkinlikler_duyurular', 5, 'personel:1', '2026-07-16 10:23:32');
+(73, 'etkinlikler_duyurular', 5, 'personel:1', '2026-07-16 10:23:32'),
+(77, 'etkinlikler_duyurular', 4, 'personel:1', '2026-07-17 09:14:14');
 
 -- --------------------------------------------------------
 
@@ -782,7 +783,18 @@ INSERT INTO `oturum_kayitlari` (`id`, `personel_id`, `giris_zamani`, `cikis_zama
 (109, 1, '2026-07-16 15:34:28', '2026-07-16 15:39:28', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 15:39:24'),
 (110, 1, '2026-07-16 15:41:06', '2026-07-16 15:42:36', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 15:42:36'),
 (111, 1, '2026-07-16 16:25:48', '2026-07-16 16:50:27', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 16:50:23'),
-(112, 1, '2026-07-16 16:52:32', NULL, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', NULL, '2026-07-16 16:52:32');
+(112, 1, '2026-07-16 16:52:32', '2026-07-16 17:02:38', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 17:02:38'),
+(113, 1, '2026-07-16 17:03:15', '2026-07-16 17:06:13', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 17:03:46'),
+(114, 1, '2026-07-16 17:06:20', '2026-07-16 17:15:08', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-16 17:11:48'),
+(115, 1, '2026-07-16 17:17:15', '2026-07-16 17:17:33', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:17:26'),
+(116, 1, '2026-07-16 17:18:09', '2026-07-16 17:18:17', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:18:09'),
+(117, 1, '2026-07-16 17:18:26', '2026-07-17 08:33:03', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:18:26'),
+(118, 1, '2026-07-17 08:33:03', '2026-07-17 08:47:10', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-17 08:47:10'),
+(119, 1, '2026-07-17 08:53:57', '2026-07-17 08:58:20', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-17 08:53:57'),
+(120, 1, '2026-07-17 08:58:32', '2026-07-17 09:04:11', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-17 08:58:59'),
+(121, 1, '2026-07-17 09:04:23', '2026-07-17 09:12:45', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-17 09:12:45'),
+(122, 1, '2026-07-17 09:13:23', '2026-07-17 09:20:18', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-17 09:20:18'),
+(123, 1, '2026-07-17 09:34:38', '2026-07-17 09:35:42', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-17 09:35:17');
 
 -- --------------------------------------------------------
 
@@ -1164,16 +1176,17 @@ CREATE TABLE `yoneticiler` (
   `soyad` varchar(100) NOT NULL,
   `yetki` enum('super','editor') NOT NULL DEFAULT 'editor',
   `aktif` tinyint(1) NOT NULL DEFAULT 1,
-  `olusturma_tarihi` datetime NOT NULL DEFAULT current_timestamp()
+  `olusturma_tarihi` datetime NOT NULL DEFAULT current_timestamp(),
+  `foto_url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Tablo döküm verisi `yoneticiler`
 --
 
-INSERT INTO `yoneticiler` (`id`, `kullanici_adi`, `sifre`, `ad`, `soyad`, `yetki`, `aktif`, `olusturma_tarihi`) VALUES
-(1, 'admin', '$2y$10$wDGGWd7w8Ue6SEf1xQsKLuLXChd4ymCGx0sB.vH8DyBx3qKRfGE2K', 'Sistem', 'Yöneticisi', 'super', 1, '2026-07-09 13:44:07'),
-(2, 'admin2', '$2y$10$jFtms1gZTClDK49aQMJUjeZLEEcwQ5scL2VDFF8GQl7eEqNEm1IMe', 'diğer', 'admin', '', 1, '2026-07-13 14:13:32');
+INSERT INTO `yoneticiler` (`id`, `kullanici_adi`, `sifre`, `ad`, `soyad`, `yetki`, `aktif`, `olusturma_tarihi`, `foto_url`) VALUES
+(1, 'admin', '$2y$10$wDGGWd7w8Ue6SEf1xQsKLuLXChd4ymCGx0sB.vH8DyBx3qKRfGE2K', 'Sistem', 'Yöneticisi', 'super', 1, '2026-07-09 13:44:07', NULL),
+(2, 'admin2', '$2y$10$jFtms1gZTClDK49aQMJUjeZLEEcwQ5scL2VDFF8GQl7eEqNEm1IMe', 'diğer', 'admin', '', 1, '2026-07-13 14:13:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -1246,7 +1259,15 @@ INSERT INTO `yonetici_oturum_kayitlari` (`id`, `yonetici_id`, `giris_zamani`, `c
 (47, 1, '2026-07-16 10:40:23', '2026-07-16 12:22:51', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 12:22:45'),
 (48, 1, '2026-07-16 12:24:46', '2026-07-16 14:20:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 14:20:06'),
 (49, 1, '2026-07-16 15:39:40', '2026-07-16 15:41:06', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 15:41:00'),
-(50, 1, '2026-07-16 15:42:47', '2026-07-16 16:25:39', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 16:25:39');
+(50, 1, '2026-07-16 15:42:47', '2026-07-16 16:25:39', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-16 16:25:39'),
+(51, 1, '2026-07-16 17:02:47', '2026-07-16 17:03:15', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:03:10'),
+(52, 1, '2026-07-16 17:17:33', '2026-07-16 17:18:17', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:17:33'),
+(53, 1, '2026-07-16 17:18:17', '2026-07-16 17:18:26', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-16 17:18:17'),
+(54, 1, '2026-07-17 08:47:20', '2026-07-17 08:53:48', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-17 08:52:46'),
+(55, 1, '2026-07-17 09:13:00', '2026-07-17 09:13:23', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'otomatik', '2026-07-17 09:13:17'),
+(56, 1, '2026-07-17 09:20:25', '2026-07-17 09:34:32', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'cikis', '2026-07-17 09:34:32'),
+(57, 1, '2026-07-17 09:36:10', '2026-07-17 09:46:48', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36', 'sekme', '2026-07-17 09:46:47'),
+(58, 1, '2026-07-17 09:48:46', NULL, '::1', 'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Mobile Safari/537.36', NULL, '2026-07-17 10:02:41');
 
 --
 -- Dökümü yapılmış tablolar için indeksler
@@ -1515,7 +1536,7 @@ ALTER TABLE `anket_cevaplari`
 -- Tablo için AUTO_INCREMENT değeri `anket_katilimlari`
 --
 ALTER TABLE `anket_katilimlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=417;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=610;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `anket_secenekleri`
@@ -1575,7 +1596,7 @@ ALTER TABLE `haber_galeri`
 -- Tablo için AUTO_INCREMENT değeri `icerik_izlemeleri`
 --
 ALTER TABLE `icerik_izlemeleri`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar`
@@ -1587,19 +1608,19 @@ ALTER TABLE `kaynaklar`
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_alt_kategori`
 --
 ALTER TABLE `kaynaklar_alt_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4901;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `kaynaklar_kategori`
 --
 ALTER TABLE `kaynaklar_kategori`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4901;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `oturum_kayitlari`
 --
 ALTER TABLE `oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- Tablo için AUTO_INCREMENT değeri `personeller`
@@ -1665,7 +1686,7 @@ ALTER TABLE `yoneticiler`
 -- Tablo için AUTO_INCREMENT değeri `yonetici_oturum_kayitlari`
 --
 ALTER TABLE `yonetici_oturum_kayitlari`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- Dökümü yapılmış tablolar için kısıtlamalar

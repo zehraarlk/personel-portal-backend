@@ -52,6 +52,7 @@ $userType = 'personel';
 $userName = 'Misafir';
 $userTitle = 'Personel';
 $userPhoto = faviconUrl($assetBase);
+$userPhotoIsBrand = true;
 $userId = 0;
 
 try {
@@ -59,7 +60,8 @@ try {
     $userType = (string) $userProfile['userType'];
     $userName = (string) $userProfile['userName'];
     $userTitle = (string) $userProfile['userTitle'];
-    $userPhoto = faviconUrl($assetBase);
+    $userPhoto = (string) ($userProfile['userPhoto'] ?: faviconUrl($assetBase));
+    $userPhotoIsBrand = !empty($userProfile['userPhotoIsBrand']);
     $userId = (int) $userProfile['id'];
 } catch (Throwable $e) {
     error_log('Profil yukleme hatasi: ' . $e->getMessage());

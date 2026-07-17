@@ -615,6 +615,19 @@
 
     .navbar .site-container {
         gap: 0.65rem;
+        grid-template-columns: auto 1fr auto;
+    }
+
+    .navbar-brand {
+        min-width: 0;
+    }
+
+    .navbar-brand img {
+        max-width: min(200px, 42vw);
+    }
+
+    .navbar-end {
+        min-width: 0;
     }
 
     .profile-name {
@@ -651,7 +664,7 @@
 
     .navbar-brand img {
         height: 42px;
-        max-width: 150px;
+        max-width: min(140px, 38vw);
     }
 
     .profile-avatar {
@@ -661,22 +674,16 @@
     }
 
     .profile-trigger {
-        padding: 0.25rem 0.4rem 0.25rem 0.25rem;
-        gap: 0.45rem;
+        padding: 0.25rem 0.35rem 0.25rem 0.25rem;
+        gap: 0.35rem;
     }
 
-    .profile-name {
-        max-width: 82px;
-        font-size: 0.75rem;
-    }
-
-    .profile-role {
-        max-width: 82px;
-        font-size: 0.625rem;
+    .profile-info {
+        display: none;
     }
 
     .navbar-end {
-        gap: 0.4rem;
+        gap: 0.35rem;
     }
 
     .hamburger-btn {
